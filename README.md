@@ -9,4 +9,4 @@ responsible for the transcription of various glosses.
 
 [![Gallery of Glosses on YouTube](https://github.com/CenterForDigitalHumanities/Gallery-of-Glosses/assets/1119165/e446532a-6c35-4cb3-bf01-06c2a4dd8c98)](https://www.youtube.com/watch?v=248EDx1u30Q)
 
-![image](https://github.com/CenterForDigitalHumanities/Gallery-of-Glosses/assets/1119165/6d319634-fe8f-43a2-be02-809fc45af1df)
+![do not trust ai](https://github.com/CenterForDigitalHumanities/Gallery-of-Glosses/assets/1119165/6d319634-fe8f-43a2-be02-809fc45af1df)
