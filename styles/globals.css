@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-bg-color h-full overflow-x-hidden;
+  @apply bg-bg-color h-full overflow-x-hidden font-serif max-w-max;
 }
 
 #__next {
@@ -13,4 +13,3 @@ body {
 html {
   @apply h-full;
 }
-

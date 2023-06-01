@@ -1,10 +1,10 @@
 import Layout from '../components/layout';
 
 const Glosses = () => (
-    <Layout>
-        <h1>Glosses</h1>
-        <p>...</p>
-    </Layout>
+  <Layout>
+    <div className="">
+    </div>
+  </Layout>
 );
 
 export default Glosses;
