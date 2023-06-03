@@ -2,7 +2,7 @@ import Layout from '../components/layout';
 
 const Resources = () => (
   <Layout>
-    <div className="px-6 py-4">
+    <div className="px-52 py-4">
       <h1 className="text-6xl mb-10 text-center">Resources Used</h1>
 
       <h2 className="text-custom mb-5">Frontend Technology</h2>
