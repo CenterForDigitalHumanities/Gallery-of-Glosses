@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import NavbarItem from './navbar-item'
+import Link from 'next/link';
+
 const TOP_OFFSET = 66;
 
 const Navbar = () => {
@@ -24,9 +26,11 @@ const Navbar = () => {
     }, []);
 
     return (
-        <nav className ="w-full fixed z-40">
-            <div className ={`px-4 md:px-16 flex flex-row items-center transition duration-500 ${showBackground ? 'bg-bg-secondary-color' : ''}`}>
-                <img className="h-12 lg:h-20 -translate-y-2" src="/images/glosses-logo.png" alt="Logo"/>
+        <nav className="w-full fixed z-40">
+            <div className={`px-4 md:px-16 flex flex-row items-center transition duration-300 ${showBackground ? 'bg-bg-secondary-color' : ''}`}>
+                <Link href="/">
+                    <img className="h-17 lg:h-20 -translate-y-2 cursor-pointer" src="/images/glosses-logo.png" alt="Logo"/>
+                </Link>
                 <div className="flex-row ml-8 gap-7 hidden lg:flex">
                     <NavbarItem label= "Home" refLink="/"/>
                     <NavbarItem label= "About" refLink="/about"/>
