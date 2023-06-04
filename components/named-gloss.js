@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import PageModal from './page-modal';
 
 const PAGE_SIZE = 10;  // Number of glosses per page
 const PAGE_RANGE_DISPLAYED = 3;  // Number of page numbers to show in the pagination component
@@ -8,6 +9,7 @@ const NamedGlosses = () => {
 	const [glosses, setGlosses] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
+	const [pageModalVisible, setPageModalVisible] = useState(false);
 
 	useEffect(() => {
 		const fetchGlosses = async () => {
@@ -25,7 +27,24 @@ const NamedGlosses = () => {
 	const displayedGlosses = glosses.slice(startIndex, startIndex + PAGE_SIZE);
 
 	const goToPage = (pageNumber) => {
-		setCurrentPage(pageNumber);
+		let page = Number(pageNumber); // Convert the input to a number.
+	  
+		// Check if the input is not a number.
+		if (isNaN(page)) {
+		  page = 1;
+		}
+	  
+		// Check if the input number is less than 1.
+		if (page < 1) {
+		  page = 1;
+		}
+	  
+		// Check if the input number is more than the total pages.
+		if (page > totalPages) {
+		  page = totalPages;
+		}
+	  
+		setCurrentPage(page);
 		window.scrollTo(0, 0);
 	};
 
@@ -52,6 +71,8 @@ const NamedGlosses = () => {
 					</div>
 				</div>
 			))}
+
+			
 			<hr className="my-4" />
 			{/* These are the buttons to change page numbers*/}
 			<div className="flex flex-row ml-auto items-center mt-4"> 
@@ -61,27 +82,27 @@ const NamedGlosses = () => {
 					</div>
 				}
 				{currentPage > 2 && 
-					<div style={{fontSize: "18px"}} className="border-2 border-black px-3 py-1 hover:text-gray-300 cursor-pointer" onClick={() => goToPage(1)}>
+					<div style={{fontSize: "18px"}} className="border-2 border-black px-4 py-1 hover:text-gray-300 cursor-pointer" onClick={() => goToPage(1)}>
 						1
 					</div>  
 				}
 				{currentPage > 3 && 
-					<div style={{fontSize: "18px"}} className="border-2 border-black px-3 py-1 hover:text-gray-300 cursor-pointer" onClick={() => {}}>
+					<div style={{fontSize: "18px"}} className="border-2 border-black px-3 py-1 hover:text-gray-300 cursor-pointer" onClick={() => setPageModalVisible(true)}>
 						...
 					</div>  
 				}
 				{getPageNumbers().map(pageNumber => (
-					<div style={{fontSize: "18px"}} className={`border-2 px-3 py-1 border-black ${currentPage === pageNumber ? 'bg-black text-white font-semibold' : 'hover:text-gray-300 cursor-pointer'}`} key={pageNumber} onClick={() => goToPage(pageNumber)}>
+					<div style={{fontSize: "18px"}} className={`border-2 px-4 py-1 border-black ${currentPage === pageNumber ? 'bg-black text-white font-semibold' : 'hover:text-gray-300 cursor-pointer'}`} key={pageNumber} onClick={() => goToPage(pageNumber)}>
 						{pageNumber}
 					</div>
 				))}
 				{currentPage < totalPages - 2 && 
-					<div style={{fontSize: "18px"}} className="border-2 border-black px-3 py-1 hover:text-gray-300 cursor-pointer" onClick={() => {}}>
+					<div style={{fontSize: "18px"}} className="border-2 border-black px-3 py-1 hover:text-gray-300 cursor-pointer" onClick={() => setPageModalVisible(true)}>
 						...
 					</div>  
 				}
 				{currentPage < totalPages - 1 && 
-					<div style={{fontSize: "18px"}} className="border-2 border-black px-3 py-1 hover:text-gray-300 cursor-pointer" onClick={() => goToPage(totalPages)}>
+					<div style={{fontSize: "18px"}} className="border-2 border-black px-4 py-1 hover:text-gray-300 cursor-pointer" onClick={() => goToPage(totalPages)}>
 						{totalPages}
 					</div>  
 				}
@@ -91,6 +112,7 @@ const NamedGlosses = () => {
 					</div>  
 				}
 			</div>
+			<PageModal visible={pageModalVisible} onClose={() => setPageModalVisible(false)} onGoToPage={goToPage} />
 	  	</div>
 	);
 };
