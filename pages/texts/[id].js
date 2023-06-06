@@ -1,34 +1,27 @@
-import { useRouter } from 'next/router';
-import axios from 'axios';
 import Layout from '../../components/layout';
-import { useState, useEffect } from 'react';
 
-const ManuscriptDetail = () => {
-  const router = useRouter();
-  const { id } = router.query;
-  const [data, setData] = useState('');
-
-  useEffect(() => {
-    if (id) {
-      axios.get(`https://store.rerum.io/v1/id/${id}`)
-        .then(res => {
-          setData(res.data);
-        })
-        .catch(err => console.log(err));
-    }
-  }, [id]);
-
-  if (!data) {
-    return <div>Loading...</div>;
-  }
-
+const PageDetail = ({ data }) => {
+  // data was fetched at the time of page request and injected as a prop
   return (
     <Layout>
-      <h1>{data.name}</h1>
-      <p>{data.description}</p>
+      <h1>{data['@type']}</h1>
+      <p>{data.label}</p>
       {/* render other data as needed */}
     </Layout>
   );
 };
 
-export default ManuscriptDetail;
+export default PageDetail;
+
+export async function getServerSideProps(context) {
+  const { id } = context.params;
+  const res = await fetch(`http://store.rerum.io/v1/id/${id}`);
+  const data = await res.json();
+
+  // The data is returned as a prop to your component
+  return {
+    props: {
+      data,
+    },
+  };
+}
