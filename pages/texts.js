@@ -72,6 +72,7 @@ const Texts = () => {
 
   const handleItemClick = (id, label) => {
     setSelectedItem({ id, label, pageData });
+    setCurrentView('PageDetail');
   }
 
   return (
