@@ -1,54 +1,43 @@
 import { useState } from 'react';
-import Layout from '../components/layout';
-import TextList from '../components/text-list';
-import PageDetail from '../components/page-detail';
-import CompareGlosses from '@/components/compare-glosses';
-import GlossMap from '@/components/gloss-map';
+import Layout from '../components/Layout';
+import TextList from '../components/TextList';
+import PageDetail from '../components/PageDetail';
+import Book from '@/components/Book';
 
 const Texts = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [currentView, setCurrentView] = useState('TextList')
   const [pageData, setPageData] = useState({
     dataUrl: 'https://store.rerum.io/v1/id/610c54deffce846a83e70625', 
-    title: 'Named Glosses'
+    title: 'Meta Glosses'
   });
   
   const UserTools = [
     { 
-      name: 'Browse Named Glosses', 
+      name: 'Browse by Meta Glosses', 
       dataUrl: 'https://store.rerum.io/v1/id/610c54deffce846a83e70625', 
-      title: "Named Glosses" 
+      title: "Meta Glosses" 
     },
     { 
-      name: 'Browse Manuscripts', 
+        name: 'Browse by Book', 
+        dataUrl: '', 
+        title: "Books" 
+    },
+    {
+        name: 'Browse by Theme',
+        dataUrl: '', 
+        title: "Themes" 
+  
+      },
+    { 
+      name: 'Browse by Manuscript', 
       dataUrl: 'https://store.rerum.io/v1/id/610ad6f1ffce846a83e70613', 
       title: "Manuscripts" 
     },
     {
-      name: 'Browse Canonical Texts (not working)',
-      dataUrl: '', 
-      title: "X" 
-
-    },
-    {
-      name: 'Compare Glosses (non functional)',
-      dataUrl: 'https://store.rerum.io/v1/id/610c54deffce846a83e70625', 
-      title: "Compare Glosses" 
-    },
-    {
-      name: 'Gloss Map (non functional)',
-      dataUrl: 'https://store.rerum.io/v1/id/610c54deffce846a83e70625', 
-      title: "Gloss Map" 
-    },
-    {
-      name: 'Add Manifest Expression (not working)',
-      dataUrl: '', 
-      title: "X" 
-    },
-    {
-      name: 'Register a Canonical Text (not working)',
+      name: 'Browse by Tag',
       dataUrl: '',
-      title: "X" 
+      title: "Tags" 
     }
   ];
 
@@ -59,11 +48,8 @@ const Texts = () => {
     });
     setSelectedItem(null);
     switch(tool.title) { 
-      case 'Compare Glosses':
-        setCurrentView('CompareGlosses');
-        break;
-      case 'Gloss Map':
-        setCurrentView('GlossMap');
+      case 'Books':
+        setCurrentView('Books');
         break;
       default:
         setCurrentView('TextList');
@@ -90,11 +76,10 @@ const Texts = () => {
           </div>
         </div>
         </div>
-        <div className="w-4/5">
+        <div className="ml-4 lg:ml-0 w-4/5">
           {currentView === 'PageDetail' && selectedItem && <PageDetail item={selectedItem} onBack={() => {setSelectedItem(null); setCurrentView('TextList');}} />}
           {currentView === 'TextList' && <TextList dataUrl={pageData.dataUrl} title={pageData.title} onItemClicked={handleItemClick}/>}
-          {currentView === 'CompareGlosses' && <CompareGlosses />}
-          {currentView === 'GlossMap' && <GlossMap />}
+          {currentView === 'Books' && <Book />}
         </div>  
       </div>
     </Layout>
