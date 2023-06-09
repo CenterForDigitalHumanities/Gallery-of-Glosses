@@ -1,17 +1,14 @@
 import { TbAdjustmentsHorizontal } from 'react-icons/tb';
 import { useEffect, useState } from 'react';
-import PageModal from './PageModal';
+import PageModal from '../PageModal';
 import Link from 'next/link';
 import axios from 'axios';
 
 const PAGE_SIZE = 10;  // Number of items per page
 const PAGE_RANGE_DISPLAYED = 3;  // Number of page numbers to show in the pagination component
 
-/*
-    TextList Component:
-    - This display a list of glosses with pagination. This component fetches data from a provided URL and displays it
-*/
-const TextList = ({dataUrl, title, onItemClicked}) => {
+
+const NamedGlosses = ({ title, onItemClicked }) => {
 	const [textData, setData] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
@@ -60,7 +57,7 @@ const TextList = ({dataUrl, title, onItemClicked}) => {
     // Fetches the data from URL
 	useEffect(() => {
 		const fetchData = async () => {
-            const response = await axios.get(dataUrl);
+            const response = await axios.get('https://store.rerum.io/v1/id/610c54deffce846a83e70625');
             const totalCount = response.data.numberOfItems;
             const totalPages = Math.ceil(totalCount / PAGE_SIZE);
             setData(response.data.itemListElement);
@@ -68,7 +65,7 @@ const TextList = ({dataUrl, title, onItemClicked}) => {
 		};
 
 		fetchData();
-	}, [dataUrl]);
+	}, []);
 
     // Filters based on search
 	useEffect(() => {
@@ -85,24 +82,6 @@ const TextList = ({dataUrl, title, onItemClicked}) => {
 		setTotalPages(Math.ceil(filteredData.length / PAGE_SIZE));
 	}, [filteredData]);
 
-	/*
-        Tailwind CSS is used for styling:
-        - 'flex', 'flex-col', 'flex-row': Flexbox related classes to create flexible layouts.
-        - 'pb-2', 'px-2', 'py-1', 'p-1', 'px-3', 'px-4': Padding classes. Numbers denote the size (e.g. 2 is 0.5rem, 3 is 0.75rem, etc.).
-        - 'text-2xl', 'text-[18px]', 'text-[20px]', 'text-sm': Text size classes. Numbers and size values set the font size.
-        - 'ml-auto': Applies automatic left margin, used for alignment (pushing items to the right).
-        - 'border-[1.5px]', 'border-2', 'border-black': Border classes. Sets the border thickness and color.
-        - 'bg-grey/10', 'bg-gray-200', 'bg-black', 'bg-white', 'bg-primary': Background color classes.
-        - 'gap-8', 'gap-4', 'gap-2': Sets the gap between child elements of a flex or grid container.
-        - 'items-center': Aligns flex items along the center perpendicular to the main axis.
-        - 'translate-y-2': Transforms an element up or down along the y-axis by 0.5rem.
-        - 'cursor-pointer': Changes the cursor to a pointer when hovering over an element.
-        - 'hover:opacity-75', 'hover:text-gray-300': Hover state classes. Defines styles that apply when an element is hovered.
-        - 'w-20', 'h-24': Width and height classes.
-        - 'text-white', 'text-black': Text color classes.
-        - 'font-semibold': Sets the font weight to semi-bold.
-        - 'rounded': Adds rounded corners.
-    */
 	return (
 		<div className="flex flex-col">
 			<div className="flex flex-row pb-2">
@@ -204,4 +183,4 @@ const TextList = ({dataUrl, title, onItemClicked}) => {
 	);
 };
 
-export default TextList;
+export default NamedGlosses;

@@ -41,7 +41,7 @@ const CompareGlosses = () => {
 
     return (
         <div className="p-8">
-        <h1 className="text-3xl mb-4">Compare Glosses</h1>
+        <h1 className="text-3xl mb-4">Compare Glosses (Work In Progress)</h1>
         <div className="grid grid-cols-4 gap-4">
             {glosses.map((gloss, index) => (
             <div key={index} className="border border-gray-300 rounded p-4">
