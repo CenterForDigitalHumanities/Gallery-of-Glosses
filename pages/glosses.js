@@ -1,62 +1,71 @@
 import { useState } from 'react';
 import Layout from '../components/Layout';
-import TextList from '../components/TextList';
+import NamedGlosses from '../components/browse-by-tools/NamedGlosses';
 import PageDetail from '../components/PageDetail';
-import Book from '@/components/Book';
+import Book from '@/components/browse-by-tools/Book';
+import Theme from '@/components/browse-by-tools/Theme';
+import Manuscript from '@/components/browse-by-tools/Manuscript';
+import Tag from '@/components/browse-by-tools/Tag';
 
-const Texts = () => {
+const glosses = () => {
   const [selectedItem, setSelectedItem] = useState(null);
-  const [currentView, setCurrentView] = useState('TextList')
+  const [currentView, setCurrentView] = useState('Named Glosses')
+  const [previousView, setPreviousView] = useState(null);
   const [pageData, setPageData] = useState({
-    dataUrl: 'https://store.rerum.io/v1/id/610c54deffce846a83e70625', 
-    title: 'Meta Glosses'
+    name: 'Browse by Named Glosses',
+    title: 'Named Glosses'
   });
   
   const UserTools = [
     { 
-      name: 'Browse by Meta Glosses', 
-      dataUrl: 'https://store.rerum.io/v1/id/610c54deffce846a83e70625', 
-      title: "Meta Glosses" 
+      name: 'Browse by Named Glosses', 
+      title: "Named Glosses" 
     },
     { 
         name: 'Browse by Book', 
-        dataUrl: '', 
-        title: "Books" 
+        title: "Book" 
     },
     {
         name: 'Browse by Theme',
-        dataUrl: '', 
-        title: "Themes" 
+        title: "Theme" 
   
       },
     { 
       name: 'Browse by Manuscript', 
-      dataUrl: 'https://store.rerum.io/v1/id/610ad6f1ffce846a83e70613', 
-      title: "Manuscripts" 
+      title: "Manuscript" 
     },
     {
       name: 'Browse by Tag',
-      dataUrl: '',
-      title: "Tags" 
+      title: "Tag" 
     }
   ];
 
   const updateData = (tool) => {
     setPageData({
-      dataUrl: tool.dataUrl,
-      title: tool.title
+        name: tool.name,
+        title: tool.title
     });
     setSelectedItem(null);
     switch(tool.title) { 
-      case 'Books':
-        setCurrentView('Books');
-        break;
+        case 'Book':
+            setCurrentView('Book');
+            break;
+        case 'Theme':
+            setCurrentView('Theme');
+            break;
+        case 'Manuscript':
+            setCurrentView('Manuscript');
+            break;
+        case 'Tag':
+            setCurrentView('Tag');
+            break;
       default:
-        setCurrentView('TextList');
+        setCurrentView('Named Glosses');
     }
   }
 
   const handleItemClick = (id, label) => {
+    setPreviousView(currentView);
     setSelectedItem({ id, label, pageData });
     setCurrentView('PageDetail');
   }
@@ -77,13 +86,16 @@ const Texts = () => {
         </div>
         </div>
         <div className="ml-4 lg:ml-0 w-4/5">
-          {currentView === 'PageDetail' && selectedItem && <PageDetail item={selectedItem} onBack={() => {setSelectedItem(null); setCurrentView('TextList');}} />}
-          {currentView === 'TextList' && <TextList dataUrl={pageData.dataUrl} title={pageData.title} onItemClicked={handleItemClick}/>}
-          {currentView === 'Books' && <Book />}
+          {currentView === 'PageDetail' && selectedItem && <PageDetail item={selectedItem} onBack={() => {setSelectedItem(null); setCurrentView(previousView);}} />}
+          {currentView === 'Named Glosses' && <NamedGlosses title={pageData.name} onItemClicked={handleItemClick}/>}
+          {currentView === 'Book' && <Book title={pageData.name} onItemClicked={handleItemClick}/>}
+          {currentView === 'Theme' && <Theme title={pageData.name} onItemClicked={handleItemClick}/>}
+          {currentView === 'Manuscript' && <Manuscript title={pageData.name} onItemClicked={handleItemClick}/>}
+          {currentView === 'Tag' && <Tag title={pageData.name} onItemClicked={handleItemClick}/>}
         </div>  
       </div>
     </Layout>
   );
 };
 
-export default Texts;
+export default glosses;
