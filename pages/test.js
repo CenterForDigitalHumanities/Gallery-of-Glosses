@@ -12,7 +12,7 @@ const Test = () => {
                     'body.target': targetId,
                 };
 
-                // Perform the query to retrieve annotations matching the target ID
+                // Step 1: Perform the query to retrieve annotations matching the target ID
                 const response = await fetch('https://tinymatt.rerum.io/gloss/query', {
                     method: 'POST',
                     headers: {
@@ -21,15 +21,15 @@ const Test = () => {
                     body: JSON.stringify(query),
                 });
 
-                // Parse the response and extract the annotations
+                // Step 2: Parse the response and extract the annotations
                 const annotations = await response.json();
 
-                // Create an array of promises to fetch the associated objects
+                // Step 3: Create an array of promises to fetch the associated objects
                 const objectPromises = annotations.map((anno) =>
                     fetch(anno.target.replace(/^https?:/, 'https:')).then((res) => res.json())
                 );
 
-                // Fetch all the associated objects concurrently using Promise.all
+                // Step 4: Fetch all the associated objects concurrently using Promise.all
                 const retrievedObjects = await Promise.all(objectPromises);
 
                 // Step 5: Set the retrieved objects to the state
