@@ -7,9 +7,10 @@ import Theme from '@/components/browse-by-tools/Theme';
 import Manuscript from '@/components/browse-by-tools/Manuscript';
 import Tag from '@/components/browse-by-tools/Tag';
 
-const Texts = () => {
+const glosses = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [currentView, setCurrentView] = useState('Named Glosses')
+  const [previousView, setPreviousView] = useState(null);
   const [pageData, setPageData] = useState({
     name: 'Browse by Named Glosses',
     title: 'Named Glosses'
@@ -59,11 +60,12 @@ const Texts = () => {
             setCurrentView('Tag');
             break;
       default:
-        setCurrentView('NamedGlosses');
+        setCurrentView('Named Glosses');
     }
   }
 
   const handleItemClick = (id, label) => {
+    setPreviousView(currentView);
     setSelectedItem({ id, label, pageData });
     setCurrentView('PageDetail');
   }
@@ -84,8 +86,8 @@ const Texts = () => {
         </div>
         </div>
         <div className="ml-4 lg:ml-0 w-4/5">
-          {currentView === 'PageDetail' && selectedItem && <PageDetail item={selectedItem} onBack={() => {setSelectedItem(null); setCurrentView('NamedGlosses');}} />}
-          {currentView === 'NamedGlosses' && <NamedGlosses title={pageData.name} onItemClicked={handleItemClick}/>}
+          {currentView === 'PageDetail' && selectedItem && <PageDetail item={selectedItem} onBack={() => {setSelectedItem(null); setCurrentView(previousView);}} />}
+          {currentView === 'Named Glosses' && <NamedGlosses title={pageData.name} onItemClicked={handleItemClick}/>}
           {currentView === 'Book' && <Book title={pageData.name} onItemClicked={handleItemClick}/>}
           {currentView === 'Theme' && <Theme title={pageData.name} onItemClicked={handleItemClick}/>}
           {currentView === 'Manuscript' && <Manuscript title={pageData.name} onItemClicked={handleItemClick}/>}
@@ -96,4 +98,4 @@ const Texts = () => {
   );
 };
 
-export default Texts;
+export default glosses;

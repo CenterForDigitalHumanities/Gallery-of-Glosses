@@ -1,6 +1,13 @@
 import Link from "next/link";
+import GlossSheet from "../GlossSheet";
 
 const Tag = ({ title, onItemClicked }) => {
+    const data = [        
+        { Glosses: 'Gloss 1', Tags: 'Tag1, Tag2', Description: 'Description 1' },
+        { Glosses: 'Gloss 2', Tags: 'Tag3, Tag4', Description: 'Description 2' },
+        { Glosses: 'Gloss 1', Tags: 'Tag1, Tag2', Description: 'Description 1' },
+        { Glosses: 'Gloss 2', Tags: 'Tag3, Tag4', Description: 'Description 2' },
+    ]
 
     return (
         <div className="py-4">
@@ -20,7 +27,7 @@ const Tag = ({ title, onItemClicked }) => {
                     &gt; {title}
                 </p>
 		    </div>
-
+            <GlossSheet headers={['Glosses', 'Tags', 'Description']} data={data}/>
         </div>
     );
 };

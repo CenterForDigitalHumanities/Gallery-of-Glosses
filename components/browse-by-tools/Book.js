@@ -5,6 +5,7 @@ import Dropdown from "../Dropdown";
 
 const Book = ({ title, onItemClicked }) => {
     const [textData,setData] = useState([]);
+    const sample = ["Item 1", "Item 2", "Item 3"];  
 
     useEffect(() => {
         const fetch = async () => {
@@ -13,8 +14,6 @@ const Book = ({ title, onItemClicked }) => {
         };
         fetch();
     }, []);
-
-    const sample = ["Item 1", "Item 2", "Item 3"];  
 
     return (
         <div className="py-4">
@@ -38,9 +37,9 @@ const Book = ({ title, onItemClicked }) => {
 
             
             {/* TODO: Some Dropdowns with individual books that has glosses in the dropdown */}
-            <Dropdown label="Glosses on the Gospel of Matthews" items={textData.map(item => item.label)} />
-            <Dropdown label="Book 2" items={sample} />
-            <Dropdown label="Book 3" items={sample} />
+            <Dropdown label="Glosses on the Gospel of Matthews" textData={textData} onItemClicked={onItemClicked}/>
+            <Dropdown label="Book 2" textData={sample} />
+            <Dropdown label="Book 3" textData={sample} />
         </div>
     );
 };

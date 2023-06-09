@@ -15,22 +15,6 @@ const PageDetail = ({ item, onBack }) => {
     
     const { label, pageData } = item;
 
-    /*
-        Tailwind CSS is used for styling:
-        - 'flex', 'flex-col', 'flex-row': Flexbox classes to create flexible layouts.
-        - 'p-1', 'px-2', 'py-1': Padding classes. Numbers denote the size (e.g. 1 is 0.25rem, 2 is 0.5rem).
-        - 'text-md': Medium text size.
-        - 'ml-auto': Automatic left margin, used for alignment (pushing items to the right).
-        - 'border-2', 'border-black': Border classes. Sets the border thickness and color.
-        - 'bg-white', 'bg-black': Background color classes.
-        - 'w-20', 'w-36', 'h-24': Width and height classes. Numbers denote the size (e.g. 20 is 5rem, 36 is 9rem).
-        - 'gap-2': Sets the gap between child elements of a flex or grid container (0.5rem).
-        - 'items-center': Aligns flex items along the center perpendicular to the main axis.
-        - 'text-white': Text color class.
-        - 'font-semibold': Sets the font weight to semi-bold.
-        - 'rounded': Adds rounded corners.
-        - 'shadow-lg': Large shadow for 3D effect.
-    */
     return (
         
         <div className="py-4">
@@ -38,7 +22,7 @@ const PageDetail = ({ item, onBack }) => {
             <div className="border-[1.5px] border-black bg-grey/10 mb-4">
             <p className="px-2">
                 <Link className="text-blue-500 text-semibold" href="/"> Home </Link> 
-                &gt; <span className="text-blue-500 text-semibold cursor-pointer" onClick={onBack} >{pageData.title} </span>
+                &gt; <span className="text-blue-500 text-semibold cursor-pointer" onClick={onBack} >{pageData.name} </span>
                 &gt; {label}
             </p>
             </div>

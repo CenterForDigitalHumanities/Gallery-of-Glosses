@@ -1,15 +1,9 @@
 import Link from "next/link";
-import GlossSheet from "../GlossSheet";
-
+import Dropdown from "../Dropdown";
 
 const Theme = ({ title, onItemClicked }) => {
-    const data = [        
-        { glosses: 'Gloss 1', property1: 'Tag1, Tag2', property2: 'Description 1' },
-        { glosses: 'Gloss 2', property1: 'Tag3, Tag4', property2: 'Description 2' },
-        { glosses: 'Gloss 1', property1: 'Tag1, Tag2', property2: 'Description 1' },
-        { glosses: 'Gloss 2', property1: 'Tag3, Tag4', property2: 'Description 2' },
-    ]
-
+    const sample = ["Item 1", "Item 2", "Item 3"];  
+    
     return (
         <div className="py-4">
             <div className="flex flex-row pb-2">
@@ -28,7 +22,9 @@ const Theme = ({ title, onItemClicked }) => {
                     &gt; {title}
                 </p>
 		    </div>
-            <GlossSheet headers={['Glosses', 'Tags', 'Description']} data={data}/>
+            <Dropdown label="Theme 1" textData={sample} />
+            <Dropdown label="Theme 2" textData={sample} />
+            <Dropdown label="Theme 3" textData={sample} />
         </div>
     );
 };

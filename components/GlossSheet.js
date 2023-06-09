@@ -2,20 +2,20 @@ import React from 'react';
 
 function TableComponent({ headers, data }) {
     return (
-        <div className="bg-gray-200 rounded-lg">
-            <div className="grid grid-cols-3 border-b font-bold">
+        <div className="rounded-lg">
+            <div className={`text-2xl bg-accent text-yellow-200 cursor-pointer grid grid-cols-${headers.length} border-black font-bold`}>
                 {headers.map((value, index) => (
-                    <div key={index} className="border border-black p-2">
+                    <div key={index} className="hover:bg-darkGrey transition flex border border-black p-2">
                         {value} 
-                        <span className="pl-2">↑↓</span>
+                        <div className="pl-2 ml-auto">↑↓</div>
                     </div>
                 ))}
             </div>
             {data.map((row, index) => (
-                <div className="grid grid-cols-3 border-black" key={index}>
-                    <div className="border border-black p-2">{row.glosses}</div>
-                    <div className="border border-black p-2">{row.property1}</div>
-                    <div className="border border-black p-2">{row.property2}</div>
+                <div className={`grid grid-cols-${headers.length} border-black`}  key={index}>
+                    {headers.map((header, i) => (
+                        <div className="border border-black p-2" key={i}>{row[header]}</div>
+                    ))}
                 </div>
             ))}
         </div>
