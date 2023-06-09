@@ -3,10 +3,10 @@ import GlossSheet from "../GlossSheet";
 
 const Tag = ({ title, onItemClicked }) => {
     const data = [        
-        { Glosses: 'Gloss 1', Tags: 'Tag1, Tag2', Description: 'Description 1' },
-        { Glosses: 'Gloss 2', Tags: 'Tag3, Tag4', Description: 'Description 2' },
-        { Glosses: 'Gloss 1', Tags: 'Tag1, Tag2', Description: 'Description 1' },
-        { Glosses: 'Gloss 2', Tags: 'Tag3, Tag4', Description: 'Description 2' },
+        { Glosses: 'Gloss 1', Tags: 'Tag1, Tag2' },
+        { Glosses: 'Gloss 2', Tags: 'Tag3, Tag4' },
+        { Glosses: 'Gloss 1', Tags: 'Tag1, Tag2' },
+        { Glosses: 'Gloss 2', Tags: 'Tag3, Tag4' },
     ]
 
     return (
@@ -27,7 +27,7 @@ const Tag = ({ title, onItemClicked }) => {
                     &gt; {title}
                 </p>
 		    </div>
-            <GlossSheet headers={['Glosses', 'Tags', 'Description']} data={data}/>
+            <GlossSheet headers={['Glosses', 'Tags']} data={data}/>
         </div>
     );
 };
