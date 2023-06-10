@@ -43,9 +43,9 @@ const Dropdown = ({ label, textData, onItemClicked }) => {
                 <div className="bg-lightGrey">
                     <div className="px-20 pt-10 flex flex-col gap-4">
                         <p>
-                        The Gospel of Matthew, a canonical gospel in the New Testament, has been extensively analyzed and commented upon for centuries, 
-                        resulting in numerous glosses that provide valuable insights into its interpretation. These glosses represent diverse perspectives 
-                        and reflect the evolving thought influenced by different cultural, theological, and philosophical contexts.
+                            The Gospel of Matthew, a canonical gospel in the New Testament, has been extensively analyzed and commented upon for centuries, 
+                            resulting in numerous glosses that provide valuable insights into its interpretation. These glosses represent diverse perspectives 
+                            and reflect the evolving thought influenced by different cultural, theological, and philosophical contexts.
                         </p>
                         <p>
                             More filler text More filler text More filler text More filler text More filler text More filler text More filler text More filler text
@@ -71,7 +71,7 @@ const Dropdown = ({ label, textData, onItemClicked }) => {
                             </div>
                         </div>
                         {sortedData.map((item, index) => (
-                            <div onClick={item['@id'] ? () => onItemClicked(item['@id'].split('/').pop(), item.label) : () => {}} key={index} className="border-black hover:text-white border-2 py-2 px-4 hover:bg-grey transition">
+                            <div onClick={item['@id'] ? () => onItemClicked(item['@id'].split('/').pop(), item.label) : () => {}} key={index} className="cursor-pointer border-black border-2 py-2 px-4 hover:border-4 transition">
                                 <div className="flex">
                                     <p>{item.label}</p>
                                 </div>
