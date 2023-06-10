@@ -2,7 +2,7 @@ import Link from "next/link";
 import GlossSheet from "../GlossSheet";
 
 const Tag = ({ title, onItemClicked }) => {
-    const data = [        
+    const textData = [        
         { Glosses: 'Gloss 1', Tags: 'Tag1, Tag2' },
         { Glosses: 'Gloss 2', Tags: 'Tag3, Tag4' },
         { Glosses: 'Gloss 1', Tags: 'Tag1, Tag2' },
@@ -18,7 +18,7 @@ const Tag = ({ title, onItemClicked }) => {
             </div>
             <div className="flex flex-row pb-2">
                 <p className="">
-                Various glosses share certain features or terms. We have selectively ascribed tags to capture this information. Here you may browse according to term or feature tag and see all the glosses that have shared content in this way.
+                    Various glosses share certain features or terms. We have selectively ascribed tags to capture this information. Here you may browse according to term or feature tag and see all the glosses that have shared content in this way.
                 </p>
             </div>
             <div className="mb-8 border-[1.5px] border-black bg-grey/10 ">
@@ -27,7 +27,7 @@ const Tag = ({ title, onItemClicked }) => {
                     &gt; {title}
                 </p>
 		    </div>
-            <GlossSheet headers={['Glosses', 'Tags']} data={data}/>
+            <GlossSheet headers={['Glosses', 'Tags']} textData={textData}/>
         </div>
     );
 };

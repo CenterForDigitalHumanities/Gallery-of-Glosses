@@ -72,7 +72,7 @@ const glosses = () => {
 
   return (
     <Layout>
-      <div className="flex flex-row">
+      <div className="flex flex-row pt-24 px-24">
         <div className="w-1/5 overflow-hidden">
           <div>
           <p className="text-2xl pb-2">

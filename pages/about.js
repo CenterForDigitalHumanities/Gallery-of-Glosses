@@ -2,7 +2,7 @@ import Layout from '../components/Layout';
 
 const About = () => (
 	<Layout>
-		<div className="px-52 py-4">
+		<div className="px-52 pt-24">
 			<h1 className="text-6xl mb-10 text-center">About Our Project</h1>
 			<div className="flex justify-center mb-4">
 				<div className="relative w-1/2" style={{paddingBottom: "28.125%" }}>
