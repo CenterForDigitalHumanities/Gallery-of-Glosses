@@ -13,11 +13,17 @@ const AboutMenu = ({visible, cancelHideMenu}) => {
     }
 
     return (
-        <div onMouseEnter={cancelHideMenu} className={`transition-all duration-1000 overflow-hidden bg-bg-color w-56 absolute top-8 right-0 py-5 flex-col border-2 border-gray-800 flex ${visible ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0'}`}>
-            <div className="flex flex-col gap-3 text-center text-sm">
-                <NavbarItem label= "About this Site" refLink="/about"/>
-                <NavbarItem label= "Project History" refLink="/history"/>
-                <NavbarItem label= "Terminology and Abbreviations" refLink="/terminology"/>
+        <div onMouseEnter={cancelHideMenu} className={`transition-all duration-1000 overflow-hidden bg-bg-color w-56 absolute top-8 right-0s flex-col border-2 border-gray-800 flex ${visible ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0'}`}>
+            <div className="bg-bg-secondary-color flex flex-col text-center text-sm">
+                <div className="border border-black py-2">
+                    <NavbarItem label= "About this Site" refLink="/about"/>
+                </div>
+                <div className="border border-black py-2">
+                    <NavbarItem label= "Project History" refLink="/history"/>
+                </div>
+                <div className="border border-black py-2">
+                    <NavbarItem label= "Terminology and Abbreviations" refLink="/terminology"/>
+                </div>
             </div>
         </div>
     )

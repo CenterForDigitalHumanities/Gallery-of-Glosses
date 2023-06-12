@@ -1,136 +1,168 @@
-import { useState } from 'react';
-import { FiDownload } from 'react-icons/fi';
+import { TbAdjustmentsHorizontal } from "react-icons/tb";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Link from "next/link";
+import PageButtons from "./PageButtons";
+import CompareModal from "./CompareModal";
+
+const PAGE_SIZE = 10;  // Number of items per page
 
 const CompareGlosses = () => {
-    // not ready
-    const [glosses, setGlosses] = useState([
-        {
-            city: "Rome",
-            date: "13th century",
-            origin: "Italy",
-            description: "This manuscript contains religious texts and illustrations.",
-            property1: "Decorated initials",
-            property2: "Gold leaf embellishments",
-        },
-        {
-            city: "Oxford",
-            date: "14th century",
-            origin: "England",
-            description: "A collection of poetry and literary works from the Middle Ages.",
-            property1: "Written in Middle English",
-            property2: "Illuminated borders",
-        },
-        {
-            city: "Toledo",
-            date: "15th century",
-            origin: "Spain",
-            description: "An illuminated manuscript showcasing Arabic calligraphy and geometric patterns.",
-            property1: "Arabic translation of Greek philosophical texts",
-            property2: "Intricate geometric illuminations",
-        },
-        {
-            city: "Vienna",
-            date: "12th century",
-            origin: "Austria",
-            description: "A manuscript containing legal codes and statutes from the Holy Roman Empire.",
-            property1: "Written in Latin",
-            property2: "Historiated initials",
-        },
-    ]);
-    
+    const [textData, setData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredData, setFilteredData] = useState([]);
+    const startIndex = (currentPage - 1) * PAGE_SIZE;
+    const [compareModalVisible, setCompareModalVisible] = useState(false);
+    const [selectedGlosses, setSelectedGlosses] = useState([])
+    const title = "Named Glosses"
+
+    // Fetches the data from URL
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await axios.get('https://store.rerum.io/v1/id/610c54deffce846a83e70625');
+            const totalCount = response.data.numberOfItems;
+            const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+            setData(response.data.itemListElement);
+            setTotalPages(totalPages);
+        };
+
+        fetchData();
+    }, []);
+
+    // Filters based on search. First checks if there's something to filter in case fetching doesn't return anything
+    useEffect(() => {
+        if (textData) setFilteredData(
+            textData.filter(item => item.label.toLowerCase().includes(searchTerm.toLowerCase()))
+        ) 
+        else {
+            setFilteredData([])
+        }
+    }, [searchTerm, textData]);
+
+    // Sets the total number of glosses being shown at a time
+    useEffect(() => {
+        setTotalPages(Math.ceil(filteredData.length / PAGE_SIZE));
+    }, [filteredData]);
+
+    // A helper function to toggle whether a gloss is selected or not
+    const toggleGloss = (label) => {
+        setSelectedGlosses((selectedGlosses) => {
+            if (selectedGlosses.includes(label)) {
+                // Remove the gloss from the selection
+                return selectedGlosses.filter((gloss) => gloss !== label);
+            } else {
+                // Don't allow more than 4 glosses to be selected
+                if (selectedGlosses.length >= 4) {
+                    return selectedGlosses;
+                }
+                // Add the gloss to the selection
+                return [...selectedGlosses, label];
+            }
+        });
+    };
 
     return (
-        <div className="p-8">
-        <h1 className="text-3xl mb-4">Compare Glosses (Work In Progress)</h1>
-        <div className="grid grid-cols-4 gap-4">
-            {glosses.map((gloss, index) => (
-            <div key={index} className="border border-gray-300 rounded p-4">
-                <div className="flex">
-                    <h2 className="text-xl mb-2">Gloss {index + 1}</h2>
-                    <h className="ml-auto text-red-600">X</h>
+        <div className="flex flex-col">
+            <CompareModal visible={compareModalVisible} onClose={() => setCompareModalVisible(false)}/>
+            <div className="flex flex-row gap-20 pb-2">
+                <p className="text-2xl">
+                    {title}
+                </p>
+
+                {/* Current Compare Functionality. 
+                TODO: CREATE A MODAL THAT APPEARS ONMOVE SOMEWHERE ELSE IN FUTURE
+                      IT WILL DISPLAY SELECTED GLOSSES AND COMPARE GLOSS BUTTON
+                      WILL TAKE YOU TO ANOTHER PAGE WITH SELECTED GLOSS AFTER YOU CLICK
+                      THE COMPARE GLOSS BUTTON
+                */}
+                <div onClick={() => setCompareModalVisible(true)} className="cursor-pointer transition bg-lightGrey hover:bg-grey hover:text-white border-2 border-black px-3">
+                    Compare Glosses
                 </div>
-                <div className="flex flex-col">
-                    <h>{gloss.city}</h>
-                    <h>{gloss.date}</h>
-                    <h>{gloss.origin}</h>
-                    <h>{gloss.description}</h>
-                    <h>{gloss.property1}</h>
-                    <h>{gloss.property2}</h>
-                    <h>{gloss.city}</h>
+
+                {/* Display the selected glosses */}
+                <div>
+                    <h2>Selected Glosses:</h2>
+                    <ul>
+                        {selectedGlosses.map((gloss, index) => (
+                            <li key={index}>{gloss}</li>
+                        ))}
+                    </ul>
+                </div>
+
+                {/* Current Search Functionality. TODO: MOVE SOMEWHERE ELSE IN FUTURE*/}
+                <div>
+                    <input
+                        className="border-2 border-black px-2"
+                        type="text"
+                        placeholder="Search..."
+                        value={searchTerm}
+                        onChange={e => setSearchTerm(e.target.value)}
+                    />
+                </div>
+
+                
+                <div className="ml-auto flex items-center text-[18px]">
+                    <TbAdjustmentsHorizontal className="text-black"/>
+                    <p>
+                        [
+                        <span className="cursor-pointer text-blue-500 mx-1">
+                            Filters
+                        </span>
+                        ]
+                    </p>
                 </div>
             </div>
+        <div className="border-[1.5px] border-black bg-grey/10 ">
+            <p className="px-2">
+                <Link className="text-blue-500 text-semibold" href="/"> Home </Link> 
+                &gt; {title}
+            </p>
+        </div>
+
+        {/* The list of texts pulled from a URL */}
+        <div className="flex flex-col gap-8 pt-2">
+            {filteredData.slice(startIndex, startIndex + PAGE_SIZE).map((data, index) => (
+                <div key={index} className="flex gap-4">
+                    <div className="translate-y-[7px]  p-1 cursor-pointer flex items-center">
+                        <input 
+                            type="checkbox" 
+                            onChange={() => toggleGloss(data.label)} 
+                            checked={selectedGlosses.includes(data.label)} 
+                            disabled={selectedGlosses.length >= 4 && !selectedGlosses.includes(data.label)}
+                        />
+                        <p 
+                            className="transition bg-lightGrey hover:bg-grey hover:text-white"
+                            onClick={() => toggleGloss(data.label)}
+                        >
+                            Compare Gloss
+                        </p>
+                    </div>
+                    <div>
+                        <div>
+                            <p className="text-[20px]">
+                                {data.label}
+                            </p>
+                        </div>
+                        {/* TODO: This is the genres. This can't be hardcoded. Change later when more glosses from different canonical texts come*/}
+                        <div className="flex flex-wrap gap-2"> 
+                            <div className="bg-primary px-1 text-sm text-white">Mt</div>
+                            <div className="bg-primary px-1 text-sm text-white">5:7</div>
+                            {/* More genres can go here */}
+                        </div>
+                    </div>
+                </div>
             ))}
-            
-        </div>
-        <div className="flex flex-col gap-4 mt-4">
-            <div className="border border-gray-300 rounded p-4">
-            <h2 className="text-xl mb-2">City</h2>
-            <div className="flex flex-col">
-                {glosses.map((gloss, index) => (
-                <h key={index}>
-                    <strong>Gloss Name:</strong> {gloss.city}
-                </h>
-                ))}
+            <hr className="my-4" />
+
+            {/* These are the buttons to change page numbers */}
+                <PageButtons
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                />
             </div>
-            </div>
-            <div className="border border-gray-300 rounded p-4">
-            <h2 className="text-xl mb-2">Date</h2>
-            <div className="flex flex-col">
-                {glosses.map((gloss, index) => (
-                    <h key={index}>
-                        <strong>Gloss Name:</strong> {gloss.date}
-                    </h>
-                ))}
-            </div>
-            </div>
-            <div className="border border-gray-300 rounded p-4">
-            <h2 className="text-xl mb-2">Origin</h2>
-            <div className="flex flex-col">
-                {glosses.map((gloss, index) => (
-                    <h key={index}>
-                        <strong>Gloss Name:</strong> {gloss.origin}
-                    </h>
-                ))}
-            </div>
-            </div>
-            <div className="border border-gray-300 rounded p-4">
-            <h2 className="text-xl mb-2">Description</h2>
-            <div className="flex flex-col">
-                {glosses.map((gloss, index) => (
-                    <h key={index}>
-                        <strong>Gloss Name:</strong> {gloss.description}
-                    </h>
-                ))}
-            </div>
-            </div>
-            <div className="border border-gray-300 rounded p-4">
-            <h2 className="text-xl mb-2">Property1</h2>
-            <div className="flex flex-col">
-                {glosses.map((gloss, index) => (
-                    <h key={index}>
-                        <strong>Gloss Name:</strong> {gloss.property1}
-                    </h>
-                ))}
-            </div>
-            </div>
-            <div className="border border-gray-300 rounded p-4">
-            <h2 className="text-xl mb-2">Property2</h2>
-            <div className="flex flex-col">
-                {glosses.map((gloss, index) => (
-                    <h key={index}>
-                        <strong>Gloss Name:</strong> {gloss.property2}
-                    </h>
-                ))}
-            </div>
-            </div>
-        </div>
-        
-        <div className="mt-4">
-            <button className="flex items-center px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-100">
-            <FiDownload className="mr-2"/>
-            Save .csv
-            </button>
-        </div>
         </div>
     );
 };

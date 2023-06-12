@@ -18,7 +18,7 @@ const Book = ({ title, onItemClicked }) => {
     return (
         <div className="py-4">
             <div className="flex flex-row pb-2">
-                <p className="text-2xl">
+                <p className="text-4xl">
                     {title}
                 </p>
             </div>

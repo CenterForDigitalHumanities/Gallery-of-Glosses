@@ -3,7 +3,7 @@
 @import 'tailwindcss/utilities';
 
 body {
-  @apply bg-bg-color h-full overflow-x-hidden font-serif max-w-max;
+  @apply bg-bg-color h-full overflow-auto font-serif max-w-max;
 }
 
 #__next {
