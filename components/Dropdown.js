@@ -33,8 +33,7 @@ const Dropdown = ({ label, textData, onItemClicked }) => {
     };
 
     return (
-        <div className="">
-
+        <div>
             <div className="cursor-pointer flex items-center py-6 px-4 pl-4 text-left w-full h-10 border-2 text-2xl font-bold border-black transition hover:bg-black bg-darkGrey text-white" onClick={toggleOpen}>
                 <p>{label}</p>
                 <BsChevronDown size={30} className={`-translate-x-2 ml-auto transition ${isOpen ? 'rotate-180' : 'rotate-0'}`}/>

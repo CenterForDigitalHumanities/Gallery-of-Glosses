@@ -19,17 +19,8 @@ module.exports = {
                 'bg-color': 'hsl(0, 0%, 100%)',
                 'bg-secondary-color': 'hsl(240, 14%, 96%)',
             },
-            spacing: {
-                'grid-gutter': '2rem',
-            },
             maxWidth: {
                 'max': '120rem',
-            },
-            fontSize: {
-                'custom': '1.6rem',
-            },
-            backgroundImage: {
-                'statues': "url('/images/statues.jpeg')",
             }
         },
      },

@@ -55,12 +55,11 @@ const Navbar = () => {
                 </Link>
 				<div className="flex-row ml-8 gap-7 hidden lg:flex">
 						<NavbarItem label= "Home" refLink="/"/>	
-						<div onMouseEnter={showMenu} onMouseLeave={hideMenu} className="flex flex-row gap-2 relative">
+						<div onMouseEnter={showMenu} onMouseLeave={hideMenu} className="flex items-center gap-2 relative">
 							<h className="font-semibold">About</h>
 							<BsChevronDown className= {`transition ${showAboutMenu ? 'rotate-180' : 'rotate-0'}`}/>
 							<AboutMenu visible={showAboutMenu} cancelHideMenu={cancelHideMenu}/>
 						</div>
-						<NavbarItem label= "Resources" refLink="/resources"/>
 						<NavbarItem label= "Explore Glosses" refLink="/glosses"/>
 				</div>
 				<div className="ml-auto hidden lg:flex gap-7">
