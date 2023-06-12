@@ -5,18 +5,24 @@ import Link from "next/link";
 import PageButtons from "./PageButtons";
 import CompareModal from "./CompareModal";
 
-const PAGE_SIZE = 10;  // Number of items per page
+
 
 const CompareGlosses = () => {
+
+    // Controls Filtered data
     const [textData, setData] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredData, setFilteredData] = useState([]);
+    
+    // Controls number of items per 'page'
+    const PAGE_SIZE = 10;  // Number of items per page
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const startIndex = (currentPage - 1) * PAGE_SIZE;
+    
+    //Controls the visibility of the Modal that compares glosses 
     const [compareModalVisible, setCompareModalVisible] = useState(false);
     const [selectedGlosses, setSelectedGlosses] = useState([])
-    const title = "Named Glosses"
 
     // Fetches the data from URL
     useEffect(() => {
@@ -68,7 +74,7 @@ const CompareGlosses = () => {
             <CompareModal visible={compareModalVisible} onClose={() => setCompareModalVisible(false)}/>
             <div className="flex flex-row gap-20 pb-2">
                 <p className="text-2xl">
-                    {title}
+                    Named Glosses
                 </p>
 
                 {/* Current Compare Functionality. 
@@ -117,7 +123,7 @@ const CompareGlosses = () => {
         <div className="border-[1.5px] border-black bg-grey/10 ">
             <p className="px-2">
                 <Link className="text-blue-500 text-semibold" href="/"> Home </Link> 
-                &gt; {title}
+                &gt; Named Gloss
             </p>
         </div>
 
