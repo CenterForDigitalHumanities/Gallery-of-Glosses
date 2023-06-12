@@ -4,19 +4,27 @@ import axios from "axios";
 import Link from "next/link";
 import PageButtons from "./PageButtons";
 import CompareModal from "./CompareModal";
+import CompareHolderModal from "./CompareHolderModal";
 
-const PAGE_SIZE = 10;  // Number of items per page
+
 
 const CompareGlosses = () => {
+
+    // Controls Filtered data
     const [textData, setData] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredData, setFilteredData] = useState([]);
+    
+    // Controls number of items per 'page'
+    const PAGE_SIZE = 10;  // Number of items per page
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const startIndex = (currentPage - 1) * PAGE_SIZE;
+    
+    // Controls the visibility of the Modal that compares glosses 
     const [compareModalVisible, setCompareModalVisible] = useState(false);
     const [selectedGlosses, setSelectedGlosses] = useState([])
-    const title = "Named Glosses"
+    const [CompareHolderModalVisible, setCompareHolderModalVisible] = useState(false);
 
     // Fetches the data from URL
     useEffect(() => {
@@ -46,6 +54,15 @@ const CompareGlosses = () => {
         setTotalPages(Math.ceil(filteredData.length / PAGE_SIZE));
     }, [filteredData]);
 
+    // Toggles whether or not compare holder modal is showing or not
+    useEffect(() =>{
+        if (selectedGlosses.length === 0) {
+            setCompareHolderModalVisible(false)
+        } else {
+            setCompareHolderModalVisible(true)
+        }
+    }, [selectedGlosses])
+
     // A helper function to toggle whether a gloss is selected or not
     const toggleGloss = (label) => {
         setSelectedGlosses((selectedGlosses) => {
@@ -65,34 +82,23 @@ const CompareGlosses = () => {
 
     return (
         <div className="flex flex-col">
-            <CompareModal visible={compareModalVisible} onClose={() => setCompareModalVisible(false)}/>
+            <CompareModal 
+                glosses={selectedGlosses} 
+                visible={compareModalVisible} 
+                onClose={() => setCompareModalVisible(false)} 
+                removeGloss={(glossToRemove) => {
+                    const newGlosses = selectedGlosses.filter(gloss => gloss !== glossToRemove);
+                    setSelectedGlosses(newGlosses);
+                }}
+            />
+            <CompareHolderModal glosses={selectedGlosses} visible={CompareHolderModalVisible} openCompareModal={() => setCompareModalVisible(true)}/>
             <div className="flex flex-row gap-20 pb-2">
                 <p className="text-2xl">
-                    {title}
+                    Named Glosses
                 </p>
 
-                {/* Current Compare Functionality. 
-                TODO: CREATE A MODAL THAT APPEARS ONMOVE SOMEWHERE ELSE IN FUTURE
-                      IT WILL DISPLAY SELECTED GLOSSES AND COMPARE GLOSS BUTTON
-                      WILL TAKE YOU TO ANOTHER PAGE WITH SELECTED GLOSS AFTER YOU CLICK
-                      THE COMPARE GLOSS BUTTON
-                */}
-                <div onClick={() => setCompareModalVisible(true)} className="cursor-pointer transition bg-lightGrey hover:bg-grey hover:text-white border-2 border-black px-3">
-                    Compare Glosses
-                </div>
-
-                {/* Display the selected glosses */}
-                <div>
-                    <h2>Selected Glosses:</h2>
-                    <ul>
-                        {selectedGlosses.map((gloss, index) => (
-                            <li key={index}>{gloss}</li>
-                        ))}
-                    </ul>
-                </div>
-
                 {/* Current Search Functionality. TODO: MOVE SOMEWHERE ELSE IN FUTURE*/}
-                <div>
+                <div className="ml-auto">
                     <input
                         className="border-2 border-black px-2"
                         type="text"
@@ -117,7 +123,7 @@ const CompareGlosses = () => {
         <div className="border-[1.5px] border-black bg-grey/10 ">
             <p className="px-2">
                 <Link className="text-blue-500 text-semibold" href="/"> Home </Link> 
-                &gt; {title}
+                &gt; Named Gloss
             </p>
         </div>
 
@@ -125,17 +131,14 @@ const CompareGlosses = () => {
         <div className="flex flex-col gap-8 pt-2">
             {filteredData.slice(startIndex, startIndex + PAGE_SIZE).map((data, index) => (
                 <div key={index} className="flex gap-4">
-                    <div className="translate-y-[7px]  p-1 cursor-pointer flex items-center">
+                    <div onClick={() => toggleGloss(data.label)} className="translate-y-[7px] transition bg-lightGrey hover:bg-grey hover:text-white p-1 cursor-pointer flex items-center gap-2">
                         <input 
                             type="checkbox" 
                             onChange={() => toggleGloss(data.label)} 
                             checked={selectedGlosses.includes(data.label)} 
                             disabled={selectedGlosses.length >= 4 && !selectedGlosses.includes(data.label)}
                         />
-                        <p 
-                            className="transition bg-lightGrey hover:bg-grey hover:text-white"
-                            onClick={() => toggleGloss(data.label)}
-                        >
+                        <p>
                             Compare Gloss
                         </p>
                     </div>

@@ -1,4 +1,4 @@
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import GlossMap from '@/components/GlossMap';
 import Layout from '../components/Layout';
 
@@ -7,11 +7,13 @@ const Map = () => {
     
     return (
         <Layout>
-            <div className="px-52 pt-24">
-                <h1 className="text-3xl mb-4">Current Location of Glossed Matthew Manuscripts</h1>
+            <div className="px-10 lg:px-52 pt-24">
+                <h1 className="text-4xl mb-6">Glossed Matthew Manuscripts Map</h1>
+                <p className="text-lg mb-6">Explore the current locations of Glossed Matthew manuscripts based on different years:</p>
                 <GlossMap currentYear={currentYear} />
-                <div className="flex items-center mt-4">
-                    <p>1800</p>
+
+                <div className="flex items-center mt-6 space-x-2">
+                    <span className="font-medium">1800</span>
                     <input
                         type="range"
                         min="1800"
@@ -20,12 +22,13 @@ const Map = () => {
                         onChange={(e) => setCurrentYear(e.target.value)}
                         className="slider w-full mx-2"
                     />
-                    <p>1900</p>
+                    <span className="font-medium">1900</span>
                 </div>
-                <div className="mt-2">Year: {currentYear}</div>
+
+                <p className="mt-4 text-lg font-bold">Selected Year: {currentYear}</p>
             </div>
         </Layout>
-    )
+    );
 };
 
 export default Map;
