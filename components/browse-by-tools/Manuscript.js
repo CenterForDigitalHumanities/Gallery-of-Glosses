@@ -28,12 +28,12 @@ const Manuscript = ({ title, onItemClicked }) => {
                     Glosses of course appear in individual manuscripts. If you want to see all of the glosses transcribed out of a particular manuscript, you can do so here.
                 </p>
             </div>
-            <div className="mb-8 border-[1.5px] border-black bg-grey/10 ">
-                <p className="px-2">
-                    <Link className="text-blue-500 text-semibold" href="/"> Home </Link> 
-                    &gt; {title}
-                </p>
-		    </div>
+            <div className="border-[1.5px] border-black bg-grey/10 mb-4 rounded-md p-2">
+                <div className="px-2 flex gap-2">
+                    <Link className="text-blue-500 font-semibold hover:underline" href="/"> Home </Link> 
+                    &gt; <p className="font-semibold">{title}</p>
+                </div>
+            </div>
 
             <GlossSheet headers={['label', '@id']} textData={textData} onItemClicked={onItemClicked}/>
         </div>
