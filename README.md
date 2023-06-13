@@ -7,6 +7,19 @@ the existing site, and a guide to how to apply the tools and software to other p
 will also credit all participants on the project, past and present, including student workers 
 responsible for the transcription of various glosses.
 
-[![Gallery of Glosses on YouTube](https://github.com/CenterForDigitalHumanities/Gallery-of-Glosses/assets/1119165/e446532a-6c35-4cb3-bf01-06c2a4dd8c98)](https://www.youtube.com/watch?v=248EDx1u30Q)
+## Features
 
-![do not trust ai](https://github.com/CenterForDigitalHumanities/Gallery-of-Glosses/assets/1119165/6d319634-fe8f-43a2-be02-809fc45af1df)
+- An interactive map visualizing the current location of the manuscripts.
+- A slider for selecting a year, which updates the map.
+- Comparing glosses (work in progress).
+
+## Installation
+
+Before starting, make sure you have [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/) (or [yarn](https://yarnpkg.com/)) installed.
+
+## Contributing
+
+Contributions from the community are welcomed and appreciated. If you discover any bugs or have suggestions for improvements, please open an issue.
+
+## License
+This project is licensed under the MIT License

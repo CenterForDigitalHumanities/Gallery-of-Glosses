@@ -21,12 +21,12 @@ const Tag = ({ title, onItemClicked }) => {
                     Various glosses share certain features or terms. We have selectively ascribed tags to capture this information. Here you may browse according to term or feature tag and see all the glosses that have shared content in this way.
                 </p>
             </div>
-            <div className="mb-8 border-[1.5px] border-black bg-grey/10 ">
-                <p className="px-2">
-                    <Link className="text-blue-500 text-semibold" href="/"> Home </Link> 
-                    &gt; {title}
-                </p>
-		    </div>
+            <div className="border-[1.5px] border-black bg-grey/10 mb-4 rounded-md p-2">
+                <div className="px-2 flex gap-2">
+                    <Link className="text-blue-500 font-semibold hover:underline" href="/"> Home </Link> 
+                    &gt; <p className="font-semibold">{title}</p>
+                </div>
+            </div>
             <GlossSheet headers={['Glosses', 'Tags']} textData={textData}/>
         </div>
     );

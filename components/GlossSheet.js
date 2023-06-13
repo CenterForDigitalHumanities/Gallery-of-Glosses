@@ -1,9 +1,16 @@
 import { useState, useEffect } from 'react';
+import PageButtons from './PageButtons';
 
 const GlossSheet = ({ headers, textData, onItemClicked }) => {
     const [lastSortedIndex, setLastSortedIndex] = useState(null);
     const [sortStates, setSortStates] = useState([0,0]);  // 0 for original, 1 for ascending, -1 for descending
     const [sortedData, setSortedData] = useState([...textData]);
+
+    // Controls number of items per 'page'
+    const PAGE_SIZE = 12; // Number of items per page
+    const [currentPage, setCurrentPage] = useState(1);
+    const startIndex = (currentPage - 1) * PAGE_SIZE;
+    const totalPages = Math.ceil(sortedData.length / PAGE_SIZE)
 
     useEffect(() => {
         let newSortedData = [...textData];
@@ -60,13 +67,21 @@ const GlossSheet = ({ headers, textData, onItemClicked }) => {
                     </div>
                 ))}
             </div>
-            {sortedData.map((item, index) => (
+            {sortedData.slice(startIndex, startIndex + PAGE_SIZE).map((item, index) => (
                 <div onClick={item['@id'] ? () => onItemClicked(item['@id'].split('/').pop(), item.label) : () => {}} key={index} className={`grid grid-cols-2 border-black cursor-pointer hover:border-4 transition `}>
                     {headers.map((header, i) => (
                         <div className={` border border-black cursor px-2 py-2 ${i === lastSortedIndex && sortStates[i] !== 0 ? 'bg-lightGrey' : ''}`} key={i}>{item[header]}</div>
                     ))}
                 </div>
             ))}
+            <div className="flex flex-col"> 
+                <hr className="my-8 border-grey" /> 
+                <PageButtons
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                />
+            </div>  
         </div>
     );
 }
