@@ -1,24 +1,22 @@
 import { TbAdjustmentsHorizontal } from "react-icons/tb";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Link from "next/link";
 import PageButtons from "./PageButtons";
 import CompareModal from "./CompareModal";
 import CompareHolderModal from "./CompareHolderModal";
-
-
+import getFetchData from "../actions/getFetchData";
+import axios from "axios";
 
 const CompareGlosses = () => {
 
     // Controls Filtered data
-    const [textData, setData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredData, setFilteredData] = useState([]);
+    const { data: textData, totalPages, setTotalPages } = getFetchData('https://store.rerum.io/v1/id/610c54deffce846a83e70625');
     
     // Controls number of items per 'page'
     const PAGE_SIZE = 10;  // Number of items per page
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
     const startIndex = (currentPage - 1) * PAGE_SIZE;
     
     // Controls the visibility of the Modal that compares glosses 
@@ -28,19 +26,6 @@ const CompareGlosses = () => {
 
     // Controls the visibility of the filter function
     const [filterModalVisible, setFilterModalVisible] = useState(false);
-
-    // Fetches the data from URL
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await axios.get('https://store.rerum.io/v1/id/610c54deffce846a83e70625');
-            const totalCount = response.data.numberOfItems;
-            const totalPages = Math.ceil(totalCount / PAGE_SIZE);
-            setData(response.data.itemListElement);
-            setTotalPages(totalPages);
-        };
-
-        fetchData();
-    }, []);
 
     // Filters based on search. First checks if there's something to filter in case fetching doesn't return anything
     useEffect(() => {

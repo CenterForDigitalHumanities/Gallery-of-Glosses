@@ -1,20 +1,7 @@
 import Link from "next/link";
 import GlossSheet from "../GlossSheet"
-import { useEffect, useState } from "react";
-import axios from "axios";
-
-const PAGE_SIZE = 10;
 
 const Manuscript = ({ title, onItemClicked }) => {
-    const [textData, setData] = useState([]);
-
-    useEffect(() => {
-        const fetch = async () => {
-            const response = await axios.get('https://store.rerum.io/v1/id/610c54deffce846a83e70625');
-            setData(response.data.itemListElement);
-        };
-        fetch();
-    }, []);
 
     return (
         <div className="py-4">
@@ -35,7 +22,7 @@ const Manuscript = ({ title, onItemClicked }) => {
                 </div>
             </div>
 
-            <GlossSheet headers={['label', '@id']} textData={textData} onItemClicked={onItemClicked}/>
+            <GlossSheet headers={['Manuscript Shelfmark', 'City of Origin']} collectionType={"Glossing-Matthew"} keys={["body.identifier.value","body.city.value","@id"]} onItemClicked={onItemClicked}/>
         </div>
     );
 };

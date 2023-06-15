@@ -4,7 +4,7 @@ import PageButtons from './PageButtons';
 
 
 
-const Dropdown = ({ label, textData, onItemClicked }) => {
+const Dropdown = ({ label, textData, onItemClicked, totalPages }) => {
 
     // Controls if the dropdown is open or not
     const [isOpen, setIsOpen] = useState(false);
@@ -15,10 +15,9 @@ const Dropdown = ({ label, textData, onItemClicked }) => {
     const [sortedData, setSortedData] = useState([...textData]);
 
     // Controls number of items per 'page'
-    const PAGE_SIZE = 12; // Number of items per page
+    const pageSize = 12; // Number of items per page
     const [currentPage, setCurrentPage] = useState(1);
-    const startIndex = (currentPage - 1) * PAGE_SIZE;
-    const totalPages = Math.ceil(sortedData.length / PAGE_SIZE)
+    const startIndex = (currentPage - 1) * pageSize;
 
     // Sorts the data
     useEffect(() => {
@@ -85,7 +84,7 @@ const Dropdown = ({ label, textData, onItemClicked }) => {
                                 </p>
                             </div>
                         </div>
-                        {sortedData.slice(startIndex, startIndex + PAGE_SIZE).map((item, index) => (
+                        {sortedData.slice(startIndex, startIndex + pageSize).map((item, index) => (
                             <div onClick={item['@id'] ? () => onItemClicked(item['@id'].split('/').pop(), item.label) : () => {}} key={index} className="cursor-pointer border-black border-2 py-2 px-4 hover:border-4 transition">
                                 <div className="flex">
                                     <p>{item.label}</p>
