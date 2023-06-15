@@ -1,19 +1,11 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import Dropdown from "../Dropdown";
+import getFetchData from "@/actions/getFetchData";
 
 const Book = ({ title, onItemClicked }) => {
-    const [textData,setData] = useState([]);
     const sample = ["Item 1", "Item 2", "Item 3"];  
 
-    useEffect(() => {
-        const fetch = async () => {
-            const response = await axios.get('https://store.rerum.io/v1/id/610c54deffce846a83e70625');
-            setData(response.data.itemListElement);
-        };
-        fetch();
-    }, []);
+    const { data: matthewData, totalPages } = getFetchData('https://store.rerum.io/v1/id/610c54deffce846a83e70625');
 
     return (
         <div className="py-4">
@@ -37,8 +29,8 @@ const Book = ({ title, onItemClicked }) => {
 
             
             {/* TODO: Some Dropdowns with individual books that has glosses in the dropdown */}
-            <Dropdown label="Glosses on the Gospel of Matthews" textData={textData} onItemClicked={onItemClicked}/>
-            <Dropdown label="Book 2" textData={sample} />
+            <Dropdown label="Glosses on the Gospel of Matthews" textData={matthewData} onItemClicked={onItemClicked}/>
+            <Dropdown label="Book 2" textData={sample} totalPages={totalPages}/>
             <Dropdown label="Book 3" textData={sample} />
         </div>
     );

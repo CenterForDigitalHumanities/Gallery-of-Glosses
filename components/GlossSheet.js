@@ -1,31 +1,26 @@
 import { useState, useEffect } from 'react';
+import getFromAnnotation from "../actions/getFromAnnotation";
 
-const GlossSheet = ({ headers, textData, onItemClicked }) => {
+const GlossSheet = ({ headers, leftData, rightData, onItemClicked }) => {
     const [lastSortedIndex, setLastSortedIndex] = useState(null);
-    const [sortStates, setSortStates] = useState([0,0]);  // 0 for original, 1 for ascending, -1 for descending
-    const [sortedData, setSortedData] = useState([...textData]);
+    const [sortStates, setSortStates] = useState(Array(headers.length).fill(0)); // 0 for original, 1 for ascending, -1 for descending
+    const [leftSortedData, setLeftSortedData] = useState([]);
+    const [rightSortedData, setRightSortedData] = useState([]);
 
     useEffect(() => {
-        let newSortedData = [...textData];
-        if (lastSortedIndex !== null && sortStates[lastSortedIndex] !== 0) {
-            newSortedData.sort((a, b) => {
-                const key = headers[lastSortedIndex];
-                if (!a[key] || !b[key]) {
-                    return 0;
-                }
-                const labelA = a[key].toUpperCase();
-                const labelB = b[key].toUpperCase();
-                if (labelA > labelB) {
-                    return sortStates[lastSortedIndex];
-                }
-                if (labelA < labelB) {
-                    return -sortStates[lastSortedIndex];
-                }
-                return 0;
-            });
-        }
-        setSortedData(newSortedData);
-    }, [textData, sortStates, lastSortedIndex]);
+        const fetchAnnotationData = async () => {
+            const leftPromises = headers.map(header => getFromAnnotation({ data: leftData, key: header }));
+            const rightPromises = headers.map(header => getFromAnnotation({ data: rightData, key: header }));
+
+            const leftResults = await Promise.all(leftPromises);
+            const rightResults = await Promise.all(rightPromises);
+
+            setLeftSortedData(leftResults);
+            setRightSortedData(rightResults);
+        };
+
+        fetchAnnotationData();
+    }, [headers, leftData, rightData]);
 
     const toggleSort = (index) => {
         setLastSortedIndex(index);
@@ -36,12 +31,37 @@ const GlossSheet = ({ headers, textData, onItemClicked }) => {
         });
     };
 
+    const sortData = (data, index) => {
+        const newSortedData = [...data];
+
+        if (sortStates[index] !== 0) {
+            newSortedData.sort((a, b) => {
+                const key = headers[index];
+                const valueA = a[key]?.value || '';
+                const valueB = b[key]?.value || '';
+
+                if (valueA > valueB) {
+                    return sortStates[index];
+                }
+                if (valueA < valueB) {
+                    return -sortStates[index];
+                }
+                return 0;
+            });
+        }
+
+        return newSortedData;
+    };
+
+    const sortedLeftData = sortData(leftSortedData, lastSortedIndex);
+    const sortedRightData = sortData(rightSortedData, lastSortedIndex);
+
     return (
         <div className="rounded-lg">
             <div className={`text-2xl bg-grey text-white cursor-pointer grid grid-cols-2 border-black font-bold`}>
                 {headers.map((value, index) => (
                     <div onClick={() => toggleSort(index)} key={index} className={`hover:bg-accent hover:text-yellow-200  transition flex border border-black p-2 ${lastSortedIndex === index && sortStates[index] !== 0 ? 'bg-darkGrey' : ''}`}>
-                        {value} 
+                        {value}
                         <div className="flex text-xl translate-y-1 ml-auto">
                             <p>
                                 {lastSortedIndex === index
@@ -60,11 +80,14 @@ const GlossSheet = ({ headers, textData, onItemClicked }) => {
                     </div>
                 ))}
             </div>
-            {sortedData.map((item, index) => (
-                <div onClick={item['@id'] ? () => onItemClicked(item['@id'].split('/').pop(), item.label) : () => {}} key={index} className={`grid grid-cols-2 border-black cursor-pointer hover:border-4 transition `}>
-                    {headers.map((header, i) => (
-                        <div className={` border border-black cursor px-2 py-2 ${i === lastSortedIndex && sortStates[i] !== 0 ? 'bg-lightGrey' : ''}`} key={i}>{item[header]}</div>
-                    ))}
+            {sortedLeftData.map((item, index) => (
+                <div onClick={() => onItemClicked(index)} key={index} className={`grid grid-cols-2 border-black cursor-pointer hover:border-4 transition `}>
+                    {item}
+                </div>
+            ))}
+            {sortedRightData.map((item, index) => (
+                <div onClick={() => onItemClicked(index)} key={index} className={`grid grid-cols-2 border-black cursor-pointer hover:border-4 transition `}>
+                    {item}
                 </div>
             ))}
         </div>

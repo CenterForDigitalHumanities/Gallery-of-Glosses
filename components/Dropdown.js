@@ -4,7 +4,7 @@ import PageButtons from './PageButtons';
 
 
 
-const Dropdown = ({ label, textData, onItemClicked }) => {
+const Dropdown = ({ label, textData, onItemClicked, totalPages }) => {
 
     // Controls if the dropdown is open or not
     const [isOpen, setIsOpen] = useState(false);
@@ -18,7 +18,6 @@ const Dropdown = ({ label, textData, onItemClicked }) => {
     const PAGE_SIZE = 12; // Number of items per page
     const [currentPage, setCurrentPage] = useState(1);
     const startIndex = (currentPage - 1) * PAGE_SIZE;
-    const totalPages = Math.ceil(sortedData.length / PAGE_SIZE)
 
     // Sorts the data
     useEffect(() => {

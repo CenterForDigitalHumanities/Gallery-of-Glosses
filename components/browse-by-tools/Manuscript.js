@@ -1,21 +1,34 @@
 import Link from "next/link";
 import GlossSheet from "../GlossSheet"
+import getAnnotations from "@/actions/getAnnotations";
 import { useEffect, useState } from "react";
-import axios from "axios";
-
-const PAGE_SIZE = 10;
+import getFromAnnotation from "@/actions/getFromAnnotation";
 
 const Manuscript = ({ title, onItemClicked }) => {
-    const [textData, setData] = useState([]);
+    const [objects, setObjects] = useState([]);
+    const [leftObjects, setLeftObjects] = useState([]);
+    const [rightObjects, setRightObjects] = useState([]);
 
     useEffect(() => {
-        const fetch = async () => {
-            const response = await axios.get('https://store.rerum.io/v1/id/610c54deffce846a83e70625');
-            setData(response.data.itemListElement);
+        const fetchData = async () => {
+            const data = await getAnnotations({ key: "@type", value: "manuscript" });
+            setObjects(data);
         };
-        fetch();
+
+        fetchData();
     }, []);
 
+    useEffect(() => {
+        const fetchAnnotationData = async () => {
+            const leftData = await getFromAnnotation({ data: objects, key: "body.identifier.value" });
+            const rightData = await getFromAnnotation({ data: objects, key: "body.city.value" });
+            setLeftObjects(leftData);
+            setRightObjects(rightData);
+        };
+    
+        fetchAnnotationData();
+    }, [objects]);
+    
     return (
         <div className="py-4">
             <div className="flex flex-row pb-2">
@@ -35,7 +48,7 @@ const Manuscript = ({ title, onItemClicked }) => {
                 </p>
 		    </div>
 
-            <GlossSheet headers={['label', '@id']} textData={textData} onItemClicked={onItemClicked}/>
+            <GlossSheet headers={['Shelfmark', 'City']} leftData={leftObjects} rightData={rightObjects} onItemClicked={onItemClicked}/>
         </div>
     );
 };
