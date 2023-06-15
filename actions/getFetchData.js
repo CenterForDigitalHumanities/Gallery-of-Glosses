@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const PAGE_SIZE = 10;
-
 const getFetchData = (url) => {
     const [data, setData] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
@@ -11,7 +9,7 @@ const getFetchData = (url) => {
         const fetchData = async () => {
             const response = await axios.get(url);
             const totalCount = response.data.numberOfItems;
-            const totalPagesCalc = Math.ceil(totalCount / PAGE_SIZE);
+            const totalPagesCalc = Math.ceil(totalCount / 12);
             setData(response.data.itemListElement);
             setTotalPages(totalPagesCalc);
         };

@@ -1,11 +1,11 @@
 import Link from "next/link";
 
-const PageDetail = ({ item, onBack }) => {
-    const placeholderTranscription = "This is where the transcription of the manuscript text will be.";
+const GlossDetail = ({ item, onBack }) => {
+    const placeholderTranscription = "This is where the transcription of the Gloss text will be.";
     const placeholderImage = "https://via.placeholder.com/200";  
-    const placeholderRelatedManuscripts = [
-        { title: "Manuscript 1", link: "#" },
-        { title: "Manuscript 2", link: "#" },
+    const placeholderRelatedGlosses = [
+        { title: "Gloss 1", link: "#" },
+        { title: "Gloss 2", link: "#" },
     ];
     const placeholderExternalLinks = [
         { title: "External Text 1", link: "#" },
@@ -33,16 +33,16 @@ const PageDetail = ({ item, onBack }) => {
                 </div>
 
                 <div className="w-1/2 pl-4">
-                    <h2 className="text-2xl mb-2 text-blue-700">Manuscript Image:</h2>
-                    <img className="shadow-lg rounded-md" src={placeholderImage} alt="Manuscript image"/>
+                    <h2 className="text-2xl mb-2 text-blue-700">Gloss Image:</h2>
+                    <img className="shadow-lg rounded-md" src={placeholderImage} alt="Gloss image"/>
                 </div>           
             </div>
             
             <div className="mt-6">
-                <h2 className="text-2xl mb-2">Related Manuscripts:</h2>
+                <h2 className="text-2xl mb-2">Related Glosses:</h2>
                 <div className="flex flex-col">
-                    {placeholderRelatedManuscripts.map((manuscript, index) => 
-                    <p key={index} className="mb-1"><Link href={manuscript.link}><p className="text-blue-600 hover:text-blue-800">{manuscript.title}</p></Link></p>
+                    {placeholderRelatedGlosses.map((Gloss, index) => 
+                    <p key={index} className="mb-1"><Link href={Gloss.link}><p className="text-blue-600 hover:text-blue-800">{Gloss.title}</p></Link></p>
                     )}
                 </div>
             </div>
@@ -64,4 +64,4 @@ const PageDetail = ({ item, onBack }) => {
     );
 };
 
-export default PageDetail;
+export default GlossDetail;

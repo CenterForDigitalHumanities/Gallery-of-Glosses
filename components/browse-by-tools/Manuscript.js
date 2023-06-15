@@ -1,34 +1,8 @@
 import Link from "next/link";
 import GlossSheet from "../GlossSheet"
-import getAnnotations from "@/actions/getAnnotations";
-import { useEffect, useState } from "react";
-import getFromAnnotation from "@/actions/getFromAnnotation";
 
 const Manuscript = ({ title, onItemClicked }) => {
-    const [objects, setObjects] = useState([]);
-    const [leftObjects, setLeftObjects] = useState([]);
-    const [rightObjects, setRightObjects] = useState([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await getAnnotations({ key: "@type", value: "manuscript" });
-            setObjects(data);
-        };
-
-        fetchData();
-    }, []);
-
-    useEffect(() => {
-        const fetchAnnotationData = async () => {
-            const leftData = await getFromAnnotation({ data: objects, key: "body.identifier.value" });
-            const rightData = await getFromAnnotation({ data: objects, key: "body.city.value" });
-            setLeftObjects(leftData);
-            setRightObjects(rightData);
-        };
-    
-        fetchAnnotationData();
-    }, [objects]);
-    
     return (
         <div className="py-4">
             <div className="flex flex-row pb-2">
@@ -48,7 +22,7 @@ const Manuscript = ({ title, onItemClicked }) => {
                 </div>
             </div>
 
-            <GlossSheet headers={['Shelfmark', 'City']} leftData={leftObjects} rightData={rightObjects} onItemClicked={onItemClicked}/>
+            <GlossSheet headers={['Manuscript Shelfmark', 'City of Origin']} collectionType={"Glossing-Matthew"} keys={["body.identifier.value","body.city.value","@id"]} onItemClicked={onItemClicked}/>
         </div>
     );
 };

@@ -2,12 +2,6 @@ import Link from "next/link";
 import GlossSheet from "../GlossSheet";
 
 const Tag = ({ title, onItemClicked }) => {
-    const textData = [        
-        { Glosses: 'Gloss 1', Tags: 'Tag1, Tag2' },
-        { Glosses: 'Gloss 2', Tags: 'Tag3, Tag4' },
-        { Glosses: 'Gloss 1', Tags: 'Tag1, Tag2' },
-        { Glosses: 'Gloss 2', Tags: 'Tag3, Tag4' },
-    ]
 
     return (
         <div className="py-4">
@@ -27,7 +21,8 @@ const Tag = ({ title, onItemClicked }) => {
                     &gt; <p className="font-semibold">{title}</p>
                 </div>
             </div>
-            <GlossSheet headers={['Glosses', 'Tags']} textData={textData}/>
+            
+            <GlossSheet headers={['Gloss', 'Tags']} collectionType={"Glossing-Matthew-Named-Glosses"} keys={["body.title.value","body.tags.items","@id"]} onItemClicked={onItemClicked}/>
         </div>
     );
 };

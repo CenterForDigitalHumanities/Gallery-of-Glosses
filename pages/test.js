@@ -1,56 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
-import getAnnotations from '../actions/getAnnotations';
-import getFromAnnotation from '../actions/getFromAnnotation';
+import getFromItemList from '@/actions/getFromItemList';
 
 const Test = () => {
     const [objects, setObjects] = useState([]);
-    const [leftObjects, setLeftObjects] = useState([]);
-    const [rightObjects, setRightObjects] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await getAnnotations({ key: "@type", value: "manuscript" });
+            const data = await getFromItemList("https://store.rerum.io/v1/id/610ad6f1ffce846a83e70613", ["body.identifier.value","body.city.value"])
             setObjects(data);
+            setIsLoading(false);
+            console.log(objects)
         };
 
         fetchData();
     }, []);
 
-    useEffect(() => {
-        const fetchAnnotationData = async () => {
-            const leftData = await getFromAnnotation({ data: objects, key: "body.identifier.value" });
-            const rightData = await getFromAnnotation({ data: objects, key: "body.city.value" });
-            setLeftObjects(leftData);
-            setRightObjects(rightData);
-        };
-    
-        fetchAnnotationData();
-    }, [objects]);
+    if (isLoading) {
+        return (
+            <Layout>
+                <div className="px-52 py-24">
+                    Loading...
+                </div>
+            </Layout>
+        );
+    };
 
     return (
         <Layout>
             <div className="px-52 py-24">
                 Queried Objects:
-                {objects.map((obj, index) => (
+                {objects?.map((obj, index) => (
                     <div key={index}>
                         <div className="flex gap-2">
                             <p>Object {index + 1}:</p>
-                            <div className="flex flex-col">
-                                {Object.entries(obj).map(([key, value], i) => (
-                                    <div key={i}>
-                                        <p>{key}: {JSON.stringify(value)}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="flex gap-2">
-                            <p>Shelfmark:</p>
-                            {leftObjects[index] && <p>{leftObjects[index]}</p>}
-                        </div>
-                        <div className="flex gap-2">
-                            <p>City:</p>
-                            {rightObjects[index] && <p>{rightObjects[index]}</p>}
+                            <pre>{obj['body.identifier.value']}</pre>
+                            <pre>{obj['body.city.value']}</pre>
                         </div>
                     </div>
                 ))}               

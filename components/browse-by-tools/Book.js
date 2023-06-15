@@ -29,7 +29,7 @@ const Book = ({ title, onItemClicked }) => {
 
             
             {/* TODO: Some Dropdowns with individual books that has glosses in the dropdown */}
-            <Dropdown label="Glosses on the Gospel of Matthews" textData={matthewData} onItemClicked={onItemClicked}/>
+            <Dropdown label="Glosses on the Gospel of Matthews" textData={matthewData} totalPages={totalPages} onItemClicked={onItemClicked}/>
             <Dropdown label="Book 2" textData={sample} totalPages={totalPages}/>
             <Dropdown label="Book 3" textData={sample} />
         </div>

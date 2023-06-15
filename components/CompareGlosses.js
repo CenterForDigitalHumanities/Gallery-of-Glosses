@@ -5,6 +5,7 @@ import PageButtons from "./PageButtons";
 import CompareModal from "./CompareModal";
 import CompareHolderModal from "./CompareHolderModal";
 import getFetchData from "../actions/getFetchData";
+import axios from "axios";
 
 const CompareGlosses = () => {
 
@@ -25,19 +26,6 @@ const CompareGlosses = () => {
 
     // Controls the visibility of the filter function
     const [filterModalVisible, setFilterModalVisible] = useState(false);
-
-    // Fetches the data from URL
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await axios.get('https://store.rerum.io/v1/id/610c54deffce846a83e70625');
-            const totalCount = response.data.numberOfItems;
-            const totalPages = Math.ceil(totalCount / PAGE_SIZE);
-            setData(response.data.itemListElement);
-            setTotalPages(totalPages);
-        };
-
-        fetchData();
-    }, []);
 
     // Filters based on search. First checks if there's something to filter in case fetching doesn't return anything
     useEffect(() => {

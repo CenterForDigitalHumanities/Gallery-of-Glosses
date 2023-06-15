@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Layout from '../components/Layout';
-import PageDetail from '../components/PageDetail';
+import GlossDetail from '../components/GlossDetail';
 import Book from '@/components/browse-by-tools/Book';
 import Theme from '@/components/browse-by-tools/Theme';
 import Manuscript from '@/components/browse-by-tools/Manuscript';
@@ -62,7 +62,7 @@ const glosses = () => {
   const handleItemClick = (id, label) => {
     setPreviousView(currentView);
     setSelectedItem({ id, label, pageData });
-    setCurrentView('PageDetail');
+    setCurrentView('GlossDetail');
   }
 
   return (
@@ -81,7 +81,7 @@ const glosses = () => {
         </div>
         </div>
         <div className="ml-4 lg:ml-0 w-4/5">
-          {currentView === 'PageDetail' && selectedItem && <PageDetail item={selectedItem} onBack={() => {setSelectedItem(null); setCurrentView(previousView);}} />}
+          {currentView === 'GlossDetail' && selectedItem && <GlossDetail item={selectedItem} onBack={() => {setSelectedItem(null); setCurrentView(previousView);}} />}
           {currentView === 'Book' && <Book title={pageData.name} onItemClicked={handleItemClick}/>}
           {currentView === 'Theme' && <Theme title={pageData.name} onItemClicked={handleItemClick}/>}
           {currentView === 'Manuscript' && <Manuscript title={pageData.name} onItemClicked={handleItemClick}/>}
