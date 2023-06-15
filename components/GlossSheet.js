@@ -1,11 +1,18 @@
 import { useState, useEffect } from 'react';
 import getFromAnnotation from "../actions/getFromAnnotation";
+import PageButtons from './PageButtons';
 
 const GlossSheet = ({ headers, leftData, rightData, onItemClicked }) => {
     const [lastSortedIndex, setLastSortedIndex] = useState(null);
     const [sortStates, setSortStates] = useState(Array(headers.length).fill(0)); // 0 for original, 1 for ascending, -1 for descending
     const [leftSortedData, setLeftSortedData] = useState([]);
     const [rightSortedData, setRightSortedData] = useState([]);
+
+    // Controls number of items per 'page'
+    const PAGE_SIZE = 12; // Number of items per page
+    const [currentPage, setCurrentPage] = useState(1);
+    const startIndex = (currentPage - 1) * PAGE_SIZE;
+    const totalPages = Math.ceil(sortedData.length / PAGE_SIZE)
 
     useEffect(() => {
         const fetchAnnotationData = async () => {
@@ -90,6 +97,14 @@ const GlossSheet = ({ headers, leftData, rightData, onItemClicked }) => {
                     {item}
                 </div>
             ))}
+            <div className="flex flex-col"> 
+                <hr className="my-8 border-grey" /> 
+                <PageButtons
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                />
+            </div>  
         </div>
     );
 }

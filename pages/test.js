@@ -56,7 +56,7 @@ const Test = () => {
                 ))}               
             </div>
         </Layout>
-    );
+  );
 };
 
 export default Test;
