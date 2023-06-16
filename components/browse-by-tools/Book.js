@@ -4,7 +4,10 @@ import getFetchData from "@/actions/getFetchData";
 
 const Book = ({ title, onItemClicked }) => {
     const sample = ["Item 1", "Item 2", "Item 3"];  
-
+    const matthewSummary = [`
+        The Gospel of Matthew, a canonical gospel in the New Testament, has been extensively analyzed and commented upon for centuries, 
+        resulting in numerous glosses that provide valuable insights into its interpretation. These glosses represent diverse perspectives 
+        and reflect the evolving thought influenced by different cultural, theological, and philosophical contexts.`]
     const { data: matthewData, totalPages } = getFetchData('https://store.rerum.io/v1/id/610c54deffce846a83e70625');
 
     return (
@@ -29,7 +32,7 @@ const Book = ({ title, onItemClicked }) => {
 
             
             {/* TODO: Some Dropdowns with individual books that has glosses in the dropdown */}
-            <Dropdown label="Glosses on the Gospel of Matthews" textData={matthewData} totalPages={totalPages} onItemClicked={onItemClicked}/>
+            <Dropdown label="Glosses on the Gospel of Matthews" summary={matthewSummary} textData={matthewData} totalPages={totalPages} onItemClicked={onItemClicked}/>
             <Dropdown label="Book 2" textData={sample} totalPages={totalPages}/>
             <Dropdown label="Book 3" textData={sample} />
         </div>

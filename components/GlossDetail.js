@@ -42,7 +42,7 @@ const GlossDetail = ({ item, onBack }) => {
                 <h2 className="text-2xl mb-2">Related Glosses:</h2>
                 <div className="flex flex-col">
                     {placeholderRelatedGlosses.map((Gloss, index) => 
-                    <p key={index} className="mb-1"><Link href={Gloss.link}><p className="text-blue-600 hover:text-blue-800">{Gloss.title}</p></Link></p>
+                    <div key={index} className="mb-1"><Link href={Gloss.link}><p className="text-blue-600 hover:text-blue-800">{Gloss.title}</p></Link></div>
                     )}
                 </div>
             </div>
@@ -51,7 +51,7 @@ const GlossDetail = ({ item, onBack }) => {
                 <h2 className="text-2xl mb-2">External Texts and Entities:</h2>
                 <div className="flex flex-col">
                     {placeholderExternalLinks.map((link, index) => 
-                    <p key={index} className="mb-1"><Link href={link.link}><p className="text-blue-600 hover:text-blue-800">{link.title}</p></Link></p>
+                    <div key={index} className="mb-1"><Link href={link.link}><p className="text-blue-600 hover:text-blue-800">{link.title}</p></Link></div>
                     )}
                 </div>
             </div>

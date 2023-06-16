@@ -4,7 +4,7 @@ import PageButtons from './PageButtons';
 
 
 
-const Dropdown = ({ label, textData, onItemClicked, totalPages }) => {
+const Dropdown = ({ label, summary, textData, onItemClicked, totalPages }) => {
 
     // Controls if the dropdown is open or not
     const [isOpen, setIsOpen] = useState(false);
@@ -55,17 +55,8 @@ const Dropdown = ({ label, textData, onItemClicked, totalPages }) => {
             {/* Inside the dropdown */}
             {isOpen && (
                 <div className="bg-lightGrey">
-                    <div className="px-20 pt-10 flex flex-col gap-4">
-                        <p>
-                            The Gospel of Matthew, a canonical gospel in the New Testament, has been extensively analyzed and commented upon for centuries, 
-                            resulting in numerous glosses that provide valuable insights into its interpretation. These glosses represent diverse perspectives 
-                            and reflect the evolving thought influenced by different cultural, theological, and philosophical contexts.
-                        </p>
-                        <p>
-                            More filler text More filler text More filler text More filler text More filler text More filler text More filler text More filler text
-                            More filler text More filler text More filler text More filler text More filler text More filler text More filler text More filler text
-                            More filler text More filler text More filler text More filler text More filler text More filler text More filler text More filler text
-                        </p>
+                    <div className="px-20 pt-10 text-xl">
+                        {summary}
                     </div>
                     <div className="px-60 py-10 flex flex-col">
                         <div onClick={toggleSort} className="cursor-pointer flex bg-grey border-black border-2 hover:bg-primary hover:text-yellow-200 py-2 px-4 transition">

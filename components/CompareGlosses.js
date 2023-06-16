@@ -79,7 +79,16 @@ const CompareGlosses = () => {
                     setSelectedGlosses(newGlosses);
                 }}
             />
-            <CompareHolderModal glosses={selectedGlosses} visible={CompareHolderModalVisible} openCompareModal={() => setCompareModalVisible(true)}/>
+            <CompareHolderModal 
+                glosses={selectedGlosses} 
+                visible={CompareHolderModalVisible} 
+                openCompareModal={() => setCompareModalVisible(true)}                 
+                removeGloss={(glossToRemove) => {
+                    const newGlosses = selectedGlosses.filter(gloss => gloss !== glossToRemove);
+                    setSelectedGlosses(newGlosses);
+                }}
+            />
+            
             <div className="flex flex-row gap-20 pb-2">
                 <p className="text-2xl">
                     Compare Glosses

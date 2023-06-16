@@ -1,58 +1,114 @@
-import React from "react";
+import getCollections from "@/actions/getCollections";
+import getFromItemList from "@/actions/getFromItemList";
+import { useEffect, useState } from "react";
 import { ComposableMap, Geographies, Geography, Graticule, Marker, ZoomableGroup } from "react-simple-maps";
 
-const geoUrl = "https://raw.githubusercontent.com/deldersveld/topojson/master/continents/europe.json";
-
-const markers = [
-    { markerOffset: -30, name: "La", coordinates: [2.349014, 48.864716], date: 1810 },
-    { markerOffset: 15, name: "Ts", coordinates: [5.36978, 43.296482], date: 1810 },
-    { markerOffset: 15, name: "E", coordinates: [4.83, 45.75], date: 1820 },
-    { markerOffset: 15, name: "Ga", coordinates: [1.444209, 43.604652], date: 1820 },
-    { markerOffset: 15, name: "Nice", coordinates: [7.25044, 43.70313], date: 1830 },
-    { markerOffset: 15, name: "Nantes", coordinates: [-1.55336, 47.21725], date: 1830 },
-    { markerOffset: -30, name: "Strasbourg", coordinates: [7.74856, 48.58392], date: 1840 },
-    { markerOffset: -30, name: "Montpellier", coordinates: [3.876716, 43.610769], date: 1840 },
-    { markerOffset: 15, name: "Bordeaux", coordinates: [-0.56667, 44.83333], date: 1850 },
-    { markerOffset: 15, name: "Lille", coordinates: [3.057256, 50.62925], date: 1850 },
-    { markerOffset: 15, name: "Rennes", coordinates: [-1.67429, 48.11198], date: 1860 },
-    { markerOffset: 15, name: "Reims", coordinates: [4.03309, 49.25], date: 1860 }
-];
-
 const GlossMap = ({ currentYear }) => {
+    const [markers, setMarkers] = useState([]);
+    const [progress, setProgress] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const cityCoordinates = {
+        "Oxford": [-1.257726, 51.752022],
+        "Cambridge": [0.121817, 52.205338],
+        "Valenciennes": [3.5234, 50.3570],
+        "St. Gallen": [9.3748, 47.4223],
+        "Vatican City": [12.4534, 41.9029],
+    };    
+    
+    const geoUrl = "https://raw.githubusercontent.com/deldersveld/topojson/master/continents/europe.json";
+
+    // Callback function for handling progress updates
+    const handleProgressUpdate = (newProgress) => {
+        setProgress(newProgress);
+    };
+
+    const checkForDuplicates = (city, index, arr) => {
+        return arr.filter((item, idx) => item['body.city.value'] === city && idx !== index).length > 0;
+    };
+
+    // fetches the data 
+    useEffect(() => {
+        const fetchData = async () => {
+            // get all collections of manuscript or named gloss
+            const collections = await getCollections({value: "Glossing-Matthew"})
+
+            // take all the collections and get the values of keys from collectoins
+            const data = await getFromItemList(collections, ["body.alternative.value", "body.city.value", "body.date.value"], handleProgressUpdate)
+
+            let cityCounts = {};
+            
+            const dataWithCoordinates = data.map((marker, index) => {
+                const city = marker['body.city.value'];
+            
+                // Increase the count for the current city, or initialize it with 0 and then increase it
+                if (!cityCounts[city]) {
+                    cityCounts[city] = 0;
+                }
+                cityCounts[city]++;
+            
+                // The offset for the current marker will be the current count - 1 (to make the offset 0 for the first occurrence) times 20
+                const offset = (cityCounts[city] - 1) * 25;
+            
+                return {
+                    ...marker,
+                    coordinates: cityCoordinates[city],
+                    offset: offset
+                };
+            });                   
+            
+            setMarkers(dataWithCoordinates);
+            setIsLoading(false);
+        };
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        console.log('markers', markers);
+    }, [markers]);
+
+    if (isLoading) {
+        return (
+            <div>
+                Loading... {Math.round(progress * 100)}%
+            </div>
+        )
+    }
+
     return (
-        <div className="border-2 border-black">
+        <div className="border-2 border-black w-[70%]">
             <ComposableMap
                 width={1000}
                 height={400}
                 projection="geoAzimuthalEqualArea"
                 projectionConfig={{
                     rotate: [-8.0, -47.0, 0],
-                    scale: 2000
+                    scale: 1300
                 }}
             >
-                    <Graticule stroke="#EAEAEC" />
-                    <Geographies geography={geoUrl}>
-                        {({ geographies }) =>
-                            geographies.map((geo) => (
-                                <Geography
-                                    key={geo.rsmKey}
-                                    geography={geo}
-                                    fill="#9998A3"
-                                    stroke="#EAEAEC"
-                                />
-                            ))
-                        }
-                    </Geographies>
-                    {/* 
-                        Marker design came off a template from react-simple-maps.io
-                        This is just drawing the label, and marking it down on the map
-                    */}
-                    {markers.map(({ name, coordinates, markerOffset, date }) => (
-                    date <= currentYear &&
-                    <Marker key={name} coordinates={coordinates}>
+                <Graticule stroke="#EAEAEC" />
+                <Geographies geography={geoUrl}>
+                    {({ geographies }) =>
+                        geographies.map((geo) => (
+                            <Geography
+                                key={geo.rsmKey}
+                                geography={geo}
+                                fill="#9998A3"
+                                stroke="#EAEAEC"
+                            />
+                        ))
+                    }
+                </Geographies>
+                {/* 
+                    Marker design came off a template from react-simple-maps.io
+                    This is just drawing the label, and marking it down on the map
+                */}
+                {markers.map(({ '@id': id, 'body.alternative.value': siglum, 'body.date.value': date, coordinates, offset }) => (
+                    date <= currentYear && coordinates &&
+                    <Marker key={id} coordinates={coordinates}>
                         <g
                             fill="none"
-                            stroke="#FF5533"
+                            stroke="#000000"
                             strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -63,10 +119,11 @@ const GlossMap = ({ currentYear }) => {
                         </g>
                         <text
                             textAnchor="middle"
-                            y={markerOffset}
-                            style={{ fontFamily: "system-ui", fill: "#5D5A6D" }}
+                            y={-30}
+                            x={offset}
+                            style={{ fontFamily: "system-ui", fill: "#000000" }}
                         >
-                            {name}
+                            {siglum}
                         </text>
                     </Marker>
                 ))}

@@ -4,11 +4,15 @@
 import getCollections from '@/actions/getCollections';
 
     const GlossSheet = ({ headers, collectionType, keys, onItemClicked }) => {
+        // The variables used to help display data
         const [lastSortedIndex, setLastSortedIndex] = useState(null);
         const [sortStates, setSortStates] = useState(Array(headers.length).fill(0)); // 0 for original, 1 for ascending, -1 for descending
         const [sortedData, setSortedData] = useState([]);
         const [objects, setObjects] = useState([]);
+
+        // Tracks Loading Progress
         const [isLoading, setIsLoading] = useState(true);
+        
 
         // Controls number of items per 'page'
         const PAGE_SIZE = 12; // Number of items per page
@@ -16,14 +20,24 @@ import getCollections from '@/actions/getCollections';
         const startIndex = (currentPage - 1) * PAGE_SIZE;
         const totalPages = Math.ceil(sortedData.length / PAGE_SIZE)
 
+        // New state variable for tracking progress
+        const [progress, setProgress] = useState(0);
+
+        // Callback function for handling progress updates
+        const handleProgressUpdate = (newProgress) => {
+            setProgress(newProgress);
+        };
+        
         // fetches the data 
         useEffect(() => {
             const fetchData = async () => {
+
                 // get all collections of manuscript or named gloss
                 const collections = await getCollections({value: collectionType})
+
                 // take all the collections and get the values of keys from collectoins
-                const data = await getFromItemList(collections, keys)
-                
+                const data = await getFromItemList(collections, keys, handleProgressUpdate)
+
                 setObjects(data);
                 setIsLoading(false);
             };
@@ -82,7 +96,7 @@ import getCollections from '@/actions/getCollections';
         if (isLoading) {
             return (
                 <div>
-                    Loading...
+                    Loading... {Math.round(progress * 100)}%
                 </div>
             )
         }
