@@ -10,13 +10,20 @@ const getNestedValue = (obj, keyPath) => {
     }
 };
 
-const getFromItemList = async (itemList, keys) => {
+const getFromItemList = async (itemList, keys, onProgressUpdate) => {
+    
     try {
         // Map itemListElement array to an array of fetch promises
-        const fetchPromises = itemList.map(item => {
-            return getTargets({value: item['target']});
+        const fetchPromises = itemList.itemListElement.map(async (item, index) => {
+            const result = await getTargets({value: item['@id']});
+            
+            // Progress update
+            const progress = (index + 1) / itemList.itemListElement.length;
+            onProgressUpdate(progress); // Call the callback function
+            
+            return result;
         });
-
+        
         // Wait for all fetches to complete
         const annotationsArrays = await Promise.all(fetchPromises);
         
@@ -34,8 +41,8 @@ const getFromItemList = async (itemList, keys) => {
             return value;
         });
         
-        console.log("values", values)
-        return values.filter(value => keys.some(key => key in value));
+        // console.log("values", values)
+        return values.filter(value => keys.every(key => key in value));
 
     } catch (error) {
         console.error('Error:', error);

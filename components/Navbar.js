@@ -56,7 +56,7 @@ const Navbar = () => {
 				<div className="flex-row ml-8 gap-7 hidden lg:flex">
 						<NavbarItem label= "Home" refLink="/"/>	
 						<div onMouseEnter={showMenu} onMouseLeave={hideMenu} className="flex items-center gap-2 relative">
-							<h className="font-semibold">About</h>
+							<h1 className="font-semibold">About</h1>
 							<BsChevronDown className= {`transition ${showAboutMenu ? 'rotate-180' : 'rotate-0'}`}/>
 							<AboutMenu visible={showAboutMenu} cancelHideMenu={cancelHideMenu}/>
 						</div>
