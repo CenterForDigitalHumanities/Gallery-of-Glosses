@@ -14,7 +14,7 @@ const Map = () => {
                     <div className="flex justify-between">
                         <div className="mr-4">
                             <p className="text-2xl font-bold">Selected Year: {currentYear}</p>
-                            <div className="bg-grey p-2 mt-4 text-lightGrey rounded-md">
+                            <div className="bg-grey text-white p-2 mt-4 rounded-md">
                                 Some words. Maybe as the scroll goes by, it will display content about a specific year..
                             </div>
                         </div>

@@ -4,20 +4,22 @@ import Link from "next/link";
 import PageButtons from "./PageButtons";
 import CompareModal from "./CompareModal";
 import CompareHolderModal from "./CompareHolderModal";
-import getFetchData from "../actions/getFetchData";
-import axios from "axios";
+import SearchBar from "./SearchBar";
+import getCollections from "@/actions/getCollections";
+import getFromItemList from "@/actions/getFromItemList";
 
 const CompareGlosses = () => {
 
     // Controls Filtered data
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredData, setFilteredData] = useState([]);
-    const { data: textData, totalPages, setTotalPages } = getFetchData('https://store.rerum.io/v1/id/610c54deffce846a83e70625');
+    const [objects, setObjects] = useState([]);
     
     // Controls number of items per 'page'
-    const PAGE_SIZE = 10;  // Number of items per page
+    const pageSize = 15;  // Number of items per page
     const [currentPage, setCurrentPage] = useState(1);
-    const startIndex = (currentPage - 1) * PAGE_SIZE;
+    const [totalPages, setTotalPages] = useState(1);
+    const startIndex = (currentPage - 1) * pageSize;
     
     // Controls the visibility of the Modal that compares glosses 
     const [compareModalVisible, setCompareModalVisible] = useState(false);
@@ -26,20 +28,48 @@ const CompareGlosses = () => {
 
     // Controls the visibility of the filter function
     const [filterModalVisible, setFilterModalVisible] = useState(false);
+    
+    // Tracks Loading Progress
+    const [isLoading, setIsLoading] = useState(true);
+
+    // New state variable for tracking progress
+    const [progress, setProgress] = useState(0);
+
+    // Callback function for handling progress updates
+    const handleProgressUpdate = (newProgress) => {
+        setProgress(newProgress);
+    };
+
+    // fetches the data 
+    useEffect(() => {
+        const fetchData = async () => {
+
+            // get all collections of manuscript or named gloss
+            const collections = await getCollections({value: "Glossing-Matthew-Named-Glosses"})
+
+            // take all the collections and get the values of keys from collectoins
+            const data = await getFromItemList(collections, ["body.title.value",  "body.tags.items", "target"], handleProgressUpdate)
+            
+            setObjects(data);
+            setIsLoading(false);
+        };
+
+        fetchData();
+    }, []);
 
     // Filters based on search. First checks if there's something to filter in case fetching doesn't return anything
     useEffect(() => {
-        if (textData) setFilteredData(
-            textData.filter(item => item.label.toLowerCase().includes(searchTerm.toLowerCase()))
+        if (objects) setFilteredData(
+            objects.filter(item => item["body.title.value"].toLowerCase().includes(searchTerm.toLowerCase()))
         ) 
         else {
             setFilteredData([])
         }
-    }, [searchTerm, textData]);
+    }, [searchTerm, objects]);
 
     // Sets the total number of glosses being shown at a time
     useEffect(() => {
-        setTotalPages(Math.ceil(filteredData.length / PAGE_SIZE));
+        setTotalPages(Math.ceil(filteredData.length / pageSize));
     }, [filteredData]);
 
     // Toggles whether or not compare holder modal is showing or not
@@ -52,22 +82,32 @@ const CompareGlosses = () => {
     }, [selectedGlosses])
 
     // A helper function to toggle whether a gloss is selected or not
-    const toggleGloss = (label) => {
+    const toggleGloss = (gloss) => {
         setSelectedGlosses((selectedGlosses) => {
-            if (selectedGlosses.includes(label)) {
+            const isAlreadySelected = selectedGlosses.some((selectedGloss) => selectedGloss.title === gloss.title);
+            if (isAlreadySelected) {
                 // Remove the gloss from the selection
-                return selectedGlosses.filter((gloss) => gloss !== label);
+                
+                return selectedGlosses.filter((selectedGloss) => selectedGloss.title !== gloss.title);
             } else {
                 // Don't allow more than 4 glosses to be selected
                 if (selectedGlosses.length >= 4) {
                     return selectedGlosses;
                 }
                 // Add the gloss to the selection
-                return [...selectedGlosses, label];
+                return [...selectedGlosses, gloss];
             }
         });
     };
 
+    if (isLoading) {
+        return (
+            <div>
+                Loading... {Math.round(progress * 100)}%
+            </div>
+        )
+    }
+    
     return (
         <div className="flex flex-col">
             <CompareModal 
@@ -104,9 +144,6 @@ const CompareGlosses = () => {
                         ]
                     </p>
                 </div>
-            </div>
-            <div>
-                Compare content...
             </div>
             
             {/* Filter Modal */}
@@ -177,52 +214,10 @@ const CompareGlosses = () => {
                         </div>
                         <div className="w-1/2 flex flex-col gap-4 ml-4">
                             {/* Search by Name */}
-                            <div className="flex gap-4 items-center">
-                                <p className="text-xl">Search by name:</p>
-                                <input
-                                className="border-2 border-black px-2"
-                                type="text"
-                                placeholder="Search..."
-                                value={searchTerm}
-                                onChange={e => setSearchTerm(e.target.value)}
-                                />
-                            </div>
-
-                            {/* Search by City */}
-                            <div className="flex gap-8 items-center">
-                                <p className="text-xl">Search by city:</p>
-                                <input
-                                className="border-2 border-black px-2"
-                                type="text"
-                                placeholder="Search... (not working)"
-                                value={""}
-                                onChange={e => (e.target.value)}
-                                />
-                            </div>
-
-                            {/* Search by Canonical Book */}
-                            <div className="flex gap-5 items-center">
-                                <p className="text-xl">Search by book:</p>
-                                <input
-                                className="border-2 border-black px-2"
-                                type="text"
-                                placeholder="Search... (not working)"
-                                value={""}
-                                onChange={e => (e.target.value)}
-                                />
-                            </div>
-
-                            {/* Search by Tags */}
-                            <div className="flex gap-7 items-center">
-                                <p className="text-xl">Search by tags:</p>
-                                <input
-                                className="border-2 border-black px-2"
-                                type="text"
-                                placeholder="Search... (not working)"
-                                value={""}
-                                onChange={e => (e.target.value)}
-                                />
-                            </div>
+                            <SearchBar searchBy={"name"} setSearchTerm={setSearchTerm} />
+                            <SearchBar searchBy={"city"} />
+                            <SearchBar searchBy={"book"} />
+                            <SearchBar searchBy={"tag"} />
                         </div>
                     </div>
                     <div className="m-2 bg-darkGrey text-white cursor-pointer transition hover:brightness-[120%] text-center w-28 rounded-full   ">
@@ -238,43 +233,44 @@ const CompareGlosses = () => {
                 </div>
             }
 
-
             {/* The list of texts pulled from a URL */}
-            <div className="border-black border bg-lightGrey flex flex-col gap-8 p-2">
-                <div className="text-xl font-semibold flex pl-5">
-                    <div className="bottom-0 border-r-2 border-grey pr-8">
-                        Compare
+            <div className="border-black border bg-lightGrey flex flex-col gap-2 p-2">
+                <div className="font-semibold">
+                    <div className="flex pl-8">
+                        <div className="pr-8">
+                            Compare
+                        </div>
+                        <div className="pl-20">
+                            Named Glosses
+                        </div>
+                        <div className="pl-72">
+                            Tags
+                        </div>
                     </div>
-                    <div className="bottom-0 pl-8">
-                        Named Glosses
-                    </div>
+                    <hr className="border-darkGrey" />
                 </div>
-                <hr className="border-darkGrey" />
-                {filteredData.slice(startIndex, startIndex + PAGE_SIZE).map((data, index) => (
-                    <div key={index} className="flex gap-4">
-                        <div onClick={() => toggleGloss(data.label)} className="translate-y-[7px] transition rounded-md hover:bg-grey hover:text-white p-1 cursor-pointer flex items-center gap-2">
+                
+                {filteredData.slice(startIndex, startIndex + pageSize).map((data, index) => (
+                    <div key={index} className="flex">
+                        <div 
+                            onClick={() => toggleGloss({ title: data["body.title.value"], targetId: data["target"] })} 
+                            className={`w-full transition rounded-md ${selectedGlosses.length >= 4 && !selectedGlosses.some(gloss => gloss.title === data["body.title.value"]) ? "" : "hover:bg-grey hover:text-white cursor-pointer"} p-1  flex items-center gap-2`}
+                        >
                             <input 
                                 type="checkbox" 
-                                onChange={() => toggleGloss(data.label)} 
-                                checked={selectedGlosses.includes(data.label)} 
-                                disabled={selectedGlosses.length >= 4 && !selectedGlosses.includes(data.label)}
+                                onChange={() => toggleGloss(data["body.title.value"])} 
+                                checked={selectedGlosses.some(gloss => gloss.title === data["body.title.value"])} 
+                                disabled={selectedGlosses.length >= 4 && !selectedGlosses.some(gloss => gloss.title === data["body.title.value"])}
                             />
-                            <p>
+                            <p className="whitespace-nowrap">
                                 Compare Gloss
                             </p>
-                        </div>
-                        <div>
-                            <div>
-                                <p className="text-[20px]">
-                                    {data.label}
-                                </p>
-                            </div>
-                            {/* TODO: This is the genres. This can't be hardcoded. Change later when more glosses from different canonical texts come*/}
-                            <div className="flex flex-wrap gap-2"> 
-                                <div className="bg-primary px-1 text-sm text-white">Mt</div>
-                                <div className="bg-primary px-1 text-sm text-white">5:7</div>
-                                {/* More genres can go here */}
-                            </div>
+                            <p className="text-[20px] pl-20 w-80 whitespace-nowrap">
+                                    {data["body.title.value"]}
+                            </p>
+                            <p className="text-[20px] pl-40 mr-44">
+                                {(data["body.tags.items"]?.join(', ')) || "No tags"}
+                            </p>
                         </div>
                     </div>
                 ))}

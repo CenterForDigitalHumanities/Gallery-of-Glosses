@@ -12,8 +12,8 @@ const History = () => (
                 </div>
                 <div className="border rounded-lg p-4 hover:shadow-lg transition duration-200">
                     <h2 className="text-2xl font-bold mb-2">June 15</h2>
-                    <img src="https://via.placeholder.com/350" alt="placeholder" className="w-full h-64 object-cover rounded mb-4" />
-                    <p className="text-gray-700">Started to actually look like something... </p>
+                    <img src="images/june_pict.png" alt="placeholder" className="w-full h-64 object-cover rounded mb-4" />
+                    <p className="text-gray-700">... </p>
                 </div>
                 <div className="border rounded-lg p-4 hover:shadow-lg transition duration-200">
                     <h2 className="text-2xl font-bold mb-2">July 15</h2>

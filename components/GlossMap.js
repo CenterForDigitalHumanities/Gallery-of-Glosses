@@ -63,10 +63,6 @@ const GlossMap = ({ currentYear }) => {
         fetchData();
     }, []);
 
-    useEffect(() => {
-        console.log('markers', markers);
-    }, [markers]);
-
     if (isLoading) {
         return (
             <div>

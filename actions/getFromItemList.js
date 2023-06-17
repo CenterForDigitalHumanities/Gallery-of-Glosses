@@ -1,12 +1,17 @@
 import getTargets from './getTargets';
 
-const getNestedValue = (obj, keyPath) => {
+const getNestedValue = (object, keyPath) => {
+    if (!object || !keyPath) {
+        return null;
+    }
+
     const [firstKey, ...remainingKeys] = keyPath.split('.');
-    const nextObj = obj[firstKey];
-    if (nextObj && remainingKeys.length) {
-        return getNestedValue(nextObj, remainingKeys.join('.'));
+    const nextLevelObject = object[firstKey];
+
+    if (nextLevelObject && remainingKeys.length) {
+        return getNestedValue(nextLevelObject, remainingKeys.join('.'));
     } else {
-        return nextObj;
+        return nextLevelObject;
     }
 };
 
@@ -16,11 +21,9 @@ const getFromItemList = async (itemList, keys, onProgressUpdate) => {
         // Map itemListElement array to an array of fetch promises
         const fetchPromises = itemList.itemListElement.map(async (item, index) => {
             const result = await getTargets({value: item['@id']});
-            
             // Progress update
             const progress = (index + 1) / itemList.itemListElement.length;
-            onProgressUpdate(progress); // Call the callback function
-            
+            onProgressUpdate(progress);
             return result;
         });
         
@@ -41,8 +44,7 @@ const getFromItemList = async (itemList, keys, onProgressUpdate) => {
             return value;
         });
         
-        // console.log("values", values)
-        return values.filter(value => keys.every(key => key in value));
+        return values;
 
     } catch (error) {
         console.error('Error:', error);

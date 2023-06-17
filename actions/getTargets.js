@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const getTargets = async ({ key, value }) => {
     let queryObj = {};
     let targetConditions = [];
@@ -21,19 +23,13 @@ const getTargets = async ({ key, value }) => {
     }
 
     try {
-        const response = await fetch("https://tinydev.rerum.io/app/query?", {
-            method: "POST",
-            mode: "cors",
-            headers: new Headers({
+        const response = await axios.post(`https://tinydev.rerum.io/app/query?`, queryObj, {
+            headers: {
                 'Content-Type': 'application/json; charset=utf-8'
-            }),
-            body: JSON.stringify(queryObj)
-        })
+            }
+        });
 
-        
-        
-        // Parse the response as JSON
-        const data = await response.json();
+        const data = await response.data;
         return data;
     } catch (error) {
         console.error('Error querying objects:', error);
