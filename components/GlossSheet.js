@@ -1,6 +1,6 @@
-    import { useState, useEffect } from 'react';
-    import PageButtons from './PageButtons';
-    import getFromItemList from '@/actions/getFromItemList';
+import { useState, useEffect } from 'react';
+import PageButtons from './PageButtons';
+import getFromItemList from '@/actions/getFromItemList';
 import getCollections from '@/actions/getCollections';
 
     const GlossSheet = ({ headers, collectionType, keys, onItemClicked }) => {
@@ -13,7 +13,6 @@ import getCollections from '@/actions/getCollections';
         // Tracks Loading Progress
         const [isLoading, setIsLoading] = useState(true);
         
-
         // Controls number of items per 'page'
         const PAGE_SIZE = 12; // Number of items per page
         const [currentPage, setCurrentPage] = useState(1);
@@ -34,11 +33,10 @@ import getCollections from '@/actions/getCollections';
 
                 // get all collections of manuscript or named gloss
                 const collections = await getCollections({value: collectionType})
-
                 // take all the collections and get the values of keys from collectoins
                 const data = await getFromItemList(collections, keys, handleProgressUpdate)
 
-                setObjects(data);
+                setObjects(data.filter(value => keys.every(key => key in value)));
                 setIsLoading(false);
             };
 

@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const getCollections = async ({ value }) => {
     let queryObj = {
         "$or": [
@@ -14,22 +16,21 @@ const getCollections = async ({ value }) => {
     }
 
     const getPagedQuery = async (lim, it = 0) => {
-        const response = await fetch(`https://tinydev.rerum.io/app/query?limit=${lim}&skip=${it}`, {
-            method: "POST",
-            mode: "cors",
-            headers: new Headers({
+        const response = await axios.post(`https://tinydev.rerum.io/app/query?limit=${lim}&skip=${it}`, queryObj, {
+            headers: {
                 'Content-Type': 'application/json; charset=utf-8'
-            }),
-            body: JSON.stringify(queryObj)
+            }
         });
 
-        // Parse the response as JSON
-        const data = await response.json();
+        const data = await response.data;
 
         listObj.itemListElement = listObj.itemListElement.concat(data.map(anno => ({ '@id': anno.target ?? anno["@id"] ?? anno.id })));
         try {
             listObj["@type"] = data[0]["@type"] ?? data[0].type ?? "ItemList";
-        } catch (err) { }
+        } catch (error) { 
+            console.error('Error querying objects:', error);
+        }
+
         if (data.length && data.length % lim === 0) {
             return getPagedQuery(lim, it + data.length);
         }
