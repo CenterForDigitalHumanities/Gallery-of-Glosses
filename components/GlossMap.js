@@ -1,29 +1,34 @@
 import getCollections from "@/actions/getCollections";
 import getFromItemList from "@/actions/getFromItemList";
 import { useEffect, useState } from "react";
-import { ComposableMap, Geographies, Geography, Graticule, Marker, ZoomableGroup } from "react-simple-maps";
+import { ComposableMap, Geographies, Geography, Graticule, Marker } from "react-simple-maps";
 
-const GlossMap = ({ currentYear }) => {
+const GlossMap = ({ currentYear, setMapMarkerModalVisible, setSelectedMarker }) => {
     const [markers, setMarkers] = useState([]);
     const [progress, setProgress] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
+
     const cityCoordinates = {
+        // Coords are incorrect. 
         "Oxford": [-1.257726, 51.752022],
         "Cambridge": [0.121817, 52.205338],
         "Valenciennes": [3.5234, 50.3570],
         "St. Gallen": [9.3748, 47.4223],
         "Vatican City": [12.4534, 41.9029],
-    };    
+        "Evora": [7.9135, 38.5714],
+        "Laon": [3.6199, 49.5641],
+        "Engelberg": [8.4070, 46.8200],
+        "London": [0.1276, 51.5072],
+        "Tours": [0.6848, 47.3941],
+        "Paris": [2.3522, 48.8566], 
+        "Hereford": [-2.7156, 52.0567],
+    };   
     
     const geoUrl = "https://raw.githubusercontent.com/deldersveld/topojson/master/continents/europe.json";
 
     // Callback function for handling progress updates
     const handleProgressUpdate = (newProgress) => {
         setProgress(newProgress);
-    };
-
-    const checkForDuplicates = (city, index, arr) => {
-        return arr.filter((item, idx) => item['body.city.value'] === city && idx !== index).length > 0;
     };
 
     // fetches the data 
@@ -34,25 +39,15 @@ const GlossMap = ({ currentYear }) => {
 
             // take all the collections and get the values of keys from collectoins
             const data = await getFromItemList(collections, ["body.alternative.value", "body.city.value", "body.date.value"], handleProgressUpdate)
+            const sortedData = data.sort((a, b) => (a['body.date.value'] || -Infinity) - (b['body.date.value'] || -Infinity));
 
-            let cityCounts = {};
-            
-            const dataWithCoordinates = data.map((marker, index) => {
+            console.log("sortedData", sortedData)
+            const dataWithCoordinates = sortedData.map((marker) => {
                 const city = marker['body.city.value'];
-            
-                // Increase the count for the current city, or initialize it with 0 and then increase it
-                if (!cityCounts[city]) {
-                    cityCounts[city] = 0;
-                }
-                cityCounts[city]++;
-            
-                // The offset for the current marker will be the current count - 1 (to make the offset 0 for the first occurrence) times 20
-                const offset = (cityCounts[city] - 1) * 25;
-            
+
                 return {
                     ...marker,
                     coordinates: cityCoordinates[city],
-                    offset: offset
                 };
             });                   
             
@@ -72,14 +67,14 @@ const GlossMap = ({ currentYear }) => {
     }
 
     return (
-        <div className="border-2 border-black w-[70%]">
+        <div className="border-2 border-black w-[80%]">
             <ComposableMap
-                width={1000}
-                height={400}
+                width={800}
+                height={800}
                 projection="geoAzimuthalEqualArea"
                 projectionConfig={{
                     rotate: [-8.0, -47.0, 0],
-                    scale: 1300
+                    scale: 1800
                 }}
             >
                 <Graticule stroke="#EAEAEC" />
@@ -99,30 +94,19 @@ const GlossMap = ({ currentYear }) => {
                     Marker design came off a template from react-simple-maps.io
                     This is just drawing the label, and marking it down on the map
                 */}
-                {markers.map(({ '@id': id, 'body.alternative.value': siglum, 'body.date.value': date, coordinates, offset }) => (
-                    date <= currentYear && coordinates &&
-                    <Marker key={id} coordinates={coordinates}>
-                        <g
-                            fill="none"
-                            stroke="#000000"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            transform="translate(-12, -24)"
-                        >
-                            <circle cx="12" cy="10" r="3" />
-                            <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z" />
-                        </g>
-                        <text
-                            textAnchor="middle"
-                            y={-30}
-                            x={offset}
-                            style={{ fontFamily: "system-ui", fill: "#000000" }}
-                        >
-                            {siglum}
-                        </text>
-                    </Marker>
-                ))}
+                {markers.map((marker) => {
+                    const { '@id': id, 'body.alternative.value': siglum, 'body.date.value': date, coordinates } = marker;
+                    if ((date === undefined || date <= currentYear) && coordinates) {
+                        
+                        return (
+                            <Marker className="cursor-pointer" onClick={() => {setMapMarkerModalVisible(true); setSelectedMarker(marker);}} key={id} coordinates={coordinates}>
+                                <circle r={10} fill="#FFFFFF" stroke="#000000" strokeWidth={2} />
+                            </Marker>
+                        );
+                    } else {
+                        return null;
+                    }
+                })}
             </ComposableMap>
         </div>
     );

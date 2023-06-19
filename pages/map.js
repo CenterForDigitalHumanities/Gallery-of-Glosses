@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import GlossMap from '@/components/GlossMap';
 import Layout from '../components/Layout';
+import MapMarkerModal from '@/components/MapMarkerModal';
 
 const Map = () => {
     const [currentYear, setCurrentYear] = useState(1000);
+    const [mapMarkerModalVisible, setMapMarkerModalVisible] = useState(false);
+    const [selectedMarker, setSelectedMarker] = useState(null);
     
     return (
         <Layout>
@@ -15,10 +18,11 @@ const Map = () => {
                         <div className="mr-4">
                             <p className="text-2xl font-bold">Selected Year: {currentYear}</p>
                             <div className="bg-grey text-white p-2 mt-4 rounded-md">
-                                Some words. Maybe as the scroll goes by, it will display content about a specific year..
+                                Click on a marker to display some information on the manuscript that appeared there below
                             </div>
+                            <MapMarkerModal marker={selectedMarker} visible={mapMarkerModalVisible} onClose={() => setMapMarkerModalVisible(false)}/>
                         </div>
-                        <GlossMap currentYear={currentYear} />
+                        <GlossMap currentYear={currentYear} setSelectedMarker={setSelectedMarker} setMapMarkerModalVisible={setMapMarkerModalVisible} />
                     </div>
 
                     <div className="flex items-center mt-6 space-x-2">
