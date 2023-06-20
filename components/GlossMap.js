@@ -39,9 +39,9 @@ const GlossMap = ({ currentYear, setMapMarkerModalVisible, setSelectedMarker }) 
             const collections = await getCollections({value: "Glossing-Matthew"})
 
             // take all the collections and get the values of keys from collectoins
-            const data = await getFromItemList(collections, ["body.alternative.value", "body.city.value", "body.date.value"], handleProgressUpdate)
+            const data = await getFromItemList(collections, ["target", "body.alternative.value", "body.city.value", "body.date.value"], handleProgressUpdate)
             const sortedData = data.sort((a, b) => (a['body.date.value'] || -Infinity) - (b['body.date.value'] || -Infinity));
-
+            
             const dataWithCoordinates = sortedData.map((marker) => {
                 const city = marker['body.city.value'];
 

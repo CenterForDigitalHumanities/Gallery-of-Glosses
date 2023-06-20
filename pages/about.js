@@ -2,7 +2,7 @@ import Layout from '../components/Layout';
 
 const About = () => (
 	<Layout>
-		<div className="px-52 pt-24">
+		<div>
             <h1 className="text-6xl text-center">About Gallery of Glosses</h1>
 			<div className="flex flex-col gap-4">
                 <p className="text-custom mt-20 font-semibold">

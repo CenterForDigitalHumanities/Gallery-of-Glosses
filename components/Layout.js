@@ -6,7 +6,9 @@ const Layout = ({ children }) => (
 <main>
 	<Navbar />
         <main className="pb-40">
+            <div className="pt-24 px-24">
                 {children}
+            </div>
         </main>
 	<Footer />
 </main>

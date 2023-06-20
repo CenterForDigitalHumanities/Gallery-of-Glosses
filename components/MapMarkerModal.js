@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
+import { useRouter } from 'next/router';
 
 const MapMarkerModal = ({ marker, visible, onClose }) => {
     const [isVisible, setIsVisible] = useState(!!visible);
-    console.log
+    const router = useRouter();
+
     useEffect(() => {
         setIsVisible(!!visible)
     }, [visible]);
-
+    
     if (!isVisible) {
         return null;
     }
@@ -15,17 +17,24 @@ const MapMarkerModal = ({ marker, visible, onClose }) => {
     if (!marker || marker.length === 0) {
         return null;
     }
+
+    const handleMoreInfo = (target) => {
+        const id = target.split("/").pop();
+
+        router.push(`/manuscript/[id]`, `/manuscript/${id}`);
+    };
+    
     
     return (
         <div className="w-full border-2 p-1 mt-2 border-black rounded shadow-lg flex flex-col">
             {marker.length > 0 && marker[0]['body.city.value'] && <p className="mb-2 text-2xl font-bold underline">{marker[0]['body.city.value']}:</p>}
-
-            {marker.map(({ 'body.alternative.value': siglum, 'body.city.value': city, 'body.date.value': date }, index) => (
+        
+            {marker.map(({ 'body.alternative.value': siglum, 'body.city.value': city, 'body.date.value': date, 'target' : target }, index) => (
                 <div key={index}>
                     <p>Siglum: {siglum}</p>
                     <p>City: {city}</p>
                     <p>Date: {date? date : "No Date Recorded"}</p>
-                    <button onClick={()=>{}} className="bg-black/30 text-white rounded-md mb-2 py-1 px-2 w-auto text-xs lg:text-lg font-semibold flex flex-rows items-center hover:bg-black/20 transition">
+                    <button onClick={()=> handleMoreInfo(target)} className="bg-black/30 text-white rounded-md mb-2 py-1 px-2 w-auto text-xs lg:text-lg font-semibold flex flex-rows items-center hover:bg-black/20 transition">
                         <AiOutlineInfoCircle className="mr-1" />
                         More Info
                     </button>
