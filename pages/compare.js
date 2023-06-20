@@ -3,7 +3,7 @@ import CompareGlosses from '@/components/CompareGlosses';
 
 const Map = () => (
   <Layout>
-    <div className="px-52 pt-24">
+    <div>
         <CompareGlosses />
     </div>
   </Layout>

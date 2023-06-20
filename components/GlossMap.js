@@ -5,6 +5,7 @@ import { ComposableMap, Geographies, Geography, Graticule, Marker } from "react-
 
 const GlossMap = ({ currentYear, setMapMarkerModalVisible, setSelectedMarker }) => {
     const [markers, setMarkers] = useState([]);
+    const [cityCount, setCityCount] = useState({});
     const [progress, setProgress] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -15,7 +16,7 @@ const GlossMap = ({ currentYear, setMapMarkerModalVisible, setSelectedMarker }) 
         "Valenciennes": [3.5234, 50.3570],
         "St. Gallen": [9.3748, 47.4223],
         "Vatican City": [12.4534, 41.9029],
-        "Evora": [7.9135, 38.5714],
+        "Evora": [-7.915873, 38.67426],
         "Laon": [3.6199, 49.5641],
         "Engelberg": [8.4070, 46.8200],
         "London": [0.1276, 51.5072],
@@ -38,10 +39,9 @@ const GlossMap = ({ currentYear, setMapMarkerModalVisible, setSelectedMarker }) 
             const collections = await getCollections({value: "Glossing-Matthew"})
 
             // take all the collections and get the values of keys from collectoins
-            const data = await getFromItemList(collections, ["body.alternative.value", "body.city.value", "body.date.value"], handleProgressUpdate)
+            const data = await getFromItemList(collections, ["target", "body.alternative.value", "body.city.value", "body.date.value"], handleProgressUpdate)
             const sortedData = data.sort((a, b) => (a['body.date.value'] || -Infinity) - (b['body.date.value'] || -Infinity));
-
-            console.log("sortedData", sortedData)
+            
             const dataWithCoordinates = sortedData.map((marker) => {
                 const city = marker['body.city.value'];
 
@@ -57,6 +57,23 @@ const GlossMap = ({ currentYear, setMapMarkerModalVisible, setSelectedMarker }) 
 
         fetchData();
     }, []);
+    
+    useEffect(() => {
+        const cityCounts = {};
+        markers.forEach(marker => {
+            const { 'body.date.value': date, 'body.city.value': city } = marker;
+            if (date !== undefined && date <= currentYear) {
+                cityCounts[city] = (cityCounts[city] || 0) + 1;
+            }
+        });
+        setCityCount(cityCounts); 
+    }, [currentYear, markers]);
+
+    const handleMarkerClick = (marker) => {
+        const markersInCity = markers.filter(m => m['body.city.value'] === marker['body.city.value'] && (m['body.date.value'] === undefined || m['body.date.value'] <= currentYear));
+        setMapMarkerModalVisible(true);
+        setSelectedMarker(markersInCity);
+    };
 
     if (isLoading) {
         return (
@@ -70,7 +87,7 @@ const GlossMap = ({ currentYear, setMapMarkerModalVisible, setSelectedMarker }) 
         <div className="border-2 border-black w-[80%]">
             <ComposableMap
                 width={800}
-                height={800}
+                height={600}
                 projection="geoAzimuthalEqualArea"
                 projectionConfig={{
                     rotate: [-8.0, -47.0, 0],
@@ -90,17 +107,18 @@ const GlossMap = ({ currentYear, setMapMarkerModalVisible, setSelectedMarker }) 
                         ))
                     }
                 </Geographies>
-                {/* 
-                    Marker design came off a template from react-simple-maps.io
-                    This is just drawing the label, and marking it down on the map
-                */}
-                {markers.map((marker) => {
-                    const { '@id': id, 'body.alternative.value': siglum, 'body.date.value': date, coordinates } = marker;
+                {markers.map((marker, index) => {
+                    const { '@id': id, 'body.alternative.value': siglum, 'body.date.value': date, coordinates, 'body.city.value': city } = marker;
                     if ((date === undefined || date <= currentYear) && coordinates) {
-                        
+                        // color marker based on city count
+                        const count = cityCount[city] || 1;
+
+                        // adjust the opacity based on the count
+                        const fill = `rgba(255, 0, 0, ${Math.min(1, count * 0.3)})`; 
+
                         return (
-                            <Marker className="cursor-pointer" onClick={() => {setMapMarkerModalVisible(true); setSelectedMarker(marker);}} key={id} coordinates={coordinates}>
-                                <circle r={10} fill="#FFFFFF" stroke="#000000" strokeWidth={2} />
+                            <Marker className="cursor-pointer" onClick={() => handleMarkerClick(marker)} key={index} coordinates={coordinates}>
+                                <circle r={10} fill={fill} stroke={fill} strokeWidth={2} />
                             </Marker>
                         );
                     } else {
