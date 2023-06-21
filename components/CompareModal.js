@@ -37,7 +37,7 @@ const CompareModal = ({ glosses, visible, onClose, removeGloss }) => {
                 glossDetails = glossDetails.concat(processedCollections);
                 setIsLoading(false);
 			}
-            console.log("glossDetails", glossDetails);
+            
 			setGlossDetails(glossDetails);
 		};
 

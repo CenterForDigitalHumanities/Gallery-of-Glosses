@@ -18,7 +18,7 @@ const Map = () => {
                         <div className="mr-4">
                             <p className="text-2xl font-bold">Selected Year: {currentYear}</p>
                             <div className="bg-grey text-white p-2 mt-4 rounded-md">
-                                Click on a marker to display some information on the manuscript that appeared there below
+                                Click on a marker to display some information on the manuscripts that appeared there below
                             </div>
                             <MapMarkerModal marker={selectedMarker} visible={mapMarkerModalVisible} onClose={() => setMapMarkerModalVisible(false)}/>
                         </div>
