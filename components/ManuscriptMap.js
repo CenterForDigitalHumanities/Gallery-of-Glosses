@@ -1,13 +1,8 @@
-import getCollections from "@/actions/getCollections";
-import getFromItemList from "@/actions/getFromItemList";
 import { useEffect, useState } from "react";
 import { ComposableMap, Geographies, Geography, Graticule, Marker } from "react-simple-maps";
 
-const GlossMap = ({ currentYear, setMapMarkerModalVisible, setSelectedMarker }) => {
-    const [markers, setMarkers] = useState([]);
+const ManuscriptMap = ({ currentYear, setMapMarkerModalVisible, setSelectedMarker, markers }) => {
     const [cityCount, setCityCount] = useState({});
-    const [progress, setProgress] = useState(0);
-    const [isLoading, setIsLoading] = useState(true);
 
     const cityCoordinates = {
         // Coords are incorrect. 
@@ -26,37 +21,6 @@ const GlossMap = ({ currentYear, setMapMarkerModalVisible, setSelectedMarker }) 
     };   
     
     const geoUrl = "https://raw.githubusercontent.com/deldersveld/topojson/master/continents/europe.json";
-
-    // Callback function for handling progress updates
-    const handleProgressUpdate = (newProgress) => {
-        setProgress(newProgress);
-    };
-
-    // fetches the data 
-    useEffect(() => {
-        const fetchData = async () => {
-            // get all collections of manuscript or named gloss
-            const collections = await getCollections({value: "Glossing-Matthew"})
-
-            // take all the collections and get the values of keys from collectoins
-            const data = await getFromItemList(collections, ["target", "body.alternative.value", "body.city.value", "body.date.value"], handleProgressUpdate)
-            const sortedData = data.sort((a, b) => (a['body.date.value'] || -Infinity) - (b['body.date.value'] || -Infinity));
-            
-            const dataWithCoordinates = sortedData.map((marker) => {
-                const city = marker['body.city.value'];
-
-                return {
-                    ...marker,
-                    coordinates: cityCoordinates[city],
-                };
-            });                   
-            
-            setMarkers(dataWithCoordinates);
-            setIsLoading(false);
-        };
-
-        fetchData();
-    }, []);
     
     useEffect(() => {
         const cityCounts = {};
@@ -74,14 +38,6 @@ const GlossMap = ({ currentYear, setMapMarkerModalVisible, setSelectedMarker }) 
         setMapMarkerModalVisible(true);
         setSelectedMarker(markersInCity);
     };
-
-    if (isLoading) {
-        return (
-            <div>
-                Loading... {Math.round(progress * 100)}%
-            </div>
-        )
-    }
 
     return (
         <div className="border-2 border-black w-[80%]">
@@ -130,4 +86,4 @@ const GlossMap = ({ currentYear, setMapMarkerModalVisible, setSelectedMarker }) 
     );
 };
 
-export default GlossMap;
+export default ManuscriptMap;

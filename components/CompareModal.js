@@ -29,16 +29,16 @@ const CompareModal = ({ glosses, visible, onClose, removeGloss }) => {
 
     useEffect(() => {
 		const fetchGlossDetails = async () => {
-			let glossDetails = [];
+			let details = [];
             
 			for (const gloss of glosses) {
                 const collectionsArray  = await getTargets({ value: gloss["targetId"] });
-                const processedCollections = getFromObject(collectionsArray, ["body.title.value", "body.description.value", "body.targetChapter.value", "body.targetVerse.value", "body.targetedText.value", "body.transcribedGloss.value", "body.tags.items"]);
-                glossDetails = glossDetails.concat(processedCollections);
+                const processedCollections = getFromObject(collectionsArray, ["body.title.value", "body.description.value", "body.targetChapter.value", "body.targetVerse.value", "body.targetedText.value", "body.transcribedGloss.value", "body.tags.items"], handleProgressUpdate);
+                details = details.concat(processedCollections);
                 setIsLoading(false);
-			}
+			} 
             
-			setGlossDetails(glossDetails);
+			setGlossDetails(details);
 		};
 
 		fetchGlossDetails();
