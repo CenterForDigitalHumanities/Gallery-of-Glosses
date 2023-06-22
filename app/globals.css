@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
+
+html,
+body,
+:root {
+  height: 100%;
+  font-family: 'PT Serif', serif;
+}
