@@ -18,7 +18,7 @@ const Header: FC<HeaderProps> = ({}) => {
           <nav className="flex items-center space-x-6 text-sm font-medium">
             <a
               className="transition-colors hover:text-foreground/80 text-foreground/60"
-              href="/about"
+              href="/docs/about"
             >
               About
             </a>
