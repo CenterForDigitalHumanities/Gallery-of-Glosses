@@ -1,4 +1,4 @@
-import { RESOURCES_CONTENT } from "@/config";
+import { RESOURCES_CONTENT } from "@/configs/docs";
 import { FC } from "react";
 
 interface ResourceProps {}

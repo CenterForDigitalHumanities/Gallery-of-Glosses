@@ -1,6 +1,10 @@
 "use client";
 import { FC } from "react";
-import { GETTING_STARTED, BROWSE_GLOSSES, GLOSS_TOOLS } from "../config";
+import {
+  GETTING_STARTED_LINKS,
+  BROWSE_GLOSSES_LINKS,
+  GLOSS_TOOLS_LINKS,
+} from "@/configs/navigation";
 import { usePathname } from "next/navigation";
 
 interface SidebarProps {}
@@ -20,9 +24,9 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               <div>
                 {pathname != "/" &&
                   [
-                    { header: "Introduction", items: GETTING_STARTED },
-                    { header: "Browse Glosses", items: BROWSE_GLOSSES },
-                    { header: "Gloss Tools", items: GLOSS_TOOLS },
+                    { header: "Introduction", items: GETTING_STARTED_LINKS },
+                    { header: "Browse Glosses", items: BROWSE_GLOSSES_LINKS },
+                    { header: "Gloss Tools", items: GLOSS_TOOLS_LINKS },
                   ].map((section) => (
                     <div className="pb-4" key={section.header}>
                       <h4 className="mb-1 rounded-md px-2 py-1 text-sm font-semibold">

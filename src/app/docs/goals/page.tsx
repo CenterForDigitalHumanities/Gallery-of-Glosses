@@ -1,4 +1,4 @@
-import { GOALS_CONTENT } from "@/config";
+import { GOALS_CONTENT } from "@/configs/docs";
 import { FC } from "react";
 
 interface GoalsProps {}

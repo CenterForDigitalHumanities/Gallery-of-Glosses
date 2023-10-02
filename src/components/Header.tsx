@@ -5,7 +5,11 @@ import { PiCaretRightBold } from "react-icons/pi";
 import { ThemeTogggle } from "./ThemeTogggle";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { BROWSE_GLOSSES, GETTING_STARTED, GLOSS_TOOLS } from "@/config";
+import {
+  BROWSE_GLOSSES_LINKS,
+  GETTING_STARTED_LINKS,
+  GLOSS_TOOLS_LINKS,
+} from "@/configs/navigation";
 
 interface HeaderProps {}
 
@@ -46,7 +50,7 @@ const Header: FC<HeaderProps> = ({}) => {
             </a>
             <a
               className="transition-colors hover:text-foreground/80 text-foreground/60"
-              href="/books"
+              href="/browse/books"
             >
               Browse Glosses
             </a>
@@ -118,9 +122,9 @@ const Header: FC<HeaderProps> = ({}) => {
           </div>
           <div className="relative overflow-hidden my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
             {[
-              { header: "Introduction", items: GETTING_STARTED },
-              { header: "Browse Glosses", items: BROWSE_GLOSSES },
-              { header: "Gloss Tools", items: GLOSS_TOOLS },
+              { header: "Introduction", items: GETTING_STARTED_LINKS },
+              { header: "Browse Glosses", items: BROWSE_GLOSSES_LINKS },
+              { header: "Gloss Tools", items: GLOSS_TOOLS_LINKS },
             ].map((section) => (
               <div className="pb-4" key={section.header}>
                 <h4 className="mb-1 rounded-md px-2 py-1 text-sm font-semibold">

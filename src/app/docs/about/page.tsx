@@ -1,5 +1,5 @@
-import { ABOUT_CONTENT } from "@/config";
-import { FC, Fragment } from "react";
+import { ABOUT_CONTENT } from "@/configs/docs";
+import { FC } from "react";
 
 interface AboutProps {}
 

@@ -1,4 +1,4 @@
-import { HISTORY_CONTENT } from "@/config";
+import { HISTORY_CONTENT } from "@//configs/docs";
 import { FC } from "react";
 
 interface HistoryProps {}

@@ -1,4 +1,4 @@
-import { ACKNOWLEDGEMENTS_CONTENT } from "@/config";
+import { ACKNOWLEDGEMENTS_CONTENT } from "@/configs/docs";
 import { FC } from "react";
 
 interface AcknowledgementsProps {}

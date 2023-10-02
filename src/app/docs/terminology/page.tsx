@@ -1,4 +1,4 @@
-import { TERMINOLOGY_CONTENT } from "@/config";
+import { TERMINOLOGY_CONTENT } from "@/configs/docs";
 import { FC } from "react";
 
 interface TerminologyProps {}

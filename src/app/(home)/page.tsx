@@ -9,25 +9,25 @@ export default function Home() {
             <h1 className="text-slate-900 font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight text-center dark:text-white">
               Gallery of Glosses
             </h1>
-            <p className="mt-6 text-lg text-slate-600 text-center max-w-3xl mx-auto dark:text-slate-400">
+            <p className="mt-6 text-md lg:text-lg text-slate-600 text-center max-w-3xl mx-auto dark:text-slate-400">
               Discover a curated collection of scholarly notes that provide
               insights into historical texts.
             </p>
             <div className="mt-6 sm:mt-10 flex justify-center space-x-6 text-sm">
               <a href="/docs/about">
-                <Button>What are Glosses?</Button>
+                <Button className="truncate">What are Glosses?</Button>
               </a>
               <a href="/browse/books">
-                <Button>Start Browsing Glosses</Button>
+                <Button className="truncate">Start Browsing Glosses</Button>
               </a>
             </div>
           </div>
         </section>
-        <section className="flex flex-col items-center px-8 mt-10 w-full ">
+        <section className="flex flex-col items-center lg:px-8 mt-10 w-full">
           <iframe
             className="rounded-md"
-            width="400"
-            height="200"
+            width="lg:400 sm:200"
+            height="lg:200 sm:100"
             src="//www.youtube.com/embed/248EDx1u30Q?rel=0"
             allowFullScreen
           />
