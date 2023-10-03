@@ -50,7 +50,7 @@ const Header: FC<HeaderProps> = ({}) => {
             </a>
             <a
               className="transition-colors hover:text-foreground/80 text-foreground/60"
-              href="/browse/books"
+              href="/browse/book"
             >
               Browse Glosses
             </a>
@@ -91,60 +91,63 @@ const Header: FC<HeaderProps> = ({}) => {
         </div>
       </div>
       {openMenu && (
-        <div
-          role="dialog"
-          id="radix-:R15hja:"
-          aria-describedby="radix-:R15hjaH2:"
-          aria-labelledby="radix-:R15hjaH1:"
-          data-state="open"
-          className="pointer-events-auto fixed h-screen gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 inset-y-0 left-0 w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm pr-0"
-          tabIndex={-1}
-        >
-          <div className="flex items-center gap-4 ">
-            <a href="/">
-              <Image
-                src="/assets/images/logo.png"
-                alt="icon"
-                width="20"
-                height="20"
-              />
-            </a>
+        <>
+          <div
+            data-state="open"
+            className="pointer-events-auto fixed h-screen w-screen gap-4 bg-black opacity-40 p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 inset-y-0 left-0 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm pr-0"
+          >
+            test
+          </div>
+          <div
+            data-state="open"
+            className="pointer-events-auto fixed h-screen gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 inset-y-0 left-0 w-4/5 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm pr-0"
+          >
+            <div className="flex items-center gap-4 ">
+              <a href="/">
+                <Image
+                  src="/assets/images/logo.png"
+                  alt="icon"
+                  width="20"
+                  height="20"
+                />
+              </a>
 
-            <a href="/" className="font-bold right-4 top-6">
-              Gallery of Glosses
-            </a>
-            <button
-              onClick={() => setOpenMenu(false)}
-              className="ml-auto mr-4 rounded-sm opacity-70 transition-opacity"
-            >
-              <AiOutlineClose />
-            </button>
-          </div>
-          <div className="relative overflow-hidden my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
-            {[
-              { header: "Introduction", items: GETTING_STARTED_LINKS },
-              { header: "Browse Glosses", items: BROWSE_GLOSSES_LINKS },
-              { header: "Gloss Tools", items: GLOSS_TOOLS_LINKS },
-            ].map((section) => (
-              <div className="pb-4" key={section.header}>
-                <h4 className="mb-1 rounded-md px-2 py-1 text-sm font-semibold">
-                  {section.header}
-                </h4>
-                <div className="grid grid-flow-row auto-rows-max text-sm">
-                  {section.items.map((item) => (
-                    <a
-                      key={item.href}
-                      className="group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline text-muted-foreground"
-                      href={item.href}
-                    >
-                      {item.title}
-                    </a>
-                  ))}
+              <a href="/" className="font-bold right-4 top-6">
+                Gallery of Glosses
+              </a>
+              <button
+                onClick={() => setOpenMenu(false)}
+                className="ml-auto mr-4 rounded-sm opacity-70 transition-opacity"
+              >
+                <AiOutlineClose />
+              </button>
+            </div>
+            <div className="relative overflow-hidden my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
+              {[
+                { header: "Introduction", items: GETTING_STARTED_LINKS },
+                { header: "Browse Glosses", items: BROWSE_GLOSSES_LINKS },
+                { header: "Gloss Tools", items: GLOSS_TOOLS_LINKS },
+              ].map((section) => (
+                <div className="pb-4" key={section.header}>
+                  <h4 className="mb-1 rounded-md px-2 py-1 text-sm font-semibold">
+                    {section.header}
+                  </h4>
+                  <div className="grid grid-flow-row auto-rows-max text-sm">
+                    {section.items.map((item) => (
+                      <a
+                        key={item.href}
+                        className="group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline text-muted-foreground"
+                        href={item.href}
+                      >
+                        {item.title}
+                      </a>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        </>
       )}
     </header>
   );
