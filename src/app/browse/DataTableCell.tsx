@@ -7,7 +7,10 @@ interface DataTableCellProps {
   rowId: string;
 }
 
-const DataTableCell: React.FC<DataTableCellProps> = ({ textValue, rowId }) => {
+const DataTableCell: React.FC<DataTableCellProps> = ({
+  textValue = "",
+  rowId,
+}) => {
   const [showMoreRows, setShowMoreRows] = useState(new Set<string>());
   const isShowMore = showMoreRows.has(rowId);
 
