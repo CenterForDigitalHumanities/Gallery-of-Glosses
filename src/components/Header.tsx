@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, ReactNode, useState } from "react";
 import { AiFillGithub, AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { PiCaretRightBold } from "react-icons/pi";
 import { ThemeTogggle } from "./ThemeTogggle";
@@ -10,21 +10,29 @@ import {
   GETTING_STARTED_LINKS,
   GLOSS_TOOLS_LINKS,
 } from "@/configs/navigation";
+import { useGlossInstance } from "@/hooks/useGlossInstance";
+import { RERUM } from "@/configs/rerum-links";
 
 interface HeaderProps {}
-
-const capitalizeFirstLetter = (topic: string) => {
-  if (topic) return topic.charAt(0).toUpperCase() + topic.slice(1);
-  else return "";
-};
 
 const Header: FC<HeaderProps> = ({}) => {
   const pathname = usePathname();
   const split_pathname = pathname.split("/");
-  const section = capitalizeFirstLetter(split_pathname[1]);
-  const topic = capitalizeFirstLetter(split_pathname[2]);
+  const section = CapitalizeFirstLetter(split_pathname[1]);
+  const topic = CapitalizeFirstLetter(split_pathname[2]);
 
   const [openMenu, setOpenMenu] = useState(false);
+
+  function CapitalizeFirstLetter(topic: string) {
+    if (topic) return topic.charAt(0).toUpperCase() + topic.slice(1);
+    else return "";
+  }
+
+  function GetGlossTitle(id: string) {
+    const targetId = RERUM + id;
+    const gloss = useGlossInstance(targetId);
+    return gloss?.title;
+  }
 
   return (
     <header className="supports-backdrop-blur:bg-background/60 sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
@@ -70,7 +78,9 @@ const Header: FC<HeaderProps> = ({}) => {
                 <li>{section}</li>
                 <PiCaretRightBold />
                 <li className="font-semibold text-slate-900 truncate dark:text-slate-200">
-                  {topic}
+                  {["Book", "Tag", "Theme"].includes(topic)
+                    ? topic
+                    : GetGlossTitle(topic)}
                 </li>
               </ol>
             )}

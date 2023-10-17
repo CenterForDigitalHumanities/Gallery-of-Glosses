@@ -16,7 +16,7 @@ const DataTableCell: React.FC<DataTableCellProps> = ({
 
   const limit = 20;
   const shortText =
-    textValue.substring(0, 100) + (textValue.length > limit ? "..." : "");
+    textValue.substring(0, 20) + (textValue.length > limit ? "..." : "");
   const displayText = isShowMore ? textValue : shortText;
 
   return (

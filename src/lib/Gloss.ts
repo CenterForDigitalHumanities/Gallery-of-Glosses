@@ -24,6 +24,7 @@ interface Gloss {
 }
 
 interface ProcessedGloss {
+  targetId: string;
   title: string;
   targetCollection: string;
   targetChapter: string;

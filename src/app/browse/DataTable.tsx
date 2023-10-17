@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/Table";
 import { DataTablePagination } from "./DataTablePagination";
 import { DataTableToolbar } from "./DataTableToolbar";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -29,6 +30,8 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const table = useReactTable({
     data,
     columns,
@@ -64,8 +67,15 @@ export function DataTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
+                  className="cursor-pointer"
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  onClick={() => {
+                    const id = (row.original as ProcessedGloss).targetId.split(
+                      "/id/"
+                    )[1];
+                    router.push(`/gloss/${id}`);
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
