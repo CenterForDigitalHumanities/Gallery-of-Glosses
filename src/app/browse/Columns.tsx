@@ -2,7 +2,6 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
-import { useState } from "react";
 import DataTableCell from "./DataTableCell";
 
 export const columns: ColumnDef<ProcessedGloss>[] = [

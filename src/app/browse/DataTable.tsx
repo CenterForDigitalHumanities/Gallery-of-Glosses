@@ -19,19 +19,21 @@ import {
 } from "@/components/ui/Table";
 import { DataTablePagination } from "./DataTablePagination";
 import { DataTableToolbar } from "./DataTableToolbar";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { BeatLoader } from "react-spinners";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  loading: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  loading,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const table = useReactTable({
     data,
     columns,
@@ -39,6 +41,9 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
+
+  const foregroundColor = `var(--foreground)`;
+  console.log(foregroundColor);
 
   return (
     <div className="space-y-4">
@@ -93,7 +98,13 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {loading ? (
+                    <div>
+                      <BeatLoader color="#94a3b7" />
+                    </div>
+                  ) : (
+                    <>No results.</>
+                  )}
                 </TableCell>
               </TableRow>
             )}
