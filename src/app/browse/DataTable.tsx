@@ -100,7 +100,7 @@ export function DataTable<TData, TValue>({
                 >
                   {loading ? (
                     <div>
-                      <BeatLoader color="#94a3b7" />
+                      <BeatLoader color="#94a3b7" size={8} />
                     </div>
                   ) : (
                     <>No results.</>
