@@ -27,6 +27,10 @@ export const GETTING_STARTED_LINKS = [
 
 export const BROWSE_GLOSSES_LINKS = [
   {
+    title: "Browse All Glosses",
+    href: "/browse",
+  },
+  {
     title: "Browse by Book",
     href: "/browse/book",
   },

@@ -4,6 +4,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import DataTableCell from "./DataTableCell";
 
+function handleOpenGlossInstance(row: { original: ProcessedGloss }) {
+  const id = (row.original as ProcessedGloss).targetId.split("/id/")[1];
+  window.open(`/gloss/${id}`, "_blank");
+}
 export const columns: ColumnDef<ProcessedGloss>[] = [
   {
     accessorKey: "title",
@@ -13,7 +17,16 @@ export const columns: ColumnDef<ProcessedGloss>[] = [
     cell: ({ row }) => {
       const title = row.getValue("title");
 
-      return <div className="truncate">{title as React.ReactNode}</div>;
+      return (
+        <div
+          className="truncate"
+          onClick={() => {
+            handleOpenGlossInstance(row);
+          }}
+        >
+          {title as React.ReactNode}
+        </div>
+      );
     },
   },
   {
@@ -21,12 +34,38 @@ export const columns: ColumnDef<ProcessedGloss>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Target Chapter" />
     ),
+    cell: ({ row }) => {
+      const targetChapter = row.getValue("targetChapter");
+
+      return (
+        <div
+          onClick={() => {
+            handleOpenGlossInstance(row);
+          }}
+        >
+          {targetChapter as React.ReactNode}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "targetVerse",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Target Verse" />
     ),
+    cell: ({ row }) => {
+      const targetVerse = row.getValue("targetVerse");
+
+      return (
+        <div
+          onClick={() => {
+            handleOpenGlossInstance(row);
+          }}
+        >
+          {targetVerse as React.ReactNode}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "textValue",

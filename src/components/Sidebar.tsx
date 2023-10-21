@@ -41,7 +41,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                         {section.items.map((item) => (
                           <a
                             key={item.href}
-                            className="truncate group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline text-muted-foreground"
+                            className=" group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline text-muted-foreground"
                             href={item.href}
                           >
                             {item.title}

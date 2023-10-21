@@ -42,9 +42,6 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  const foregroundColor = `var(--foreground)`;
-  console.log(foregroundColor);
-
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} />
@@ -75,12 +72,6 @@ export function DataTable<TData, TValue>({
                   className="cursor-pointer"
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  onClick={() => {
-                    const id = (row.original as ProcessedGloss).targetId.split(
-                      "/id/"
-                    )[1];
-                    router.push(`/gloss/${id}`);
-                  }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
