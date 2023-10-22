@@ -50,7 +50,7 @@ const Header: FC<HeaderProps> = ({}) => {
             </a>
             <a
               className="transition-colors hover:text-foreground/80 text-foreground/60"
-              href="/browse/book"
+              href="/browse"
             >
               Browse Glosses
             </a>
