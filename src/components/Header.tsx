@@ -13,18 +13,18 @@ import {
 
 interface HeaderProps {}
 
-const capitalizeFirstLetter = (topic: string) => {
-  if (topic) return topic.charAt(0).toUpperCase() + topic.slice(1);
-  else return "";
-};
-
 const Header: FC<HeaderProps> = ({}) => {
   const pathname = usePathname();
   const split_pathname = pathname.split("/");
-  const section = capitalizeFirstLetter(split_pathname[1]);
-  const topic = capitalizeFirstLetter(split_pathname[2]);
+  const section = CapitalizeFirstLetter(split_pathname[1]);
+  const topic = CapitalizeFirstLetter(split_pathname[2]);
 
   const [openMenu, setOpenMenu] = useState(false);
+
+  function CapitalizeFirstLetter(topic: string) {
+    if (topic) return topic.charAt(0).toUpperCase() + topic.slice(1);
+    else return "";
+  }
 
   return (
     <header className="supports-backdrop-blur:bg-background/60 sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
@@ -50,7 +50,7 @@ const Header: FC<HeaderProps> = ({}) => {
             </a>
             <a
               className="transition-colors hover:text-foreground/80 text-foreground/60"
-              href="/browse/book"
+              href="/browse"
             >
               Browse Glosses
             </a>
@@ -68,10 +68,15 @@ const Header: FC<HeaderProps> = ({}) => {
             {pathname != "/" && (
               <ol className="ml-4 flex text-sm leading-6 whitespace-nowrap min-w-0 items-center gap-2">
                 <li>{section}</li>
-                <PiCaretRightBold />
-                <li className="font-semibold text-slate-900 truncate dark:text-slate-200">
-                  {topic}
-                </li>
+
+                {["Book", "Tag", "Theme"].includes(topic) && (
+                  <>
+                    <PiCaretRightBold />
+                    <li className="font-semibold text-slate-900 truncate dark:text-slate-200">
+                      {topic}
+                    </li>
+                  </>
+                )}
               </ol>
             )}
           </div>

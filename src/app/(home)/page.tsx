@@ -16,7 +16,7 @@ export default function Home() {
             <a href="/docs/about">
               <Button className="truncate w-[150px]">What are Glosses?</Button>
             </a>
-            <a href="/browse/books">
+            <a href="/browse/book">
               <Button className="truncate w-[150px]">Start Browsing</Button>
             </a>
           </div>
@@ -25,9 +25,7 @@ export default function Home() {
       <section className="flex flex-col items-center px-8 mt-10 w-full ">
         <iframe
           className="rounded-md"
-          width="200 lg:400"
-          height="100 lg:200"
-          src="//www.youtube.com/embed/248EDx1u30Q?rel=0"
+          src="https://www.youtube.com/embed/248EDx1u30Q?rel=0"
           allowFullScreen
         />
       </section>
