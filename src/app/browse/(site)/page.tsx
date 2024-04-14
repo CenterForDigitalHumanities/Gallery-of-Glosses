@@ -3,12 +3,12 @@
 import { FC } from "react";
 import { columns } from "../Columns";
 import { DataTable } from "../DataTable";
-import { useGlossList } from "@/hooks/useGlossList";
+import { useGlossInstance } from "@/hooks/useGlossInstance";
 
 interface BrowseAllGlossesProps {}
 
 const BrowseAllGlosses: FC<BrowseAllGlossesProps> = ({}) => {
-  const { glosses, loading } = useGlossList();
+  const { glosses, loading } = useGlossInstance();
   return (
     <div>
       {<DataTable columns={columns} data={glosses} loading={loading} />}
