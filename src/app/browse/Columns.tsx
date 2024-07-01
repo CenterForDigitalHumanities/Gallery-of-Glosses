@@ -35,14 +35,14 @@ export function make_columns(columnsList: { header: string, accessorKey: string,
     else
       return {
         accessorKey: columnObject.accessorKey,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={columnObject.header} />
-    ),
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={columnObject.header} />
+        ),
         cell: ({ row }) => {
-      return (
-        <DataTableCell textValue={row.getValue(columnObject.accessorKey)} rowId={row.id} />
-      );
-    },
+          return (
+            <DataTableCell textValue={row.getValue(columnObject.accessorKey)} rowId={row.id} />
+          );
+        },
       }
   });
 }
