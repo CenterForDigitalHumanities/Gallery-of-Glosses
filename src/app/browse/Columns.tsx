@@ -9,8 +9,8 @@ function handleOpenGlossInstance(row: { original: ProcessedGloss }) {
   window.open(`/gloss/${id}`, "_blank");
 }
 
-export function make_columns(columnsList: { header: string, accessorKey: string, expandable: boolean }[]) {
-  return columnsList.map((columnObject: any) => {
+export function make_columns(columnsList: { header: string, accessorKey: string, expandable: boolean }[]): ColumnDef<ProcessedGloss>[] {
+  return columnsList.map((columnObject) => {
     if (!columnObject.expandable)
       return {
         accessorKey: columnObject.accessorKey,
