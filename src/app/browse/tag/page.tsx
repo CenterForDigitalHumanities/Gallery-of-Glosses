@@ -7,27 +7,19 @@ import { useGlossList } from "@/hooks/useGlossList";
 
 interface TagProps {}
 
+let filterColumn = { header: "Tags", accessorKey: "tags", expandable: false }
 let columns = make_columns([
-  { header: "Tag", accessorKey: "tags", expandable: false },
+  { header: "Incipit", accessorKey: "title", expandable: false },
+  filterColumn,
+  { header: "Target Text", accessorKey: "textValue", expandable: true },
 ])
 
 const Tag: FC<TagProps> = ({}) => {
   const { glosses, loading } = useGlossList();
 
-  let tags: string[] = []
-  tags = glosses.map((gloss) => {
-    if (gloss.tags)
-      return gloss.tags.split(' ').filter(tag =>
-        !tags.includes(tag)
-      )
-    else
-      return [];
-  })
-    .flat();
-
   return (
     <div>
-      {<DataTable columns={columns} data={glosses} loading={loading} />}
+      {<DataTable columns={columns} data={glosses} loading={loading} filterColumn={filterColumn} />}
     </div>
   );
 };
