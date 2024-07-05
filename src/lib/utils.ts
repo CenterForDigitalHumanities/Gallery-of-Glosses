@@ -94,6 +94,9 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
     textLanguage: undefined,
     textValue: undefined,
     creator: undefined,
+    document: undefined,
+    themes: undefined,
+    canonicalReference: undefined,
   };
 
   processedGloss.targetId = targetId;
@@ -117,6 +120,12 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
       processedGloss.textValue = item.text.textValue;
     } else if (item.creator && item.creator.value) {
       processedGloss.creator = item.creator.value;
+    } else if (item._document && item._document.value) {
+      processedGloss.creator = item._document.value;
+    } else if (item.themes && item.themes.value) {
+      processedGloss.creator = item.themes.value;
+    } else if (item.canonicalReference && item.canonicalReference.value) {
+      processedGloss.creator = item.canonicalReference.value;
     }
   });
 
