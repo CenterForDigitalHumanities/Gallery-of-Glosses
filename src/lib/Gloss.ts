@@ -30,6 +30,9 @@ interface Gloss {
   canonicalReference?: {
     value: string
   };
+  description?: {
+    value: string
+  };
 }
 
 interface ProcessedGloss {
@@ -46,4 +49,5 @@ interface ProcessedGloss {
   document?: string;
   themes?: string[];
   canonicalReference?: string;
+  description?: string;
 }

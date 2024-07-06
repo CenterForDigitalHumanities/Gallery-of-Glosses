@@ -97,6 +97,7 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
     document: undefined,
     themes: undefined,
     canonicalReference: undefined,
+    description: undefined
   };
 
   processedGloss.targetId = targetId;
@@ -125,11 +126,13 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
     } else if (item.creator && item.creator.value) {
       processedGloss.creator = item.creator.value;
     } else if (item._document && item._document.value) {
-      processedGloss.creator = item._document.value;
+      processedGloss.document = item._document.value;
     } else if (item.themes && item.themes.value) {
-      processedGloss.creator = item.themes.value;
+      processedGloss.themes = item.themes.value;
     } else if (item.canonicalReference && item.canonicalReference.value) {
-      processedGloss.creator = item.canonicalReference.value;
+      processedGloss.canonicalReference = item.canonicalReference.value;
+    } else if (item.description && item.description.value) {
+      processedGloss.description = item.description.value;
     }
   });
 
