@@ -7,7 +7,7 @@ import { useGlossList } from "@/hooks/useGlossList";
 
 interface BookProps {}
 
-let filterColumn = { header: "Book", accessorKey: "targetCollection", expandable: false }
+let filterColumn = { header: "Book", accessorKey: "document", expandable: false }
 let columns = make_columns([
   { header: "Incipit", accessorKey: "title", expandable: false },
   filterColumn,
