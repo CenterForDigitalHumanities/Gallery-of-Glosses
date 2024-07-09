@@ -7,19 +7,35 @@ import { useGlossList } from "@/hooks/useGlossList";
 
 interface BookProps {}
 
-let filterColumn = { header: "Book", accessorKey: "document", expandable: false }
+let filterColumn = {
+  header: "Book",
+  accessorKey: "document",
+  expandable: false,
+};
 let columns = make_columns([
   { header: "Incipit", accessorKey: "title", expandable: false },
+  {
+    header: "Canonical Reference Locator",
+    accessorKey: "canonicalReference",
+    expandable: false,
+  },
   filterColumn,
   { header: "Target Text", accessorKey: "textValue", expandable: true },
-])
+]);
 
 const Book: FC<BookProps> = ({}) => {
   const { glosses, loading } = useGlossList();
 
   return (
     <div>
-      {<DataTable columns={columns} data={glosses} loading={loading} filterColumn={filterColumn} />}
+      {
+        <DataTable
+          columns={columns}
+          data={glosses}
+          loading={loading}
+          filterColumn={filterColumn}
+        />
+      }
     </div>
   );
 };

@@ -7,19 +7,33 @@ import { useGlossList } from "@/hooks/useGlossList";
 
 interface BrowseAllGlossesProps {}
 
-let filterColumn = { header: "Incipit", accessorKey: "title", expandable: false }
+let filterColumn = {
+  header: "Incipit",
+  accessorKey: "title",
+  expandable: false,
+};
 let columns = make_columns([
   filterColumn,
-  { header: "Target Chapter", accessorKey: "targetChapter", expandable: false },
-  { header: "Target Verse", accessorKey: "targetVerse", expandable: false },
+  {
+    header: "Canonical Reference Locator",
+    accessorKey: "canonicalReference",
+    expandable: false,
+  },
   { header: "Target Text", accessorKey: "textValue", expandable: true },
-])
+]);
 
 const BrowseAllGlosses: FC<BrowseAllGlossesProps> = ({}) => {
   const { glosses, loading } = useGlossList();
   return (
     <div>
-      {<DataTable columns={columns} data={glosses} loading={loading} filterColumn={filterColumn} />}
+      {
+        <DataTable
+          columns={columns}
+          data={glosses}
+          loading={loading}
+          filterColumn={filterColumn}
+        />
+      }
     </div>
   );
 };
