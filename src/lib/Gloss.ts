@@ -21,6 +21,18 @@ interface Gloss {
   creator?: {
     value: string;
   };
+  document?: {
+    value: string;
+  };
+  themes?: {
+    value: string[];
+  };
+  canonicalReference?: {
+    value: string
+  };
+  description?: {
+    value: string
+  };
 }
 
 interface ProcessedGloss {
@@ -36,4 +48,8 @@ interface ProcessedGloss {
   textLanguage?: string;
   textValue?: string;
   creator?: string;
+  document?: string;
+  themes?: string[];
+  canonicalReference?: string;
+  description?: string;
 }

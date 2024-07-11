@@ -94,6 +94,10 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
     textLanguage: undefined,
     textValue: undefined,
     creator: undefined,
+    document: undefined,
+    themes: undefined,
+    canonicalReference: undefined,
+    description: undefined
   };
 
   processedGloss.targetId = targetId;
@@ -107,8 +111,12 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
       processedGloss.targetCollection = item.targetCollection;
     } else if (item.targetChapter && item.targetChapter.value) {
       processedGloss.targetChapter = item.targetChapter.value;
+    } else if (item._section && item._section.value) {
+      processedGloss.targetChapter = item._section.value;
     } else if (item.targetVerse && item.targetVerse.value) {
       processedGloss.targetVerse = item.targetVerse.value;
+    } else if (item._subsection && item._subsection.value) {
+      processedGloss.targetVerse = item._subsection.value;
     } else if (item.tags && item.tags.items) {
       processedGloss.tags = item.tags.items.join(", ");
     } else if (item.text) {
@@ -117,6 +125,14 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
       processedGloss.textValue = item.text.textValue;
     } else if (item.creator && item.creator.value) {
       processedGloss.creator = item.creator.value;
+    } else if (item._document && item._document.value) {
+      processedGloss.document = item._document.value;
+    } else if (item.themes && item.themes.value) {
+      processedGloss.themes = item.themes.value;
+    } else if (item.canonicalReference && item.canonicalReference.value) {
+      processedGloss.canonicalReference = item.canonicalReference.value;
+    } else if (item.description && item.description.value) {
+      processedGloss.description = item.description.value;
     }
   });
 
