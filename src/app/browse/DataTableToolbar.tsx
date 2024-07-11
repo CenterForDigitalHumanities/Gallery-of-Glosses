@@ -19,7 +19,10 @@ export function DataTableToolbar<TData>({
     table.getPreFilteredRowModel().rows.length >
     table.getFilteredRowModel().rows.length;
   const [searchTerm, setSearchTerm] = useState<string | null>(
-    new URLSearchParams(window.location.search).get("q"),
+    // Check if running in a browser environment fixes "window is not defined"
+    typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search).get("q")
+      : null
   );
 
   useEffect(() => {
