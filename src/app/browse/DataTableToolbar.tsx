@@ -25,6 +25,7 @@ export function DataTableToolbar<TData>({
       : null
   );
 
+  // Update the URL query string and filter table when user types in search bar
   useEffect(() => {
     const url = new URL(window.location.href);
     if (searchTerm !== "" && searchTerm !== null) {
