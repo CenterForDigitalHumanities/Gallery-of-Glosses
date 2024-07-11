@@ -22,7 +22,9 @@ const GlossInstance = () => {
           <p>
             <span className="font-semibold">Canonical Reference Locator:</span>{" "}
             <span className={`${!gloss && blurredStyles}`}>
-              {gloss && gloss.canonicalReference ? gloss.canonicalReference : "Not found"}
+              {gloss && gloss.canonicalReference
+                ? gloss.canonicalReference
+                : "Not found"}
             </span>
           </p>
           <p>
@@ -40,13 +42,38 @@ const GlossInstance = () => {
           <p>
             <span className="font-semibold">Tags:</span>{" "}
             <span className={`${!gloss && blurredStyles}`}>
-              {gloss && gloss.tags ? gloss.tags : "Not found"}
+              {gloss && gloss.tags
+                ? gloss.tags.split(", ").map((tag, tagIndex, tagArray) => (
+                    <a
+                      key={tagIndex}
+                      href={"/browse/tag?q=" + tag}
+                      className="text-blue-500 hover:underline"
+                    >
+                      {tag}
+                      {tagIndex < tagArray.length - 1 ? ", " : ""}
+                    </a>
+                  ))
+                : "Not found"}
             </span>
           </p>
           <p>
             <span className="font-semibold">Themes:</span>{" "}
             <span className={`${!gloss && blurredStyles}`}>
-              {gloss && gloss.themes ? gloss.themes : "Not found"}
+              {gloss && gloss.themes
+                ? gloss.themes
+                    .join("")
+                    .split(", ")
+                    .map((theme, themeIndex, themeArray) => (
+                      <a
+                        key={themeIndex}
+                        href={"/browse/theme?q=" + theme}
+                        className="text-blue-500 hover:underline"
+                      >
+                        {theme}
+                        {themeIndex < themeArray.length - 1 ? ", " : ""}
+                      </a>
+                    ))
+                : "Not found"}
             </span>
           </p>
         </div>
