@@ -51,7 +51,7 @@ export async function GrabGlossProperties(req: Request): Promise<Response> {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
           },
-        }
+        },
       );
 
       objects = [...objects, ...response.data];
@@ -76,7 +76,7 @@ export async function GrabGlossProperties(req: Request): Promise<Response> {
       "Could not retrieve objects at this time. Please try later",
       {
         status: 500,
-      }
+      },
     );
   }
 }
@@ -97,7 +97,7 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
     document: undefined,
     themes: undefined,
     canonicalReference: undefined,
-    description: undefined
+    description: undefined,
   };
 
   processedGloss.targetId = targetId;
@@ -144,6 +144,87 @@ export async function GrabProductionGlosses() {
     const response = await axios.get(PRODUCTION_GLOSS_COLLECTION);
     return response.data;
   } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
+}
+
+/**
+ * Fetches Witness fragments for a Gloss.
+ * @param targetId
+ * @param limit
+ * @returns An array of Witness fragments
+ */
+export async function grabGlossWitnessFragments(
+  targetId: string,
+  limit: number,
+) {
+  // Fetch annotations referencing the Gloss
+  try {
+    const annotationResponse = await axios.post(
+      `https://tiny.rerum.io/app/query?limit=${limit}`,
+      {
+        "body.references.value": targetId,
+        "__rerum.history.next": {
+          $exists: true,
+          $type: "array",
+          $eq: [],
+        },
+      },
+    );
+
+    return annotationResponse.data.map(
+      async (annotation: TranscriptionAnnotation) => {
+        // For each annotation, fetch the Witness fragment
+        const witnessFragmentResponse = await axios.get(annotation.target);
+        if (witnessFragmentResponse.data["@type"] !== "Text") return null;
+        return witnessFragmentResponse.data;
+      },
+    );
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
+}
+
+/**
+ * Fetches annotations for a Witness fragment
+ * @param targetId ID of the Witness fragment to fetch annotations for
+ */
+export async function processTranscriptionAnnotations(
+  targetId: string,
+): Promise<ProcessedTranscriptionAnnotations | null> {
+  try {
+    // Fetch a list of TranscriptionAnnotations
+    const response = await axios.post("https://tiny.rerum.io/app/query", {
+      target: targetId,
+      "__rerum.history.next": {
+        $exists: true,
+        $type: "array",
+        $eq: [],
+      },
+    });
+
+    // Process
+    let processedAnnotations: ProcessedTranscriptionAnnotations = {};
+    response.data.forEach((annotation: TranscriptionAnnotation) => {
+      processedAnnotations = {
+        target: annotation.target,
+        creator: annotation.creator,
+        body: {
+          title: annotation.body.title?.value,
+          identifier: annotation.body.identifier?.value,
+          creator: annotation.body.creator?.value,
+          source: annotation.body.source?.value,
+          selections: annotation.body.selections?.value,
+          references: annotation.body.references?.value,
+          text: annotation.body.text ?? undefined,
+        },
+      };
+    });
+    return processedAnnotations;
+  }
+  catch (error) {
     console.error("Error fetching data:", error);
     return null;
   }
