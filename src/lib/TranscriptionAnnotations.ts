@@ -19,17 +19,15 @@ interface TranscriptionAnnotation {
 interface ProcessedTranscriptionAnnotations {
   target?: string;
   creator?: string;
-  body?: {
+  body: {
     title?: string;
     identifier?: string;
     creator?: string;
     source?: string[];
     selections?: string[];
     references?: string[];
-    text?: {
-      format: string;
-      language: string;
-      textValue: string;
-    };
+    textFormat?: string;
+    textLanguage?: string;
+    textValue?: string;
   };
 }

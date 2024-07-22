@@ -4,6 +4,7 @@ import { TargetIdValidator } from "./validators/TargetId";
 import { z } from "zod";
 import axios from "axios";
 import { PRODUCTION_GLOSS_COLLECTION } from "@/configs/rerum-links";
+import { Item } from "@radix-ui/react-dropdown-menu";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -206,21 +207,41 @@ export async function processTranscriptionAnnotations(
     });
 
     // Process
-    let processedAnnotations: ProcessedTranscriptionAnnotations = {};
+    let processedAnnotations: ProcessedTranscriptionAnnotations = {
+      target: undefined,
+      creator: undefined,
+      body: {
+        title: undefined,
+        identifier: undefined,
+        creator: undefined,
+        source: undefined,
+        selections: undefined,
+        references: undefined,
+        textFormat: undefined,
+        textLanguage: undefined,
+        textValue: undefined,
+      }
+    };
     response.data.forEach((annotation: TranscriptionAnnotation) => {
-      processedAnnotations = {
-        target: annotation.target,
-        creator: annotation.creator,
-        body: {
-          title: annotation.body.title?.value,
-          identifier: annotation.body.identifier?.value,
-          creator: annotation.body.creator?.value,
-          source: annotation.body.source?.value,
-          selections: annotation.body.selections?.value,
-          references: annotation.body.references?.value,
-          text: annotation.body.text ?? undefined,
-        },
-      };
+      processedAnnotations.target = annotation.target;
+      processedAnnotations.creator = annotation.creator;
+      if (annotation.body.title)
+        processedAnnotations.body.title = annotation.body.title.value;
+      else if (annotation.body.identifier)
+        processedAnnotations.body.identifier = annotation.body.identifier.value;
+      else if (annotation.body.creator)
+        processedAnnotations.body.creator = annotation.body.creator.value;
+      else if (annotation.body.source)
+        processedAnnotations.body.source = annotation.body.source.value;
+      else if (annotation.body.selections)
+        processedAnnotations.body.selections = annotation.body.selections.value;
+      else if (annotation.body.references)
+        processedAnnotations.body.references = annotation.body.references.value;
+      else if (annotation.body.text) {
+        processedAnnotations.body.textFormat = annotation.body.text.format;
+        processedAnnotations.body.textLanguage = annotation.body.text.language;
+        processedAnnotations.body.textValue = annotation.body.text.textValue;
+      }
     });
     return processedAnnotations;
   }
