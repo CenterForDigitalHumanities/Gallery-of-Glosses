@@ -2,36 +2,57 @@
 
 import { Table } from "@tanstack/react-table";
 import { X } from "lucide-react";
-
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { useEffect, useState } from "react";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  filterColumn: { header: string; accessorKey: string };
 }
 
 export function DataTableToolbar<TData>({
   table,
+  filterColumn,
 }: DataTableToolbarProps<TData>) {
   const isFiltered =
     table.getPreFilteredRowModel().rows.length >
     table.getFilteredRowModel().rows.length;
+  const [searchTerm, setSearchTerm] = useState<string | null>(
+    // Check if running in a browser environment fixes "window is not defined"
+    typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search).get("q")
+      : null
+  );
+
+  // Update the URL query string and filter table when user types in search bar
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (searchTerm !== "" && searchTerm !== null) {
+      url.searchParams.set("q", searchTerm);
+    } else {
+      url.searchParams.delete("q");
+    }
+    history.pushState(null, "", url.toString());
+    table.getColumn(filterColumn.accessorKey)?.setFilterValue(searchTerm);
+  }, [searchTerm, table, filterColumn.accessorKey]);
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
-          placeholder="Filter by Incipit..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
+          placeholder={`Filter by ${filterColumn.header}...`}
+          value={searchTerm ?? ""}
+          onChange={(event) => setSearchTerm(event.target.value)}
           className="h-8 w-[150px] lg:w-[250px] border border-neutral-500"
         />
         {isFiltered && (
           <Button
             variant="ghost"
-            onClick={() => table.resetColumnFilters()}
+            onClick={() => {
+              table.resetColumnFilters();
+              setSearchTerm(null);
+            }}
             className="h-8 px-2 lg:px-3"
           >
             Reset

@@ -8,74 +8,46 @@ function handleOpenGlossInstance(row: { original: ProcessedGloss }) {
   const id = (row.original as ProcessedGloss).targetId.split("/id/")[1];
   window.open(`/gloss/${id}`, "_blank");
 }
-export const columns: ColumnDef<ProcessedGloss>[] = [
-  {
-    accessorKey: "title",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Incipit" />
-    ),
-    cell: ({ row }) => {
-      const title = row.getValue("title");
 
-      return (
-        <div
-          className="truncate"
-          onClick={() => {
-            handleOpenGlossInstance(row);
-          }}
-        >
-          {title as React.ReactNode}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "targetChapter",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Target Chapter" />
-    ),
-    cell: ({ row }) => {
-      const targetChapter = row.getValue("targetChapter");
+/**
+ * Creates an array of columns for a data table.
+ * @param columnsList - An array of objects representing basic column information.
+ * @returns An array of columns.
+ */
+export function make_columns(columnsList: { header: string, accessorKey: string, expandable: boolean }[]): ColumnDef<ProcessedGloss>[] {
+  return columnsList.map((columnObject) => {
+    if (!columnObject.expandable)
+      return {
+        accessorKey: columnObject.accessorKey,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={columnObject.header} />
+        ),
+        cell: ({ row }) => {
+          const title = row.getValue(columnObject.accessorKey);
 
-      return (
-        <div
-          onClick={() => {
-            handleOpenGlossInstance(row);
-          }}
-        >
-          {targetChapter as React.ReactNode}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "targetVerse",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Target Verse" />
-    ),
-    cell: ({ row }) => {
-      const targetVerse = row.getValue("targetVerse");
-
-      return (
-        <div
-          onClick={() => {
-            handleOpenGlossInstance(row);
-          }}
-        >
-          {targetVerse as React.ReactNode}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "textValue",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Target Text" />
-    ),
-    cell: ({ row }) => {
-      return (
-        <DataTableCell textValue={row.getValue("textValue")} rowId={row.id} />
-      );
-    },
-  },
-];
+          return (
+            <div
+              className="truncate"
+              onClick={() => {
+                handleOpenGlossInstance(row);
+              }}
+            >
+              {title as React.ReactNode}
+            </div>
+          );
+        },
+      }
+    else
+      return {
+        accessorKey: columnObject.accessorKey,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={columnObject.header} />
+        ),
+        cell: ({ row }) => {
+          return (
+            <DataTableCell textValue={row.getValue(columnObject.accessorKey)} rowId={row.id} />
+          );
+        },
+      }
+  });
+}
