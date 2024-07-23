@@ -1,6 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { z } from "zod";
 import axios from "axios";
 import { PRODUCTION_GLOSS_COLLECTION } from "@/configs/rerum-links";
 
@@ -63,10 +62,6 @@ export async function GrabGlossProperties(targetId: string): Promise<Response> {
       status: 200,
     });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return new Response(error.message, { status: 400 });
-    }
-
     console.error("Error querying objects:", error);
     return new Response(
       "Could not retrieve objects at this time. Please try later",

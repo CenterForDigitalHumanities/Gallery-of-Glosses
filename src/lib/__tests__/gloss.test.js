@@ -5,21 +5,14 @@ import axios from "axios";
 jest.mock("axios");
 
 describe("GrabGlossProperties", () => {
-  const mockRequest = {
-    json: jest.fn().mockResolvedValue({ targetId: "http://example.com" }),
-  };
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it("should send an appropriate RERUM query", async () => {
     axios.post.mockResolvedValue({
-      data: {
-        targetId: "https://store.rerum.io/v1/id/614362c3e74876243131a4e0",
-      },
+      data: { status: 200, someProperty: "someValue" },
     });
-
     const response = await GrabGlossProperties(
       "https://store.rerum.io/v1/id/614362c3e74876243131a4e0",
     );
@@ -50,6 +43,7 @@ describe("GrabGlossProperties", () => {
       },
       { headers: { "Content-Type": "application/json; charset=utf-8" } },
     );
+    expect(response.status).toBe(200);
   });
 });
 
