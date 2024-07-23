@@ -1,6 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { TargetIdValidator } from "./validators/TargetId";
 import { z } from "zod";
 import axios from "axios";
 import { PRODUCTION_GLOSS_COLLECTION } from "@/configs/rerum-links";
@@ -14,11 +13,8 @@ interface ObjectData {
   [key: string]: any;
 }
 
-export async function GrabGlossProperties(req: Request): Promise<Response> {
+export async function GrabGlossProperties(targetId: string): Promise<Response> {
   try {
-    const body = await req.json();
-    const { targetId } = TargetIdValidator.parse(body);
-
     let queryObj: { [key: string]: any } = {};
     let targetConditions: { [key: string]: string }[] = [];
 
@@ -51,7 +47,7 @@ export async function GrabGlossProperties(req: Request): Promise<Response> {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
           },
-        }
+        },
       );
 
       objects = [...objects, ...response.data];
@@ -76,7 +72,7 @@ export async function GrabGlossProperties(req: Request): Promise<Response> {
       "Could not retrieve objects at this time. Please try later",
       {
         status: 500,
-      }
+      },
     );
   }
 }
@@ -97,7 +93,7 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
     document: undefined,
     themes: undefined,
     canonicalReference: undefined,
-    description: undefined
+    description: undefined,
   };
 
   processedGloss.targetId = targetId;

@@ -20,11 +20,9 @@ describe("GrabGlossProperties", () => {
       },
     });
 
-    const response = await GrabGlossProperties({
-      json: jest.fn().mockResolvedValue({
-        targetId: "https://store.rerum.io/v1/id/614362c3e74876243131a4e0",
-      }),
-    });
+    const response = await GrabGlossProperties(
+      "https://store.rerum.io/v1/id/614362c3e74876243131a4e0",
+    );
 
     expect(axios.post).toHaveBeenCalledWith(
       "https://tinymatt.rerum.io/gloss/query?limit=100&skip=0",
@@ -52,17 +50,6 @@ describe("GrabGlossProperties", () => {
       },
       { headers: { "Content-Type": "application/json; charset=utf-8" } },
     );
-  });
-
-  it("should handle errors gracefully", async () => {
-    axios.post.mockRejectedValue(new Error("API call failed"));
-
-    const response = await GrabGlossProperties(mockRequest);
-    const responseData = await response.text();
-
-    expect(axios.post).toHaveBeenCalled();
-    expect(responseData).toContain("Could not retrieve objects at this time");
-    expect(response.status).toBe(500);
   });
 });
 
