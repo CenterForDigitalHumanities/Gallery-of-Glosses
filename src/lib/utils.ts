@@ -15,30 +15,39 @@ interface ObjectData {
   [key: string]: any;
 }
 
+/**
+ * Converts a RERUM ID to be used in a query for "target" and related fields.
+ * @param targetId The RERUM ID to convert
+ * @returns Object with queries for "target", "target.@id", and "target.id" for http and https versions of passed ID
+ */
+function getQueryFromId(targetId: string) {
+  let queryObj: { [key: string]: any } = {};
+  let targetConditions: { [key: string]: string }[] = [];
+
+  if (targetId.startsWith("http")) {
+    const httpVersion = targetId.replace(/^https?/, "http");
+    const httpsVersion = targetId.replace(/^https?/, "https");
+
+    ["target", "target.@id", "target.id"].forEach((targetKey) => {
+      targetConditions.push({ [targetKey]: httpVersion });
+      targetConditions.push({ [targetKey]: httpsVersion });
+    });
+
+    queryObj = {
+      $or: targetConditions,
+      "__rerum.history.next": { $exists: true, $size: 0 },
+    };
+  } else {
+    queryObj["target"] = targetId;
+  }
+  return queryObj;
+}
+
 export async function GrabGlossProperties(req: Request): Promise<Response> {
   try {
     const body = await req.json();
     const { targetId } = TargetIdValidator.parse(body);
-
-    let queryObj: { [key: string]: any } = {};
-    let targetConditions: { [key: string]: string }[] = [];
-
-    if (targetId.startsWith("http")) {
-      const httpVersion = targetId.replace(/^https?/, "http");
-      const httpsVersion = targetId.replace(/^https?/, "https");
-
-      ["target", "target.@id", "target.id"].forEach((targetKey) => {
-        targetConditions.push({ [targetKey]: httpVersion });
-        targetConditions.push({ [targetKey]: httpsVersion });
-      });
-
-      queryObj = {
-        $or: targetConditions,
-        "__rerum.history.next": { $exists: true, $size: 0 },
-      };
-    } else {
-      queryObj["target"] = targetId;
-    }
+    let queryObj = getQueryFromId(targetId);
 
     const limit = 100;
     let skip = 0;
@@ -172,6 +181,11 @@ export async function grabGlossWitnessFragments(
           $eq: [],
         },
       },
+      {
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+      },
     );
 
     return annotationResponse.data.map(
@@ -195,16 +209,18 @@ export async function grabGlossWitnessFragments(
 export async function processTranscriptionAnnotations(
   targetId: string,
 ): Promise<ProcessedTranscriptionAnnotations | null> {
+  let queryObj = getQueryFromId(targetId);
   try {
     // Fetch a list of TranscriptionAnnotations
-    const response = await axios.post("https://tiny.rerum.io/app/query", {
-      target: targetId,
-      "__rerum.history.next": {
-        $exists: true,
-        $type: "array",
-        $eq: [],
+    const response = await axios.post(
+      "https://tiny.rerum.io/app/query",
+      queryObj,
+      {
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
       },
-    });
+    );
 
     // Process
     let processedAnnotations: ProcessedTranscriptionAnnotations = {
@@ -220,8 +236,9 @@ export async function processTranscriptionAnnotations(
         textFormat: undefined,
         textLanguage: undefined,
         textValue: undefined,
-      }
+      },
     };
+
     response.data.forEach((annotation: TranscriptionAnnotation) => {
       processedAnnotations.target = annotation.target;
       processedAnnotations.creator = annotation.creator;
@@ -244,8 +261,7 @@ export async function processTranscriptionAnnotations(
       }
     });
     return processedAnnotations;
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Error fetching data:", error);
     return null;
   }
