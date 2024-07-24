@@ -178,17 +178,13 @@ export async function GrabProductionGlosses() {
 /**
  * Fetches Witness fragments for a Gloss.
  * @param targetId
- * @param limit
  * @returns An array of Witness fragments
  */
-export async function grabGlossWitnessFragments(
-  targetId: string,
-  limit: number,
-) {
+export async function grabGlossWitnessFragments(targetId: string) {
   // Fetch annotations referencing the Gloss
   try {
-    const annotationResponse = await axios.post(
-      `https://tiny.rerum.io/app/query?limit=${limit}`,
+    const annotationResponse = await makePagedQuery(
+      "https://tiny.rerum.io/app/query",
       {
         "body.references.value": targetId,
         "__rerum.history.next": {
@@ -197,21 +193,19 @@ export async function grabGlossWitnessFragments(
           $eq: [],
         },
       },
-      {
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-        },
-      },
     );
 
-    return annotationResponse.data.map(
+    // For each annotation, get the targetId
+    const responseData = await annotationResponse.json();
+    let targets = responseData.map(
       async (annotation: TranscriptionAnnotation) => {
-        // For each annotation, fetch the Witness fragment
         const witnessFragmentResponse = await axios.get(annotation.target);
-        if (witnessFragmentResponse.data["@type"] !== "Text") return null;
         return witnessFragmentResponse.data;
       },
     );
+
+    // Filter out those that are not Witness fragments
+    return targets.filter((item: any) => item["@type"] === "Witness");
   } catch (error) {
     console.error("Error fetching data:", error);
     return null;
@@ -249,42 +243,39 @@ export function processTranscriptionAnnotations(
   targetId: string,
 ): ProcessedTranscriptionAnnotations {
   let processedAnnotations: ProcessedTranscriptionAnnotations = {
-    target: undefined,
+    targetId: undefined,
+    title: undefined,
+    identifier: undefined,
     creator: undefined,
-    body: {
-      title: undefined,
-      identifier: undefined,
-      creator: undefined,
-      source: undefined,
-      selections: undefined,
-      references: undefined,
-      textFormat: undefined,
-      textLanguage: undefined,
-      textValue: undefined,
-    },
+    source: undefined,
+    selections: undefined,
+    references: undefined,
+    textFormat: undefined,
+    textLanguage: undefined,
+    textValue: undefined,
   };
 
-  processedAnnotations.target = targetId;
+  processedAnnotations.targetId = targetId;
 
   annotations.forEach((annotation: TranscriptionAnnotation) => {
-    if (!annotations) return;
+    if (!annotation) return;
 
-    if (annotation.body.title)
-      processedAnnotations.body.title = annotation.body.title.value;
-    else if (annotation.body.identifier)
-      processedAnnotations.body.identifier = annotation.body.identifier.value;
-    else if (annotation.body.creator)
-      processedAnnotations.body.creator = annotation.body.creator.value;
-    else if (annotation.body.source)
-      processedAnnotations.body.source = annotation.body.source.value;
-    else if (annotation.body.selections)
-      processedAnnotations.body.selections = annotation.body.selections.value;
-    else if (annotation.body.references)
-      processedAnnotations.body.references = annotation.body.references.value;
-    else if (annotation.body.text) {
-      processedAnnotations.body.textFormat = annotation.body.text.format;
-      processedAnnotations.body.textLanguage = annotation.body.text.language;
-      processedAnnotations.body.textValue = annotation.body.text.textValue;
+    if (annotation.title) {
+      processedAnnotations.title = annotation.title.value;
+    } else if (annotation.identifier) {
+      processedAnnotations.identifier = annotation.identifier.value;
+    } else if (annotation.creator) {
+      processedAnnotations.creator = annotation.creator.value;
+    } else if (annotation.source) {
+      processedAnnotations.source = annotation.source.value;
+    } else if (annotation.selections) {
+      processedAnnotations.selections = annotation.selections.value;
+    } else if (annotation.references) {
+      processedAnnotations.references = annotation.references.value;
+    } else if (annotation.text) {
+      processedAnnotations.textFormat = annotation.text.format;
+      processedAnnotations.textLanguage = annotation.text.language;
+      processedAnnotations.textValue = annotation.text.textValue;
     }
   });
   return processedAnnotations;

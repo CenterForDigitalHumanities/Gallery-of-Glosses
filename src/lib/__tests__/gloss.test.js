@@ -43,6 +43,15 @@ describe("GrabGlossProperties", () => {
       },
       { headers: { "Content-Type": "application/json; charset=utf-8" } },
     );
+  });
+
+  it("should return a response with a status of 200 for a valid query", async () => {
+    axios.post.mockResolvedValue({
+      data: { status: 200, someProperty: "someValue" },
+    });
+    const response = await GrabGlossProperties(
+      "https://store.rerum.io/v1/id/614362c3e74876243131a4e0",
+    );
     expect(response.status).toBe(200);
   });
 });
