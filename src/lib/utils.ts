@@ -1,10 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { TargetIdValidator } from "./validators/TargetId";
-import { z } from "zod";
 import axios from "axios";
 import { PRODUCTION_GLOSS_COLLECTION } from "@/configs/rerum-links";
-import { Item } from "@radix-ui/react-dropdown-menu";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -43,10 +40,8 @@ function getQueryFromId(targetId: string) {
   return queryObj;
 }
 
-export async function GrabGlossProperties(req: Request): Promise<Response> {
+export async function GrabGlossProperties(targetId: string): Promise<Response> {
   try {
-    const body = await req.json();
-    const { targetId } = TargetIdValidator.parse(body);
     let queryObj = getQueryFromId(targetId);
 
     const limit = 100;
@@ -77,10 +72,6 @@ export async function GrabGlossProperties(req: Request): Promise<Response> {
       status: 200,
     });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return new Response(error.message, { status: 400 });
-    }
-
     console.error("Error querying objects:", error);
     return new Response(
       "Could not retrieve objects at this time. Please try later",
