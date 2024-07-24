@@ -40,18 +40,26 @@ function getQueryFromId(targetId: string) {
   return queryObj;
 }
 
-export async function GrabGlossProperties(targetId: string): Promise<Response> {
+/**
+ * Makes a paged query and returns the response
+ * @param url Base URL to send request to
+ * @param data JSON object to send
+ * @param limit Number of objects to get out of query
+ * @param skip Number of objects to skip in query
+ */
+async function makePagedQuery(
+  url: string,
+  data: Object,
+  limit: number = 100,
+  skip: number = 0,
+): Promise<Response> {
   try {
-    let queryObj = getQueryFromId(targetId);
-
-    const limit = 100;
-    let skip = 0;
     let objects: ObjectData[] = [];
 
     while (true) {
       const response = await axios.post(
-        `https://tinymatt.rerum.io/gloss/query?limit=${limit}&skip=${skip}`,
-        queryObj,
+        `${url}?limit=${limit}&skip=${skip}`,
+        data,
         {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
@@ -71,6 +79,23 @@ export async function GrabGlossProperties(targetId: string): Promise<Response> {
     return new Response(JSON.stringify(objects), {
       status: 200,
     });
+  } catch (err) {
+    return new Response(
+      "Could not retrieve objects at this time. Please try later",
+      {
+        status: 500,
+      },
+    );
+  }
+}
+
+export async function GrabGlossProperties(targetId: string): Promise<Response> {
+  try {
+    let queryObj = getQueryFromId(targetId);
+    return await makePagedQuery(
+      "https://tinymatt.rerum.io/gloss/query",
+      queryObj,
+    );
   } catch (error) {
     console.error("Error querying objects:", error);
     return new Response(
@@ -197,63 +222,70 @@ export async function grabGlossWitnessFragments(
  * Fetches annotations for a Witness fragment
  * @param targetId ID of the Witness fragment to fetch annotations for
  */
-export async function processTranscriptionAnnotations(
+export async function grabTranscriptionAnnotations(
   targetId: string,
-): Promise<ProcessedTranscriptionAnnotations | null> {
-  let queryObj = getQueryFromId(targetId);
+): Promise<Response> {
   try {
-    // Fetch a list of TranscriptionAnnotations
-    const response = await axios.post(
-      "https://tiny.rerum.io/app/query",
-      queryObj,
+    let queryObj = getQueryFromId(targetId);
+    return await makePagedQuery("https://tiny.rerum.io/query", queryObj);
+  } catch (error) {
+    console.error("Error querying objects:", error);
+    return new Response(
+      "Could not retrieve objects at this time. Please try later",
       {
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-        },
+        status: 500,
       },
     );
-
-    // Process
-    let processedAnnotations: ProcessedTranscriptionAnnotations = {
-      target: undefined,
-      creator: undefined,
-      body: {
-        title: undefined,
-        identifier: undefined,
-        creator: undefined,
-        source: undefined,
-        selections: undefined,
-        references: undefined,
-        textFormat: undefined,
-        textLanguage: undefined,
-        textValue: undefined,
-      },
-    };
-
-    response.data.forEach((annotation: TranscriptionAnnotation) => {
-      processedAnnotations.target = annotation.target;
-      processedAnnotations.creator = annotation.creator;
-      if (annotation.body.title)
-        processedAnnotations.body.title = annotation.body.title.value;
-      else if (annotation.body.identifier)
-        processedAnnotations.body.identifier = annotation.body.identifier.value;
-      else if (annotation.body.creator)
-        processedAnnotations.body.creator = annotation.body.creator.value;
-      else if (annotation.body.source)
-        processedAnnotations.body.source = annotation.body.source.value;
-      else if (annotation.body.selections)
-        processedAnnotations.body.selections = annotation.body.selections.value;
-      else if (annotation.body.references)
-        processedAnnotations.body.references = annotation.body.references.value;
-      else if (annotation.body.text) {
-        processedAnnotations.body.textFormat = annotation.body.text.format;
-        processedAnnotations.body.textLanguage = annotation.body.text.language;
-        processedAnnotations.body.textValue = annotation.body.text.textValue;
-      }
-    });
-    return processedAnnotations;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return null;
   }
+}
+
+/**
+ * Processes annotations for a Witness fragment
+ * @param annotations Array of annotations to process
+ * @param targetId ID of the Witness fragment
+ */
+export function processTranscriptionAnnotations(
+  annotations: any[],
+  targetId: string,
+): ProcessedTranscriptionAnnotations {
+  let processedAnnotations: ProcessedTranscriptionAnnotations = {
+    target: undefined,
+    creator: undefined,
+    body: {
+      title: undefined,
+      identifier: undefined,
+      creator: undefined,
+      source: undefined,
+      selections: undefined,
+      references: undefined,
+      textFormat: undefined,
+      textLanguage: undefined,
+      textValue: undefined,
+    },
+  };
+
+  processedAnnotations.target = targetId;
+
+  annotations.forEach((annotation: TranscriptionAnnotation) => {
+    if (!annotations) return;
+
+    if (annotation.body.title)
+      processedAnnotations.body.title = annotation.body.title.value;
+    else if (annotation.body.identifier)
+      processedAnnotations.body.identifier = annotation.body.identifier.value;
+    else if (annotation.body.creator)
+      processedAnnotations.body.creator = annotation.body.creator.value;
+    else if (annotation.body.source)
+      processedAnnotations.body.source = annotation.body.source.value;
+    else if (annotation.body.selections)
+      processedAnnotations.body.selections = annotation.body.selections.value;
+    else if (annotation.body.references)
+      processedAnnotations.body.references = annotation.body.references.value;
+    else if (annotation.body.text) {
+      processedAnnotations.body.textFormat = annotation.body.text.format;
+      processedAnnotations.body.textLanguage = annotation.body.text.language;
+      processedAnnotations.body.textValue = annotation.body.text.textValue;
+    }
+  });
+  return processedAnnotations;
 }
