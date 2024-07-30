@@ -51,7 +51,7 @@ export async function GrabGlossProperties(req: Request): Promise<Response> {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
           },
-        }
+        },
       );
 
       objects = [...objects, ...response.data];
@@ -76,7 +76,7 @@ export async function GrabGlossProperties(req: Request): Promise<Response> {
       "Could not retrieve objects at this time. Please try later",
       {
         status: 500,
-      }
+      },
     );
   }
 }
@@ -97,7 +97,7 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
     document: undefined,
     themes: undefined,
     canonicalReference: undefined,
-    description: undefined
+    description: undefined,
   };
 
   processedGloss.targetId = targetId;
@@ -118,7 +118,7 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
     } else if (item._subsection && item._subsection.value) {
       processedGloss.targetVerse = item._subsection.value;
     } else if (item.tags && item.tags.items) {
-      processedGloss.tags = item.tags.items.join(", ");
+      processedGloss.tags = item.tags.items;
     } else if (item.text) {
       processedGloss.textFormat = item.text.format;
       processedGloss.textLanguage = item.text.language;

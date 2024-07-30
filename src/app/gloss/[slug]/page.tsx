@@ -3,12 +3,14 @@
 import { RERUM } from "@/configs/rerum-links";
 import { useGlossInstance } from "@/hooks/useGlossInstance";
 import { usePathname } from "next/navigation";
+import { useGlossTranscriptionAnnotations } from "@/hooks/useGlossTranscriptionAnnotations";
 
 const GlossInstance = () => {
   const pathname = usePathname();
 
   const targetId = RERUM + pathname.split("/gloss/")[1];
   const gloss = useGlossInstance(targetId);
+  const transcriptionAnnotations = useGlossTranscriptionAnnotations(targetId);
 
   const blurredStyles = "filter blur-md opacity-50";
 
@@ -18,6 +20,18 @@ const GlossInstance = () => {
         <h1 className={`text-2xl font-bold mb-4 ${!gloss && blurredStyles}`}>
           {gloss && gloss.title ? gloss.title : "Not found"}
         </h1>
+        <div className="rounded-xl shadow-inner">
+          <h2 className={`text-xl font-bold mb-4 ${!gloss && blurredStyles}`}>
+            Witness References
+          </h2>
+          <ul>
+            {transcriptionAnnotations && transcriptionAnnotations.length > 0
+              ? transcriptionAnnotations.map(
+                  (annotation, annotationIndex) => annotation.identifier,
+                )
+              : "Not found"}
+          </ul>
+        </div>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
           <p>
             <span className="font-semibold">Canonical Reference Locator:</span>{" "}
@@ -43,7 +57,7 @@ const GlossInstance = () => {
             <span className="font-semibold">Tags:</span>{" "}
             <span className={`${!gloss && blurredStyles}`}>
               {gloss && gloss.tags
-                ? gloss.tags.split(", ").map((tag, tagIndex, tagArray) => (
+                ? gloss.tags.map((tag, tagIndex, tagArray) => (
                     <a
                       key={tagIndex}
                       href={"/browse/tag?q=" + tag}

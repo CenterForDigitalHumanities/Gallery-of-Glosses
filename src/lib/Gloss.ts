@@ -28,10 +28,10 @@ interface Gloss {
     value: string[];
   };
   canonicalReference?: {
-    value: string
+    value: string;
   };
   description?: {
-    value: string
+    value: string;
   };
 }
 
@@ -41,7 +41,7 @@ interface ProcessedGloss {
   targetCollection: string;
   targetChapter: string;
   targetVerse: string;
-  tags?: string;
+  tags?: string[];
   textFormat?: string;
   textLanguage?: string;
   textValue?: string;
