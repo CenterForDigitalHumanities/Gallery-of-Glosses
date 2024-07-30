@@ -195,7 +195,7 @@ export async function grabGlossWitnessFragments(targetId: string) {
       },
     );
 
-    // For each annotation, get the targetId
+    // For each annotation, get the data at the target ID
     const responseData = await annotationResponse.json();
     let targets = responseData.map(
       async (annotation: TranscriptionAnnotation) => {
@@ -205,7 +205,7 @@ export async function grabGlossWitnessFragments(targetId: string) {
     );
 
     // Filter out those that are not Witness fragments
-    return targets.filter((item: any) => item["@type"] === "Witness");
+    return targets.filter((item: any) => item["@type"] === "Text");
   } catch (error) {
     console.error("Error fetching data:", error);
     return null;
