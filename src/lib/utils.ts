@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import axios from "axios";
-import { PRODUCTION_GLOSS_COLLECTION } from "@/configs/rerum-links";
+import { PRODUCTION_GLOSS_COLLECTION, TINY } from "@/configs/rerum-links";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -17,7 +17,7 @@ interface ObjectData {
  * @param targetId The RERUM ID to convert
  * @returns Object with queries for "target", "target.@id", and "target.id" for http and https versions of passed ID
  */
-function getQueryFromId(targetId: string) {
+export function getQueryFromId(targetId: string) {
   let queryObj: { [key: string]: any } = {};
   let targetConditions: { [key: string]: string }[] = [];
 
@@ -47,7 +47,7 @@ function getQueryFromId(targetId: string) {
  * @param limit Number of objects to get out of query
  * @param skip Number of objects to skip in query
  */
-async function makePagedQuery(
+export async function makePagedQuery(
   url: string,
   data: Object,
   limit: number = 100,
@@ -89,13 +89,14 @@ async function makePagedQuery(
   }
 }
 
-export async function GrabGlossProperties(targetId: string): Promise<Response> {
+/**
+ * Fetches properties for the target ID, such as Gloss properties or Witness fragment annotations.
+ * @param targetId ID of the object to fetch properties for
+ */
+export async function grabProperties(targetId: string): Promise<Response> {
   try {
     let queryObj = getQueryFromId(targetId);
-    return await makePagedQuery(
-      "https://tinymatt.rerum.io/gloss/query",
-      queryObj,
-    );
+    return await makePagedQuery(`${TINY}/query`, queryObj);
   } catch (error) {
     console.error("Error querying objects:", error);
     return new Response(
@@ -183,17 +184,14 @@ export async function GrabProductionGlosses() {
 export async function grabGlossWitnessFragments(targetId: string) {
   // Fetch annotations referencing the Gloss
   try {
-    const annotationResponse = await makePagedQuery(
-      "https://tiny.rerum.io/app/query",
-      {
-        "body.references.value": targetId,
-        "__rerum.history.next": {
-          $exists: true,
-          $type: "array",
-          $eq: [],
-        },
+    const annotationResponse = await makePagedQuery(`${TINY}/query`, {
+      "body.references.value": targetId,
+      "__rerum.history.next": {
+        $exists: true,
+        $type: "array",
+        $eq: [],
       },
-    );
+    });
 
     // For each annotation, get the data at the target ID
     const responseData = await annotationResponse.json();
@@ -209,27 +207,6 @@ export async function grabGlossWitnessFragments(targetId: string) {
   } catch (error) {
     console.error("Error fetching data:", error);
     return null;
-  }
-}
-
-/**
- * Fetches annotations for a Witness fragment
- * @param targetId ID of the Witness fragment to fetch annotations for
- */
-export async function grabTranscriptionAnnotations(
-  targetId: string,
-): Promise<Response> {
-  try {
-    let queryObj = getQueryFromId(targetId);
-    return await makePagedQuery("https://tiny.rerum.io/query", queryObj);
-  } catch (error) {
-    console.error("Error querying objects:", error);
-    return new Response(
-      "Could not retrieve objects at this time. Please try later",
-      {
-        status: 500,
-      },
-    );
   }
 }
 

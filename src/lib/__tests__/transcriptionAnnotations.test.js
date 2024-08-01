@@ -1,11 +1,10 @@
 import {
   grabGlossWitnessFragments,
-  grabTranscriptionAnnotations,
   processTranscriptionAnnotations,
 } from "../utils";
 import axios from "axios";
+import { TINY } from "@/configs/rerum-links";
 
-// Mock axios
 jest.mock("axios");
 
 describe("grabGlossWitnessFragments", () => {
@@ -13,66 +12,47 @@ describe("grabGlossWitnessFragments", () => {
     jest.clearAllMocks();
   });
 
-  it("should return a response with a status of 200 for a valid query", async () => {
+  it("should send appropriate POST query", async () => {
     axios.post.mockResolvedValue({
-      data: { status: 200, someProperty: "someValue" },
+      data: [{ target: "example1" }, { target: "example2" }],
     });
-    const response = await grabTranscriptionAnnotations(
-      "https://store.rerum.io/v1/id/654e522f1521f1b32513839b",
-    );
-    expect(response.status).toBe(200);
-  });
-});
-
-describe("grabTranscriptionAnnotations", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it("should send an appropriate RERUM query", async () => {
-    axios.post.mockResolvedValue({
-      data: { status: 200, someProperty: "someValue" },
+    axios.get.mockResolvedValue({
+      data: { status: 200, "@type": "Text" },
     });
-    const response = await grabTranscriptionAnnotations(
-      "https://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
-    );
+
+    let targetId = "https://store.rerum.io/v1/id/654e522f1521f1b32513839b";
+    const response = await grabGlossWitnessFragments(targetId);
 
     expect(axios.post).toHaveBeenCalledWith(
-      "https://tiny.rerum.io/query?limit=100&skip=0",
+      `${TINY}/query?limit=100&skip=0`,
       {
-        $or: [
-          { target: "http://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1" },
-          { target: "https://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1" },
-          {
-            "target.@id":
-              "http://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
-          },
-          {
-            "target.@id":
-              "https://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
-          },
-          {
-            "target.id": "http://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
-          },
-          {
-            "target.id":
-              "https://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
-          },
-        ],
-        "__rerum.history.next": { $exists: true, $size: 0 },
+        "body.references.value": targetId,
+        "__rerum.history.next": {
+          $exists: true,
+          $type: "array",
+          $eq: [],
+        },
       },
-      { headers: { "Content-Type": "application/json; charset=utf-8" } },
+      {
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+      },
     );
   });
 
-  it("should return a response with a status of 200 for a valid query", async () => {
+  it("should send appropriate GET", async () => {
     axios.post.mockResolvedValue({
-      data: { status: 200, someProperty: "someValue" },
+      data: [{ target: "example1" }, { target: "example2" }],
     });
-    const response = await grabTranscriptionAnnotations(
-      "https://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
-    );
-    expect(response.status).toBe(200);
+    axios.get.mockResolvedValue({
+      data: { status: 200, "@type": "Text" },
+    });
+
+    let targetId = "https://store.rerum.io/v1/id/654e522f1521f1b32513839b";
+    const response = await grabGlossWitnessFragments(targetId);
+
+    expect(axios.get).toHaveBeenCalledWith("example1");
   });
 });
 

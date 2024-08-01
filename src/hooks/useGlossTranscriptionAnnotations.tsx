@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   grabGlossWitnessFragments,
-  grabTranscriptionAnnotations,
+  grabProperties,
   processTranscriptionAnnotations,
 } from "@/lib/utils";
 
@@ -17,7 +17,7 @@ export const useGlossTranscriptionAnnotations = (targetId: string) => {
     if (witnessFragmentList && witnessFragmentList.itemListElement) {
       for (let item of witnessFragmentList.itemListElement) {
         const fragmentTargetId = item["@id"];
-        const res = await grabTranscriptionAnnotations(fragmentTargetId);
+        const res = await grabProperties(fragmentTargetId);
         const data = await res.json();
         const processedTranscriptionAnnotations =
           processTranscriptionAnnotations(data, fragmentTargetId);
