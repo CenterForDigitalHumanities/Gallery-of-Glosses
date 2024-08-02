@@ -8,8 +8,8 @@ import { useGlossList } from "@/hooks/useGlossList";
 interface BookProps {}
 
 let filterColumn = {
-  header: "Book",
-  accessorKey: "document",
+  header: "Chapter",
+  accessorKey: "targetChapter",
   expandable: false,
 };
 let columns = make_columns([
