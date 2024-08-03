@@ -11,6 +11,7 @@ const GlossInstance = () => {
   const targetId = RERUM + pathname.split("/gloss/")[1];
   const gloss = useGlossInstance(targetId);
   const transcriptionAnnotations = useGlossTranscriptionAnnotations(targetId);
+  let annotations = transcriptionAnnotations.transcriptionAnnotations;
 
   const blurredStyles = "filter blur-md opacity-50";
 
@@ -25,11 +26,12 @@ const GlossInstance = () => {
             Witness References
           </h2>
           <ul>
-            {transcriptionAnnotations && transcriptionAnnotations.length > 0
-              ? transcriptionAnnotations.map(
+            {annotations && annotations.length > 0
+              ? annotations.map(
                   (annotation, annotationIndex) => annotation.identifier,
                 )
               : "Not found"}
+            {transcriptionAnnotations.loading && "Loading..."}
           </ul>
         </div>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
