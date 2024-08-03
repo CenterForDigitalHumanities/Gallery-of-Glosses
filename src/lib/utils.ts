@@ -195,11 +195,11 @@ export async function grabGlossWitnessFragments(targetId: string) {
 
     // For each annotation, get the data at the target ID
     const responseData = await annotationResponse.json();
-    let targets = responseData.map(
-      async (annotation: TranscriptionAnnotation) => {
+    let targets = await Promise.all(
+      responseData.map(async (annotation: TranscriptionAnnotation) => {
         const witnessFragmentResponse = await axios.get(annotation.target);
         return witnessFragmentResponse.data;
-      },
+      }),
     );
 
     // Filter out those that are not Witness fragments
