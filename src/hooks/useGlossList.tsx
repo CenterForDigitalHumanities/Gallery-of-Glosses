@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import {
-  GrabGlossProperties,
+  grabProperties,
   GrabProductionGlosses,
   processGloss,
 } from "@/lib/utils";
@@ -15,7 +15,7 @@ export const useGlossList = () => {
     if (collectionList && collectionList.itemListElement) {
       for (let item of collectionList.itemListElement) {
         const targetId = item["@id"];
-        const res = await GrabGlossProperties(targetId);
+        const res = await grabProperties(targetId);
         const data = await res.json();
         const gloss = data.map((item: { body: any }) => item.body);
         const processedGloss = processGloss(gloss, targetId);
