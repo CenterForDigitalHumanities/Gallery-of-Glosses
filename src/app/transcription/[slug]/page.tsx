@@ -13,12 +13,12 @@ function ReferencesListItems(props: {
   const gloss = useGlossInstance(props.reference);
   const glossId = props.reference.split("/").pop();
   return (
-    <a href={`/gloss/${glossId}`}>
+    <a href={`/gloss/${glossId}`} className="text-blue-500 hover:underline">
       {gloss
         ? gloss.title +
           (props.referenceIndex < props.maxReferences - 1 ? ", " : "")
         : "Loading..."}
-    </a> /* TODO: style this as a link */
+    </a>
   );
 }
 
