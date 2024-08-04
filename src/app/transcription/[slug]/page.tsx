@@ -36,8 +36,13 @@ const TranscriptionInstance = () => {
         <h1
           className={`text-2xl font-bold mb-4 ${!transcription && blurredStyles}`}
         >
-          {transcription ? transcription.title : "Not found"}
+          {transcription ? "Gloss Transcription Witness" : "Not found"}
         </h1>
+        <h2
+          className={`text-xl font-bold mb-4 ${!transcription && blurredStyles}`}
+        >
+          {transcription ? transcription.title : "Not found"}
+        </h2>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
           <p>
             <span className="font-semibold">Shelfmark:</span>{" "}
