@@ -3,10 +3,10 @@ interface Gloss {
     value: string;
   };
   targetCollection?: string;
-  targetChapter?: {
+  _section?: {
     value: string;
   };
-  targetVerse?: {
+  _subsection?: {
     value: string;
   };
   text?: {
