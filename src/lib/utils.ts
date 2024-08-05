@@ -1,7 +1,11 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import axios from "axios";
-import { PRODUCTION_GLOSS_COLLECTION, TINY } from "@/configs/rerum-links";
+import {
+  PRODUCTION_GLOSS_COLLECTION,
+  TINY,
+  PRODUCTION_WITNESS_COLLECTION,
+} from "@/configs/rerum-links";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -176,6 +180,16 @@ export async function GrabProductionGlosses() {
   }
 }
 
+export async function grabProductionWitnesses() {
+  try {
+    const response = await axios.get(PRODUCTION_WITNESS_COLLECTION);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
+}
+
 /**
  * Fetches Witness fragments for a Gloss.
  * @param targetId
@@ -256,4 +270,57 @@ export function processTranscriptionAnnotations(
     }
   });
   return processedAnnotations;
+}
+
+/**
+ * Processes properties for a Witness
+ * @param witness Witness to process
+ * @param targetId ID of the Witness
+ */
+export function processWitness(
+  witness: any[],
+  targetId: string,
+): ProcessedWitness {
+  let processedWitness: ProcessedWitness = {
+    targetId: undefined,
+    provenance: undefined,
+    url: undefined,
+    identifier: undefined,
+    city: undefined,
+    alternative: undefined,
+    repository: undefined,
+    title: undefined,
+    institution: undefined,
+    baseProject: undefined,
+    region: undefined,
+  };
+
+  processedWitness.targetId = targetId;
+
+  witness.forEach((witness: Witness) => {
+    if (!witness) return;
+
+    if (witness.provenance) {
+      processedWitness.provenance = witness.provenance.value;
+    } else if (witness.url) {
+      processedWitness.url = witness.url.value;
+    } else if (witness.identifier) {
+      processedWitness.identifier = witness.identifier.value;
+    } else if (witness.city) {
+      processedWitness.city = witness.city.value;
+    } else if (witness.alternative) {
+      processedWitness.alternative = witness.alternative.value;
+    } else if (witness.Repository) {
+      processedWitness.repository = witness.Repository.value;
+    } else if (witness.title) {
+      processedWitness.title = witness.title.value;
+    } else if (witness.institution) {
+      processedWitness.institution = witness.institution.value;
+    } else if (witness["tpen://base-project"]) {
+      processedWitness.baseProject = witness["tpen://base-project"].value;
+    } else if (witness.region) {
+      processedWitness.region = witness.region.value;
+    }
+  });
+  return processedWitness;
 }
