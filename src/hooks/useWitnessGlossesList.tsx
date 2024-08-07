@@ -8,65 +8,65 @@ import {
 
 /**
  * Fetches the attached Glosses for the Witness at the given Witness
- * @param witness The Witness to fetch attached Glosses for
+ * @param witnessIdentifier The identifier of the Witness to fetch attached Glosses for
  */
-export const useWitnessGlossesList = (witness: ProcessedWitness) => {
-  const [fragments, setFragments] = useState<
-    ProcessedTranscriptionAnnotations[]
-  >([]);
+export const useWitnessGlossesList = (
+  witnessIdentifier: string | undefined,
+) => {
   const [glosses, setGlosses] = useState<ProcessedGloss[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   /**
-   * Fetches and processes fragments of the Witness
+   * Fetches and processes a fragment of the Witness
    */
-  async function fetchFragmentsAndProcessProperties() {
-    const witnessFragmentList = await grabWitnessFragments(witness);
+  async function fetchFragmentAndProcessProperties(fragmentTargetId: string) {
+    const res = await grabProperties(fragmentTargetId);
+    const data = await res.json();
 
-    if (witnessFragmentList && witnessFragmentList.length > 1) {
-      for (let item of witnessFragmentList) {
-        const fragmentTargetId = item["@id"];
-        const res = await grabProperties(fragmentTargetId);
+    const fetchedFragment = data.map((item: { body: any }) => item.body);
+    return processTranscriptionAnnotations(fetchedFragment, fragmentTargetId);
+  }
+
+  /**
+   * Fetches and processes Glosses referenced by a Witness fragment
+   */
+  async function fetchGlossesAndProcessProperties(
+    fragment: ProcessedTranscriptionAnnotations,
+  ) {
+    if (fragment.references) {
+      for (let glossId of fragment.references) {
+        const res = await grabProperties(glossId);
         const data = await res.json();
+        const gloss = data.map((item: { body: any }) => item.body);
+        const processedGloss = processGloss(gloss, glossId);
 
-        const fetchedFragment = data.map((item: { body: any }) => item.body);
-        const processedFragment = processTranscriptionAnnotations(
-          fetchedFragment,
-          fragmentTargetId,
-        );
-        setFragments((prevFragments) => [...prevFragments, processedFragment]);
+        setGlosses((prevGlosses) => [...prevGlosses, processedGloss]);
       }
     }
   }
 
-  /**
-   * Fetches and processes Glosses referenced by the fragments
-   */
-  async function fetchGlossesAndProcessProperties() {
-    for (let fragment of fragments) {
-      if (fragment.references) {
-        for (let glossId of fragment.references) {
-          const res = await grabProperties(glossId);
-          const data = await res.json();
-          const gloss = data.map((item: { body: any }) => item.body);
-          const processedGloss = processGloss(gloss, glossId);
+  async function fetchWitnessFragmentsAndGlosses() {
+    if (!witnessIdentifier) return;
+    const witnessFragmentList = await grabWitnessFragments(witnessIdentifier);
 
-          setGlosses((prevGlosses) => [...prevGlosses, processedGloss]);
-        }
+    if (witnessFragmentList && witnessFragmentList.length > 1) {
+      for (let item of witnessFragmentList) {
+        // Fetch and process Witness fragment
+        const fragmentTargetId = item["@id"];
+        const processedFragment =
+          await fetchFragmentAndProcessProperties(fragmentTargetId);
+
+        // Fetch and process Glosses referenced by the fragment
+        fetchGlossesAndProcessProperties(processedFragment);
       }
     }
 
     setLoading(false);
   }
 
-  async function fetchWitnessFragmentsAndGlosses() {
-    await fetchFragmentsAndProcessProperties();
-    fetchGlossesAndProcessProperties();
-  }
-
   useEffect(() => {
     fetchWitnessFragmentsAndGlosses();
-  }, [witness]);
+  }, [witnessIdentifier]);
 
   return { glosses, loading };
 };

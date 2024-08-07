@@ -327,13 +327,13 @@ export function processWitness(
 
 /**
  * Grabs the fragments of a Witness
- * @param witness The Witness to get fragments for
+ * @param witnessIdentifier The identifier Witness to get fragments for
  */
-export async function grabWitnessFragments(witness: ProcessedWitness) {
+export async function grabWitnessFragments(witnessIdentifier: string) {
   // Fetch annotations referencing the Gloss
   try {
     const annotationResponse = await makePagedQuery(`${TINY}/query`, {
-      "body.identifier.value": witness.identifier,
+      "body.identifier.value": witnessIdentifier,
       "__rerum.history.next": {
         $exists: true,
         $type: "array",
