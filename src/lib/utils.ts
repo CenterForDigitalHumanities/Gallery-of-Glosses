@@ -209,11 +209,11 @@ export async function grabGlossWitnessFragments(targetId: string) {
 
     // For each annotation, get the data at the target ID
     const responseData = await annotationResponse.json();
-    let targets = responseData.map(
-      async (annotation: TranscriptionAnnotation) => {
+    let targets = await Promise.all(
+      responseData.map(async (annotation: TranscriptionAnnotation) => {
         const witnessFragmentResponse = await axios.get(annotation.target);
         return witnessFragmentResponse.data;
-      },
+      }),
     );
 
     // Filter out those that are not Witness fragments
@@ -323,4 +323,37 @@ export function processWitness(
     }
   });
   return processedWitness;
+}
+
+/**
+ * Grabs the fragments of a Witness
+ * @param witness The Witness to get fragments for
+ */
+export async function grabWitnessFragments(witness: ProcessedWitness) {
+  // Fetch annotations referencing the Gloss
+  try {
+    const annotationResponse = await makePagedQuery(`${TINY}/query`, {
+      "body.identifier.value": witness.identifier,
+      "__rerum.history.next": {
+        $exists: true,
+        $type: "array",
+        $eq: [],
+      },
+    });
+
+    // For each annotation, get the data at the target ID
+    const responseData = await annotationResponse.json();
+    let targets = await Promise.all(
+      responseData.map(async (annotation: TranscriptionAnnotation) => {
+        const witnessFragmentResponse = await axios.get(annotation.target);
+        return witnessFragmentResponse.data;
+      }),
+    );
+
+    // Filter out those that are not Witness fragments
+    return targets.filter((item: any) => item["@type"] === "Text");
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
 }
