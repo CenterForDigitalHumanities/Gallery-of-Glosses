@@ -69,7 +69,7 @@ const Header: FC<HeaderProps> = ({}) => {
               <ol className="ml-4 flex text-sm leading-6 whitespace-nowrap min-w-0 items-center gap-2">
                 <li>{section}</li>
 
-                {["Book", "Tag", "Theme"].includes(topic) && (
+                {["Document", "Tag", "Theme"].includes(topic) && (
                   <>
                     <PiCaretRightBold />
                     <li className="font-semibold text-slate-900 truncate dark:text-slate-200">

@@ -147,6 +147,6 @@ export const TERMINOLOGY_CONTENT = [
   {
     title: "[##:##]",
     summary:
-      "A canonical reference system common in theological studies, where the numbers before and after the colon respectively represent the chapter and verse of a book from the Bible, e.g., Matthew 5:16 refers to Chapter 5, Verse 16 of the Gospel of Matthew.",
+      "A canonical reference system common in theological studies, where the numbers before and after the colon respectively represent the section and subsection of a book or document from the Bible, e.g., Matthew 5:16 refers to Chapter 5, Verse 16 of the Gospel of Matthew.",
   },
 ];
