@@ -366,10 +366,11 @@ export async function grabWitnessFromFragment(fragmentIdentifier: string) {
 
     // Filter out those whose targets are not Witness fragments
     const responseData = await annotationResponse.json();
-    return await filterDataAtTargets(
+    const filteredData = await filterDataAtTargets(
       responseData,
       (item: any) => item["@type"] === "manuscript",
     );
+    return filteredData[0];
   } catch (error) {
     console.error("Error fetching data:", error);
     return null;
