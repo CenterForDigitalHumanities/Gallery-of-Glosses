@@ -207,17 +207,12 @@ export async function grabGlossWitnessFragments(targetId: string) {
       },
     });
 
-    // For each annotation, get the data at the target ID
+    // Filter out those whose targets are not Witness fragments
     const responseData = await annotationResponse.json();
-    let targets = await Promise.all(
-      responseData.map(async (annotation: TranscriptionAnnotation) => {
-        const witnessFragmentResponse = await axios.get(annotation.target);
-        return witnessFragmentResponse.data;
-      }),
+    return await filterDataAtTargets(
+      responseData,
+      (item: any) => item["@type"] === "Text",
     );
-
-    // Filter out those that are not Witness fragments
-    return targets.filter((item: any) => item["@type"] === "Text");
   } catch (error) {
     console.error("Error fetching data:", error);
     return null;
@@ -330,7 +325,7 @@ export function processWitness(
  * @param witnessIdentifier The identifier Witness to get fragments for
  */
 export async function grabWitnessFragments(witnessIdentifier: string) {
-  // Fetch annotations referencing the Gloss
+  // Fetch annotations referencing the identifier
   try {
     const annotationResponse = await makePagedQuery(`${TINY}/query`, {
       "body.identifier.value": witnessIdentifier,
@@ -341,19 +336,57 @@ export async function grabWitnessFragments(witnessIdentifier: string) {
       },
     });
 
-    // For each annotation, get the data at the target ID
+    // Filter out those whose targets are not Witness fragments
     const responseData = await annotationResponse.json();
-    let targets = await Promise.all(
-      responseData.map(async (annotation: TranscriptionAnnotation) => {
-        const witnessFragmentResponse = await axios.get(annotation.target);
-        return witnessFragmentResponse.data;
-      }),
+    return await filterDataAtTargets(
+      responseData,
+      (item: any) => item["@type"] === "Text",
     );
-
-    // Filter out those that are not Witness fragments
-    return targets.filter((item: any) => item["@type"] === "Text");
   } catch (error) {
     console.error("Error fetching data:", error);
     return null;
   }
+}
+
+/**
+ * Grabs the Witness from a Witness fragment
+ * @param fragmentIdentifier The identifier of the Witness fragment
+ */
+export async function grabWitnessFromFragment(fragmentIdentifier: string) {
+  // Fetch annotations referencing the identifier
+  try {
+    const annotationResponse = await makePagedQuery(`${TINY}/query`, {
+      "body.identifier.value": fragmentIdentifier,
+      "__rerum.history.next": {
+        $exists: true,
+        $type: "array",
+        $eq: [],
+      },
+    });
+
+    // Filter out those whose targets are not Witness fragments
+    const responseData = await annotationResponse.json();
+    return await filterDataAtTargets(
+      responseData,
+      (item: any) => item["@type"] === "manuscript",
+    );
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
+}
+
+/**
+ * Filters an array of RERUM objects such that the data referenced at their targets is filtered by the passed function.
+ * @param data Data to be filtered
+ * @param filterFunction Function to pass into filter method of the array of objects returned at the targets of the passed data
+ */
+export async function filterDataAtTargets(data: any[], filterFunction: any) {
+  let targets = await Promise.all(
+    data.map(async (annotation: TranscriptionAnnotation) => {
+      const witnessFragmentResponse = await axios.get(annotation.target);
+      return witnessFragmentResponse.data;
+    }),
+  );
+  return targets.filter(filterFunction);
 }

@@ -1,4 +1,9 @@
-import { grabProperties, getQueryFromId, makePagedQuery } from "../utils";
+import {
+  grabProperties,
+  getQueryFromId,
+  makePagedQuery,
+  filterDataAtTargets,
+} from "../utils";
 import axios from "axios";
 import { TINY } from "@/configs/rerum-links";
 
@@ -101,5 +106,43 @@ describe("makePagedQuery", () => {
       mockData,
       { headers: { "Content-Type": "application/json; charset=utf-8" } },
     );
+  });
+});
+
+describe("filterDataAtTargets", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("should filter through all data that matches the filter function", async () => {
+    const mockData = [
+      { target: "https://example.com" },
+      { target: "https://example.com" },
+      { target: "https://example.com" },
+    ];
+    axios.get.mockResolvedValue({ data: { "@type": "Text" } });
+    const filteredData = await filterDataAtTargets(
+      mockData,
+      (item) => item["@type"] === "Text",
+    );
+    expect(filteredData).toEqual([
+      { "@type": "Text" },
+      { "@type": "Text" },
+      { "@type": "Text" },
+    ]);
+  });
+
+  it("should filter out all data that doesn't match the filter function", async () => {
+    const mockData = [
+      { target: "https://example.com" },
+      { target: "https://example.com" },
+      { target: "https://example.com" },
+    ];
+    axios.get.mockResolvedValue({ data: { "@type": "Text" } });
+    const filteredData = await filterDataAtTargets(
+      mockData,
+      (item) => item["@type"] !== "Text",
+    );
+    expect(filteredData).toEqual([]);
   });
 });

@@ -1,4 +1,12 @@
-import { processWitness } from "../utils";
+import {
+  processWitness,
+  grabWitnessFragments,
+  grabWitnessFromFragment,
+} from "../utils";
+import axios from "axios";
+import { TINY } from "@/configs/rerum-links";
+
+jest.mock("axios");
 
 describe("processWitness", () => {
   it("should return an object with the correct properties", () => {
@@ -53,5 +61,103 @@ describe("processWitness", () => {
       baseProject: undefined,
       region: undefined,
     });
+  });
+});
+
+describe("grabWitnessFragments", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("should send appropriate POST query", async () => {
+    axios.post.mockResolvedValue({
+      data: [{ target: "example1" }, { target: "example2" }],
+    });
+    axios.get.mockResolvedValue({
+      data: { status: 200, "@type": "Text" },
+    });
+
+    let targetId = "https://store.rerum.io/v1/id/654e522f1521f1b32513839b";
+    const response = await grabWitnessFragments(targetId);
+
+    expect(axios.post).toHaveBeenCalledWith(
+      `${TINY}/query?limit=100&skip=0`,
+      {
+        "body.identifier.value": targetId,
+        "__rerum.history.next": {
+          $exists: true,
+          $type: "array",
+          $eq: [],
+        },
+      },
+      {
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+      },
+    );
+  });
+
+  it("should send appropriate GET", async () => {
+    axios.post.mockResolvedValue({
+      data: [{ target: "example1" }, { target: "example2" }],
+    });
+    axios.get.mockResolvedValue({
+      data: { status: 200, "@type": "Text" },
+    });
+
+    let targetId = "https://store.rerum.io/v1/id/654e522f1521f1b32513839b";
+    const response = await grabWitnessFragments(targetId);
+
+    expect(axios.get).toHaveBeenCalledWith("example1");
+  });
+});
+
+describe("grabWitnessFromFragment", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("should send appropriate POST query", async () => {
+    axios.post.mockResolvedValue({
+      data: [{ target: "example1" }, { target: "example2" }],
+    });
+    axios.get.mockResolvedValue({
+      data: { status: 200, "@type": "Text" },
+    });
+
+    let targetId = "https://store.rerum.io/v1/id/654e522f1521f1b32513839b";
+    const response = await grabWitnessFromFragment(targetId);
+
+    expect(axios.post).toHaveBeenCalledWith(
+      `${TINY}/query?limit=100&skip=0`,
+      {
+        "body.identifier.value": targetId,
+        "__rerum.history.next": {
+          $exists: true,
+          $type: "array",
+          $eq: [],
+        },
+      },
+      {
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+      },
+    );
+  });
+
+  it("should send appropriate GET", async () => {
+    axios.post.mockResolvedValue({
+      data: [{ target: "example1" }, { target: "example2" }],
+    });
+    axios.get.mockResolvedValue({
+      data: { status: 200, "@type": "Text" },
+    });
+
+    let targetId = "https://store.rerum.io/v1/id/654e522f1521f1b32513839b";
+    const response = await grabWitnessFromFragment(targetId);
+
+    expect(axios.get).toHaveBeenCalledWith("example1");
   });
 });
