@@ -9,7 +9,7 @@ interface SectionProps {}
 
 let filterColumn = {
   header: "Section",
-  accessorKey: "targetChapter",
+  accessorKey: "section",
   expandable: false,
 };
 let columns = make_columns([

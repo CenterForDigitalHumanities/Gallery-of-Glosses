@@ -1,7 +1,11 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import axios from "axios";
-import { PRODUCTION_GLOSS_COLLECTION, TINY } from "@/configs/rerum-links";
+import {
+  PRODUCTION_GLOSS_COLLECTION,
+  TINY,
+  PRODUCTION_WITNESS_COLLECTION,
+} from "@/configs/rerum-links";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -114,8 +118,8 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
     targetId: "",
     title: "",
     targetCollection: "",
-    targetChapter: "",
-    targetVerse: "",
+    section: "",
+    subsection: "",
     tags: undefined,
     textFormat: undefined,
     textLanguage: undefined,
@@ -136,14 +140,10 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
       processedGloss.title = item.title.value;
     } else if (item.targetCollection) {
       processedGloss.targetCollection = item.targetCollection;
-    } else if (item.targetChapter && item.targetChapter.value) {
-      processedGloss.targetChapter = item.targetChapter.value;
     } else if (item._section && item._section.value) {
-      processedGloss.targetChapter = item._section.value;
-    } else if (item.targetVerse && item.targetVerse.value) {
-      processedGloss.targetVerse = item.targetVerse.value;
+      processedGloss.section = item._section.value;
     } else if (item._subsection && item._subsection.value) {
-      processedGloss.targetVerse = item._subsection.value;
+      processedGloss.subsection = item._subsection.value;
     } else if (item.tags && item.tags.items) {
       processedGloss.tags = item.tags.items.join(", ");
     } else if (item.text) {
@@ -176,6 +176,16 @@ export async function GrabProductionGlosses() {
   }
 }
 
+export async function grabProductionWitnesses() {
+  try {
+    const response = await axios.get(PRODUCTION_WITNESS_COLLECTION);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
+}
+
 /**
  * Fetches Witness fragments for a Gloss.
  * @param targetId
@@ -193,17 +203,12 @@ export async function grabGlossWitnessFragments(targetId: string) {
       },
     });
 
-    // For each annotation, get the data at the target ID
+    // Filter out those whose targets are not Witness fragments
     const responseData = await annotationResponse.json();
-    let targets = responseData.map(
-      async (annotation: TranscriptionAnnotation) => {
-        const witnessFragmentResponse = await axios.get(annotation.target);
-        return witnessFragmentResponse.data;
-      },
+    return await filterDataAtTargets(
+      responseData,
+      (item: any) => item["@type"] === "Text",
     );
-
-    // Filter out those that are not Witness fragments
-    return targets.filter((item: any) => item["@type"] === "Text");
   } catch (error) {
     console.error("Error fetching data:", error);
     return null;
@@ -256,4 +261,129 @@ export function processTranscriptionAnnotations(
     }
   });
   return processedAnnotations;
+}
+
+/**
+ * Processes properties for a Witness
+ * @param witness Witness to process
+ * @param targetId ID of the Witness
+ */
+export function processWitness(
+  witness: any[],
+  targetId: string,
+): ProcessedWitness {
+  let processedWitness: ProcessedWitness = {
+    targetId: undefined,
+    provenance: undefined,
+    url: undefined,
+    identifier: undefined,
+    city: undefined,
+    alternative: undefined,
+    repository: undefined,
+    title: undefined,
+    institution: undefined,
+    baseProject: undefined,
+    region: undefined,
+  };
+
+  processedWitness.targetId = targetId;
+
+  witness.forEach((witness: Witness) => {
+    if (!witness) return;
+
+    if (witness.provenance) {
+      processedWitness.provenance = witness.provenance.value;
+    } else if (witness.url) {
+      processedWitness.url = witness.url.value;
+    } else if (witness.identifier) {
+      processedWitness.identifier = witness.identifier.value;
+    } else if (witness.city) {
+      processedWitness.city = witness.city.value;
+    } else if (witness.alternative) {
+      processedWitness.alternative = witness.alternative.value;
+    } else if (witness.Repository) {
+      processedWitness.repository = witness.Repository.value;
+    } else if (witness.title) {
+      processedWitness.title = witness.title.value;
+    } else if (witness.institution) {
+      processedWitness.institution = witness.institution.value;
+    } else if (witness["tpen://base-project"]) {
+      processedWitness.baseProject = witness["tpen://base-project"].value;
+    } else if (witness.region) {
+      processedWitness.region = witness.region.value;
+    }
+  });
+  return processedWitness;
+}
+
+/**
+ * Grabs the fragments of a Witness
+ * @param witnessIdentifier The identifier Witness to get fragments for
+ */
+export async function grabWitnessFragments(witnessIdentifier: string) {
+  // Fetch annotations referencing the identifier
+  try {
+    const annotationResponse = await makePagedQuery(`${TINY}/query`, {
+      "body.identifier.value": witnessIdentifier,
+      "__rerum.history.next": {
+        $exists: true,
+        $type: "array",
+        $eq: [],
+      },
+    });
+
+    // Filter out those whose targets are not Witness fragments
+    const responseData = await annotationResponse.json();
+    return await filterDataAtTargets(
+      responseData,
+      (item: any) => item["@type"] === "Text",
+    );
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
+}
+
+/**
+ * Grabs the Witness from a Witness fragment
+ * @param fragmentIdentifier The identifier of the Witness fragment
+ */
+export async function grabWitnessFromFragment(fragmentIdentifier: string) {
+  // Fetch annotations referencing the identifier
+  try {
+    const annotationResponse = await makePagedQuery(`${TINY}/query`, {
+      "body.identifier.value": fragmentIdentifier,
+      "__rerum.history.next": {
+        $exists: true,
+        $type: "array",
+        $eq: [],
+      },
+    });
+
+    // Filter out those whose targets are not Witness fragments
+    const responseData = await annotationResponse.json();
+    const filteredData = await filterDataAtTargets(
+      responseData,
+      (item: any) => item["@type"] === "manuscript",
+    );
+    return filteredData[0];
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
+}
+
+/**
+ * Filters an array of RERUM objects such that the data referenced at their targets is filtered by the passed function.
+ * @param data Data to be filtered
+ * @param filterFunction Function to pass into filter method of the array of objects returned at the targets of the passed data
+ */
+export async function filterDataAtTargets(data: any[], filterFunction: any) {
+  let targets = await Promise.all(
+    data.map(async (annotation: TranscriptionAnnotation) => {
+      const witnessFragmentResponse = await axios.get(annotation.target);
+      return witnessFragmentResponse.data;
+    }),
+  );
+  return targets.filter(filterFunction);
 }

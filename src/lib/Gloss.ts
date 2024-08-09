@@ -3,10 +3,10 @@ interface Gloss {
     value: string;
   };
   targetCollection?: string;
-  targetChapter?: {
+  _section?: {
     value: string;
   };
-  targetVerse?: {
+  _subsection?: {
     value: string;
   };
   text?: {
@@ -28,10 +28,10 @@ interface Gloss {
     value: string[];
   };
   canonicalReference?: {
-    value: string
+    value: string;
   };
   description?: {
-    value: string
+    value: string;
   };
 }
 
@@ -41,8 +41,8 @@ interface ProcessedGloss {
   targetId: string;
   title: string;
   targetCollection: string;
-  targetChapter: string;
-  targetVerse: string;
+  section: string;
+  subsection: string;
   tags?: string;
   textFormat?: string;
   textLanguage?: string;
