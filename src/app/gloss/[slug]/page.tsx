@@ -28,13 +28,13 @@ const GlossInstance = () => {
           <p>
             <span className="font-semibold">Chapter:</span>{" "}
             <span className={`${!gloss && blurredStyles}`}>
-              {gloss ? gloss.targetChapter : "5"}
+              {gloss ? gloss.section : "5"}
             </span>
           </p>
           <p>
             <span className="font-semibold">Verse:</span>{" "}
             <span className={`${!gloss && blurredStyles}`}>
-              {gloss ? gloss.targetVerse : "2"}
+              {gloss ? gloss.subsection : "2"}
             </span>
           </p>
           <p>

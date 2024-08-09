@@ -114,8 +114,8 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
     targetId: "",
     title: "",
     targetCollection: "",
-    targetChapter: "",
-    targetVerse: "",
+    section: "",
+    subsection: "",
     tags: undefined,
     textFormat: undefined,
     textLanguage: undefined,
@@ -136,14 +136,10 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
       processedGloss.title = item.title.value;
     } else if (item.targetCollection) {
       processedGloss.targetCollection = item.targetCollection;
-    } else if (item.targetChapter && item.targetChapter.value) {
-      processedGloss.targetChapter = item.targetChapter.value;
     } else if (item._section && item._section.value) {
-      processedGloss.targetChapter = item._section.value;
-    } else if (item.targetVerse && item.targetVerse.value) {
-      processedGloss.targetVerse = item.targetVerse.value;
+      processedGloss.section = item._section.value;
     } else if (item._subsection && item._subsection.value) {
-      processedGloss.targetVerse = item._subsection.value;
+      processedGloss.subsection = item._subsection.value;
     } else if (item.tags && item.tags.items) {
       processedGloss.tags = item.tags.items.join(", ");
     } else if (item.text) {
