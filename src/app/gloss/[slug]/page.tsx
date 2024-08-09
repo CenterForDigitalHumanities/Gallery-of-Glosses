@@ -4,6 +4,13 @@ import { RERUM } from "@/configs/rerum-links";
 import { useGlossInstance } from "@/hooks/useGlossInstance";
 import { usePathname } from "next/navigation";
 import { useGlossTranscriptionAnnotations } from "@/hooks/useGlossTranscriptionAnnotations";
+import { useTranscriptionWitness } from "@/hooks/useTranscriptionWitness";
+
+const WitnessLink = (witnessFragment: ProcessedTranscriptionAnnotations) => {
+  const witness = useTranscriptionWitness(witnessFragment.identifier);
+  const witnessId = witness.targetId.split("/id/")[1];
+  return <a href={"/witness/" + witnessId}>{witness.identifier}</a>;
+};
 
 const GlossInstance = () => {
   const pathname = usePathname();
@@ -25,14 +32,13 @@ const GlossInstance = () => {
           <h2 className={`text-xl font-bold mb-4 ${!gloss && blurredStyles}`}>
             Witness References
           </h2>
-          <ul>
-            {annotations && annotations.length > 0
-              ? annotations.map(
-                  (annotation, annotationIndex) => annotation.identifier,
-                )
-              : "Not found"}
-            {transcriptionAnnotations.loading && "Loading..."}
-          </ul>
+
+          {annotations && annotations.length > 0
+            ? annotations.map(
+                (annotation, annotationIndex) => annotation.identifier,
+              )
+            : "Not found"}
+          {transcriptionAnnotations.loading && "Loading..."}
         </div>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
           <p>
