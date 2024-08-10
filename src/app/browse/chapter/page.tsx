@@ -9,7 +9,7 @@ interface BookProps {}
 
 let filterColumn = {
   header: "Chapter",
-  accessorKey: "targetChapter",
+  accessorKey: "section",
   expandable: false,
 };
 let columns = make_columns([
