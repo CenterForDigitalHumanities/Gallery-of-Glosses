@@ -3,22 +3,31 @@
 import { RERUM } from "@/configs/rerum-links";
 import { useGlossInstance } from "@/hooks/useGlossInstance";
 import { usePathname } from "next/navigation";
-import { useGlossTranscriptionAnnotations } from "@/hooks/useGlossTranscriptionAnnotations";
-import { useTranscriptionWitness } from "@/hooks/useTranscriptionWitness";
+import { make_columns } from "@/app/browse/Columns";
+import { DataTable } from "@/app/browse/DataTable";
+import { useGlossWitnesses } from "@/hooks/useGlossWitnesses";
 
-const WitnessLink = (witnessFragment: ProcessedTranscriptionAnnotations) => {
-  const witness = useTranscriptionWitness(witnessFragment.identifier);
-  const witnessId = witness.targetId.split("/id/")[1];
-  return <a href={"/witness/" + witnessId}>{witness.identifier}</a>;
+const filterColumn = {
+  header: "Witness",
+  accessorKey: "identifier",
+  expandable: false,
 };
+const columns = make_columns([
+  filterColumn,
+  {
+    header: "Witness Details (not yet implemented)",
+    accessorKey: "city",
+    expandable: false,
+  },
+]);
 
 const GlossInstance = () => {
   const pathname = usePathname();
 
   const targetId = RERUM + pathname.split("/gloss/")[1];
   const gloss = useGlossInstance(targetId);
-  const transcriptionAnnotations = useGlossTranscriptionAnnotations(targetId);
-  let annotations = transcriptionAnnotations.transcriptionAnnotations;
+  const witnessesResult = useGlossWitnesses(targetId);
+  let witnesses = witnessesResult.witnesses;
 
   const blurredStyles = "filter blur-md opacity-50";
 
@@ -28,18 +37,6 @@ const GlossInstance = () => {
         <h1 className={`text-2xl font-bold mb-4 ${!gloss && blurredStyles}`}>
           {gloss && gloss.title ? gloss.title : "Not found"}
         </h1>
-        <div className="rounded-xl shadow-inner">
-          <h2 className={`text-xl font-bold mb-4 ${!gloss && blurredStyles}`}>
-            Witness References
-          </h2>
-
-          {annotations && annotations.length > 0
-            ? annotations.map(
-                (annotation, annotationIndex) => annotation.identifier,
-              )
-            : "Not found"}
-          {transcriptionAnnotations.loading && "Loading..."}
-        </div>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
           <p>
             <span className="font-semibold">Canonical Reference Locator:</span>{" "}
@@ -104,6 +101,15 @@ const GlossInstance = () => {
             {gloss && gloss.textValue ? gloss.textValue : "Not found"}
           </p>
         </div>
+        <h2 className={`text-xl font-bold mb-4 ${!witnesses && blurredStyles}`}>
+          Witness References
+        </h2>
+        <DataTable
+          columns={columns}
+          data={witnesses}
+          loading={witnessesResult.loading}
+          filterColumn={filterColumn}
+        />
       </div>
     </div>
   );

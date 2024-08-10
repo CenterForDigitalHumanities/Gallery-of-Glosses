@@ -29,7 +29,7 @@ describe("processGloss", () => {
       targetCollection: "Example collection",
       section: "5",
       subsection: "1",
-      tags: "Tag 1, Tag 2",
+      tags: ["Tag 1", "Tag 2"],
       textFormat: "text/html",
       textLanguage: "la",
       textValue: "Lorem ipsum dolor sit amet",
