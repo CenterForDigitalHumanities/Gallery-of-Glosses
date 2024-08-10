@@ -8,8 +8,11 @@ export const useGlossWitnessFragments = (targetId: string) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   async function fetchWitnessFragments() {
-    setWitnessFragments(await grabGlossWitnessFragments(targetId));
-    setLoading(false);
+    const fragments = await grabGlossWitnessFragments(targetId);
+    if (fragments) {
+      setWitnessFragments(fragments);
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
