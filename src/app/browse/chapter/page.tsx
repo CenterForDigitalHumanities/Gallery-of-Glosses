@@ -11,17 +11,32 @@ let filterColumn = {
   header: "Chapter",
   accessorKey: "section",
   expandable: false,
+  linked: false,
 };
-let columns = make_columns([
-  { header: "Incipit", accessorKey: "title", expandable: false },
-  {
-    header: "Canonical Reference Locator",
-    accessorKey: "canonicalReference",
-    expandable: false,
-  },
-  filterColumn,
-  { header: "Target Text", accessorKey: "textValue", expandable: true },
-]);
+let columns = make_columns(
+  [
+    {
+      header: "Incipit",
+      accessorKey: "title",
+      expandable: false,
+      linked: true,
+    },
+    {
+      header: "Canonical Reference Locator",
+      accessorKey: "canonicalReference",
+      expandable: false,
+      linked: false,
+    },
+    filterColumn,
+    {
+      header: "Target Text",
+      accessorKey: "textValue",
+      expandable: true,
+      linked: false,
+    },
+  ],
+  "/gloss",
+);
 
 const Book: FC<BookProps> = ({}) => {
   const { glosses, loading } = useGlossList();

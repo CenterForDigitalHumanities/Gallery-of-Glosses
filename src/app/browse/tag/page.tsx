@@ -7,17 +7,36 @@ import { useGlossList } from "@/hooks/useGlossList";
 
 interface TagProps {}
 
-let filterColumn = { header: "Tags", accessorKey: "tags", expandable: false };
-let columns = make_columns([
-  { header: "Incipit", accessorKey: "title", expandable: false },
-  {
-    header: "Canonical Reference Locator",
-    accessorKey: "canonicalReference",
-    expandable: false,
-  },
-  filterColumn,
-  { header: "Target Text", accessorKey: "textValue", expandable: true },
-]);
+let filterColumn = {
+  header: "Tags",
+  accessorKey: "tags",
+  expandable: false,
+  linked: false,
+};
+let columns = make_columns(
+  [
+    {
+      header: "Incipit",
+      accessorKey: "title",
+      expandable: false,
+      linked: true,
+    },
+    {
+      header: "Canonical Reference Locator",
+      accessorKey: "canonicalReference",
+      expandable: false,
+      linked: false,
+    },
+    filterColumn,
+    {
+      header: "Target Text",
+      accessorKey: "textValue",
+      expandable: true,
+      linked: false,
+    },
+  ],
+  "/gloss",
+);
 
 const Tag: FC<TagProps> = ({}) => {
   const { glosses, loading } = useGlossList();

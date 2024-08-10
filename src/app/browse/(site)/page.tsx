@@ -11,16 +11,26 @@ let filterColumn = {
   header: "Incipit",
   accessorKey: "title",
   expandable: false,
+  linked: true,
 };
-let columns = make_columns([
-  filterColumn,
-  {
-    header: "Canonical Reference Locator",
-    accessorKey: "canonicalReference",
-    expandable: false,
-  },
-  { header: "Target Text", accessorKey: "textValue", expandable: true },
-]);
+let columns = make_columns(
+  [
+    filterColumn,
+    {
+      header: "Canonical Reference Locator",
+      accessorKey: "canonicalReference",
+      expandable: false,
+      linked: false,
+    },
+    {
+      header: "Target Text",
+      accessorKey: "textValue",
+      expandable: true,
+      linked: false,
+    },
+  ],
+  "/gloss",
+);
 
 const BrowseAllGlosses: FC<BrowseAllGlossesProps> = ({}) => {
   const { glosses, loading } = useGlossList();
