@@ -48,6 +48,13 @@ export const BROWSE_GLOSSES_LINKS = [
   },
 ];
 
+export const BROWSE_WITNESSES_LINKS = [
+  {
+    title: "Browse All Witnesses",
+    href: "/witnesses",
+  },
+];
+
 export const GLOSS_TOOLS_LINKS = [
   {
     title: "Compare Different Glosses",
