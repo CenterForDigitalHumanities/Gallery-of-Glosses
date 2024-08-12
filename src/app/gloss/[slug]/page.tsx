@@ -15,7 +15,7 @@ const filterColumn = {
 const columns = make_columns([
   filterColumn,
   {
-    header: "Witness Details (not yet implemented)",
+    header: "Witness Details (under construction)",
     accessorKey: "city",
     expandable: false,
   },
