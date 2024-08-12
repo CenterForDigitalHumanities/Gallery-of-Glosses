@@ -16,7 +16,7 @@ export default function Home() {
             <a href="/docs/about">
               <Button className="truncate w-[150px]">What are Glosses?</Button>
             </a>
-            <a href="/browse/book">
+            <a href="/browse">
               <Button className="truncate w-[150px]">Start Browsing</Button>
             </a>
           </div>

@@ -31,20 +31,8 @@ export const BROWSE_GLOSSES_LINKS = [
     href: "/browse",
   },
   {
-    title: "Browse by Book",
-    href: "/browse/book",
-  },
-  {
-    title: "Browse by Chapter",
-    href: "/browse/chapter",
-  },
-  {
     title: "Browse by Tag",
     href: "/browse/tag",
-  },
-  {
-    title: "Browse by Theme",
-    href: "/browse/theme",
   },
 ];
 
