@@ -4,7 +4,6 @@ import { FC } from "react";
 import {
   GETTING_STARTED_LINKS,
   BROWSE_GLOSSES_LINKS,
-  BROWSE_WITNESSES_LINKS,
   GLOSS_TOOLS_LINKS,
 } from "@/configs/navigation";
 import { usePathname } from "next/navigation";
@@ -32,10 +31,6 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                   [
                     { header: "Introduction", items: GETTING_STARTED_LINKS },
                     { header: "Browse Glosses", items: BROWSE_GLOSSES_LINKS },
-                    {
-                      header: "Browse Witnesses",
-                      items: BROWSE_WITNESSES_LINKS,
-                    },
                     { header: "Gloss Tools", items: GLOSS_TOOLS_LINKS },
                   ].map((section) => (
                     <div className="pb-4" key={section.header}>

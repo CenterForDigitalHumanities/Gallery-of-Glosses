@@ -1,8 +1,8 @@
 "use client";
 
 import { FC } from "react";
-import { make_columns } from "../browse/Columns";
-import { DataTable } from "../browse/DataTable";
+import { make_columns } from "../Columns";
+import { DataTable } from "../DataTable";
 import { useWitnessList } from "@/hooks/useWitnessList";
 
 interface BrowseAllWitnessesProps {}
@@ -17,7 +17,7 @@ let columns = make_columns(
   [
     filterColumn,
     {
-      header: "Witness Details (not yet implemented)",
+      header: "Witness Details (under construction)",
       accessorKey: "city",
       expandable: false,
       linked: false,

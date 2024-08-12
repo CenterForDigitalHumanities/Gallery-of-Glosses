@@ -46,12 +46,9 @@ export const BROWSE_GLOSSES_LINKS = [
     title: "Browse by Theme",
     href: "/browse/theme",
   },
-];
-
-export const BROWSE_WITNESSES_LINKS = [
   {
-    title: "Browse All Witnesses",
-    href: "/witnesses",
+    title: "Browse by Witness",
+    href: "/browse/witness",
   },
 ];
 

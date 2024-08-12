@@ -7,7 +7,6 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   BROWSE_GLOSSES_LINKS,
-  BROWSE_WITNESSES_LINKS,
   GETTING_STARTED_LINKS,
   GLOSS_TOOLS_LINKS,
 } from "@/configs/navigation";
@@ -54,12 +53,6 @@ const Header: FC<HeaderProps> = ({}) => {
               href="/browse"
             >
               Browse Glosses
-            </a>
-            <a
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
-              href="/witnesses"
-            >
-              Browse Witnesses
             </a>
           </nav>
         </div>
@@ -138,7 +131,6 @@ const Header: FC<HeaderProps> = ({}) => {
               {[
                 { header: "Introduction", items: GETTING_STARTED_LINKS },
                 { header: "Browse Glosses", items: BROWSE_GLOSSES_LINKS },
-                { header: "Browse Witnesses", items: BROWSE_WITNESSES_LINKS },
                 { header: "Gloss Tools", items: GLOSS_TOOLS_LINKS },
               ].map((section) => (
                 <div className="pb-4" key={section.header}>
