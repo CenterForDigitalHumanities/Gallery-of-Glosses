@@ -4,6 +4,33 @@ import { RERUM } from "@/configs/rerum-links";
 import { useGlossInstance } from "@/hooks/useGlossInstance";
 import { usePathname } from "next/navigation";
 
+const parseGlossText = (text: string) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(text, "application/xml");
+
+  // Replace <SEG ref="..."> with <span className="font-italics" title="...">
+  const segElements = doc.getElementsByTagName("SEG");
+  for (let i = 0; i < segElements.length; i++) {
+    let span = document.createElement("span");
+    span.className = "font-italics";
+    span.title = segElements[i].getAttribute("ref") ?? "";
+    span.textContent = segElements[i].textContent;
+    segElements[i].replaceWith(span);
+  }
+
+  // Replace <Target text="..."> with <span className="font-bold" title="...">
+  const targetElements = doc.getElementsByTagName("Target");
+  for (let i = 0; i < targetElements.length; i++) {
+    let span = document.createElement("span");
+    span.className = "font-bold";
+    span.title = targetElements[i].getAttribute("text") ?? "";
+    span.textContent = targetElements[i].textContent;
+    targetElements[i].replaceWith(span);
+  }
+
+  return text;
+};
+
 const GlossInstance = () => {
   const pathname = usePathname();
 
@@ -58,8 +85,8 @@ const GlossInstance = () => {
         </div>
         <div className="rounded-xl shadow-inner">
           <p className={`text-justify ${!gloss && blurredStyles}`}>
-            {gloss
-              ? gloss.textValue
+            {gloss && gloss.textValue
+              ? parseGlossText(gloss.textValue)
               : "Ex dolore ipsum quis pariatur nulla proident exercitation exercitation aliqua dolor dolor est cillum. Fugiat enim non reprehenderit in laborum voluptate ut exercitation et esse. Qui cupidatat irure in officia eu consectetur amet mollit exercitation excepteur fugiat occaecat in aute. Mollit nisi aliqua exercitation labore minim sunt ut id voluptate aliqua magna deserunt. Lorem magna ipsum culpa dolor ea veniam fugiat id officia. Irure qui culpa eiusmod laborum velit sunt velit ut anim consectetur anim mollit Lorem."}
           </p>
         </div>
