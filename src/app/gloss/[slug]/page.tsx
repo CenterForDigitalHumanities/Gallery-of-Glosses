@@ -6,29 +6,39 @@ import { usePathname } from "next/navigation";
 
 const parseGlossText = (text: string) => {
   const parser = new DOMParser();
-  const doc = parser.parseFromString(text, "application/xml");
+  let doc = parser.parseFromString(text, "text/html");
 
-  // Replace <SEG ref="..."> with <span className="font-italics" title="...">
-  const segElements = doc.getElementsByTagName("SEG");
-  for (let i = 0; i < segElements.length; i++) {
+  // Replace each <SEG ref="..."> with italicized text
+  const segElements = doc.querySelectorAll("SEG");
+  segElements.forEach((segElement) => {
+    // Add reference after text
+    let refSpan = document.createElement("span");
+    refSpan.textContent = ` (${segElement.getAttribute("ref") ?? "No reference found"})`;
+    segElement.insertAdjacentElement("afterend", refSpan);
+
+    // Change text to italic
     let span = document.createElement("span");
-    span.className = "font-italics";
-    span.title = segElements[i].getAttribute("ref") ?? "";
-    span.textContent = segElements[i].textContent;
-    segElements[i].replaceWith(span);
-  }
+    span.style.fontStyle = "italic";
+    span.textContent = segElement.textContent;
+    segElement.replaceWith(span);
+  });
 
-  // Replace <Target text="..."> with <span className="font-bold" title="...">
-  const targetElements = doc.getElementsByTagName("Target");
-  for (let i = 0; i < targetElements.length; i++) {
+  // Replace each <Target text="..."> with <span style="font-weight: bold" title="...">
+  const targetElements = doc.querySelectorAll("Target");
+  targetElements.forEach((targetElement) => {
+    // Add reference after text
+    let refSpan = document.createElement("span");
+    refSpan.textContent = ` (${targetElement.getAttribute("text") ?? "No reference found"})`;
+    targetElement.insertAdjacentElement("afterend", refSpan);
+
+    // Change text to bold
     let span = document.createElement("span");
-    span.className = "font-bold";
-    span.title = targetElements[i].getAttribute("text") ?? "";
-    span.textContent = targetElements[i].textContent;
-    targetElements[i].replaceWith(span);
-  }
+    span.style.fontWeight = "bold";
+    span.textContent = targetElement.textContent;
+    targetElement.replaceWith(span);
+  });
 
-  return text;
+  return doc.body.innerHTML;
 };
 
 const GlossInstance = () => {
@@ -85,9 +95,15 @@ const GlossInstance = () => {
         </div>
         <div className="rounded-xl shadow-inner">
           <p className={`text-justify ${!gloss && blurredStyles}`}>
-            {gloss && gloss.textValue
-              ? parseGlossText(gloss.textValue)
-              : "Ex dolore ipsum quis pariatur nulla proident exercitation exercitation aliqua dolor dolor est cillum. Fugiat enim non reprehenderit in laborum voluptate ut exercitation et esse. Qui cupidatat irure in officia eu consectetur amet mollit exercitation excepteur fugiat occaecat in aute. Mollit nisi aliqua exercitation labore minim sunt ut id voluptate aliqua magna deserunt. Lorem magna ipsum culpa dolor ea veniam fugiat id officia. Irure qui culpa eiusmod laborum velit sunt velit ut anim consectetur anim mollit Lorem."}
+            {gloss && gloss.textValue ? (
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: parseGlossText(gloss.textValue),
+                }}
+              />
+            ) : (
+              "Ex dolore ipsum quis pariatur nulla proident exercitation exercitation aliqua dolor dolor est cillum. Fugiat enim non reprehenderit in laborum voluptate ut exercitation et esse. Qui cupidatat irure in officia eu consectetur amet mollit exercitation excepteur fugiat occaecat in aute. Mollit nisi aliqua exercitation labore minim sunt ut id voluptate aliqua magna deserunt. Lorem magna ipsum culpa dolor ea veniam fugiat id officia. Irure qui culpa eiusmod laborum velit sunt velit ut anim consectetur anim mollit Lorem."
+            )}
           </p>
         </div>
       </div>
