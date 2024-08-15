@@ -82,16 +82,11 @@ const GlossInstance = () => {
                 ? gloss.themes
                     .join("")
                     .split(", ")
-                    .map((theme, themeIndex, themeArray) => (
-                      <a
-                        key={themeIndex}
-                        href={"/browse/theme?q=" + theme}
-                        className="text-blue-500 hover:underline"
-                      >
-                        {theme}
-                        {themeIndex < themeArray.length - 1 ? ", " : ""}
-                      </a>
-                    ))
+                    .map(
+                      (theme, themeIndex, themeArray) =>
+                        theme +
+                        (themeIndex < themeArray.length - 1 ? ", " : ""),
+                    )
                 : "Not found"}
             </span>
           </p>
