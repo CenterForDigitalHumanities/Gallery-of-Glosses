@@ -1,29 +1,31 @@
 "use client";
 
 import { FC } from "react";
-import { make_columns } from "../Columns";
-import { DataTable } from "../DataTable";
 import { useGlossList } from "@/hooks/useGlossList";
+import { DataTable } from "@/app/browse/DataTable";
+import { make_columns } from "@/app/browse/Columns";
 
-interface BrowseAllGlossesProps {}
+interface ThemeProps {}
 
 let filterColumn = {
-  header: "Incipit",
-  accessorKey: "title",
+  header: "Themes",
+  accessorKey: "themes",
   expandable: false,
 };
 let columns = make_columns([
-  filterColumn,
+  { header: "Incipit", accessorKey: "title", expandable: false },
   {
     header: "Canonical Reference Locator",
     accessorKey: "canonicalReference",
     expandable: false,
   },
+  filterColumn,
   { header: "Gloss Text", accessorKey: "textValue", expandable: true },
 ]);
 
-const BrowseAllGlosses: FC<BrowseAllGlossesProps> = ({}) => {
+const Theme: FC<ThemeProps> = ({}) => {
   const { glosses, loading } = useGlossList();
+
   return (
     <div>
       {
@@ -38,4 +40,4 @@ const BrowseAllGlosses: FC<BrowseAllGlossesProps> = ({}) => {
   );
 };
 
-export default BrowseAllGlosses;
+export default Theme;

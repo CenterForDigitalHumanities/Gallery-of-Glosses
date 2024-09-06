@@ -16,7 +16,7 @@ let columns = make_columns([
     expandable: false,
   },
   filterColumn,
-  { header: "Target Text", accessorKey: "textValue", expandable: true },
+  { header: "Gloss Text", accessorKey: "textValue", expandable: true },
 ]);
 
 const Tag: FC<TagProps> = ({}) => {
