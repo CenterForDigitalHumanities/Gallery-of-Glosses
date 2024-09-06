@@ -5,11 +5,11 @@ import { DataTable } from "../DataTable";
 import { FC } from "react";
 import { useGlossList } from "@/hooks/useGlossList";
 
-interface BookProps {}
+interface SectionProps {}
 
 let filterColumn = {
-  header: "Book",
-  accessorKey: "document",
+  header: "Section",
+  accessorKey: "section",
   expandable: false,
 };
 let columns = make_columns([
@@ -20,10 +20,10 @@ let columns = make_columns([
     expandable: false,
   },
   filterColumn,
-  { header: "Target Text", accessorKey: "textValue", expandable: true },
+  { header: "Gloss Text", accessorKey: "textValue", expandable: true },
 ]);
 
-const Book: FC<BookProps> = ({}) => {
+const Section: FC<SectionProps> = ({}) => {
   const { glosses, loading } = useGlossList();
 
   return (
@@ -40,4 +40,4 @@ const Book: FC<BookProps> = ({}) => {
   );
 };
 
-export default Book;
+export default Section;

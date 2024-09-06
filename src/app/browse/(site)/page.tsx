@@ -19,7 +19,7 @@ let columns = make_columns([
     accessorKey: "canonicalReference",
     expandable: false,
   },
-  { header: "Target Text", accessorKey: "textValue", expandable: true },
+  { header: "Gloss Text", accessorKey: "textValue", expandable: true },
 ]);
 
 const BrowseAllGlosses: FC<BrowseAllGlossesProps> = ({}) => {
