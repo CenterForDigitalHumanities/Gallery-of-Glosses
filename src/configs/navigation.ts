@@ -42,10 +42,6 @@ export const BROWSE_GLOSSES_LINKS = [
     title: "Browse by Tag",
     href: "/browse/tag",
   },
-  {
-    title: "Browse by Theme",
-    href: "/browse/theme",
-  },
 ];
 
 export const GLOSS_TOOLS_LINKS = [
