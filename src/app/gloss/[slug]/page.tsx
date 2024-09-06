@@ -63,13 +63,13 @@ const GlossInstance = () => {
             </span>
           </p>
           <p>
-            <span className="font-semibold">Chapter:</span>{" "}
+            <span className="font-semibold">Section:</span>{" "}
             <span className={`${!gloss && blurredStyles}`}>
               {gloss ? gloss.section : "5"}
             </span>
           </p>
           <p>
-            <span className="font-semibold">Verse:</span>{" "}
+            <span className="font-semibold">Subsection:</span>{" "}
             <span className={`${!gloss && blurredStyles}`}>
               {gloss ? gloss.subsection : "2"}
             </span>
@@ -90,6 +90,12 @@ const GlossInstance = () => {
             <span className="font-semibold">Tags:</span>{" "}
             <span className={`${!gloss && blurredStyles}`}>
               {gloss ? gloss.tags : "4913, 4901, 10934"}
+            </span>
+          </p>
+          <p>
+            <span className="font-semibold">Target Text:</span>{" "}
+            <span className={`${!gloss && blurredStyles}`}>
+              {gloss ? gloss.targetedText : "Not found"}
             </span>
           </p>
         </div>

@@ -20,6 +20,7 @@ describe("processGloss", () => {
       },
       { themes: { value: ["Theme 1", "Theme 2"] } },
       { description: { value: "Example description" } },
+      { targetedText: { value: "Example targetedText" } },
     ];
     const processedGloss = processGloss(mockGlossList, "https://example.com");
 
@@ -38,6 +39,7 @@ describe("processGloss", () => {
       themes: ["Theme 1", "Theme 2"],
       canonicalReference: "Matthew 5:1",
       description: "Example description",
+      targetedText: "Example targetedText",
     });
   });
 
@@ -59,6 +61,7 @@ describe("processGloss", () => {
       themes: undefined,
       canonicalReference: undefined,
       description: undefined,
+      targetedText: undefined,
     });
   });
 });

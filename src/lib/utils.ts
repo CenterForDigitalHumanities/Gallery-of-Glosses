@@ -129,6 +129,7 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
     themes: undefined,
     canonicalReference: undefined,
     description: undefined,
+    targetedText: undefined,
   };
 
   processedGloss.targetId = targetId;
@@ -160,6 +161,8 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
       processedGloss.canonicalReference = item.canonicalReference.value;
     } else if (item.description && item.description.value) {
       processedGloss.description = item.description.value;
+    } else if (item.targetedText && item.targetedText.value) {
+      processedGloss.targetedText = item.targetedText.value;
     }
   });
 
