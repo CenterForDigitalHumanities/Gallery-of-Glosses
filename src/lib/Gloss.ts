@@ -33,6 +33,9 @@ interface Gloss {
   description?: {
     value: string;
   };
+  targetedText?: {
+    value: string;
+  };
 }
 
 interface ProcessedGloss {
@@ -52,4 +55,5 @@ interface ProcessedGloss {
   themes?: string[];
   canonicalReference?: string;
   description?: string;
+  targetedText?: string;
 }
