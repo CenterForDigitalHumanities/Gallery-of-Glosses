@@ -146,7 +146,7 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
     } else if (item._subsection && item._subsection.value) {
       processedGloss.subsection = item._subsection.value;
     } else if (item.tags && item.tags.items) {
-      processedGloss.tags = item.tags.items.join(", ");
+      processedGloss.tags = item.tags.items;
     } else if (item.text) {
       processedGloss.textFormat = item.text.format;
       processedGloss.textLanguage = item.text.language;
