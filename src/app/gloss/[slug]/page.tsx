@@ -90,6 +90,12 @@ const GlossInstance = () => {
                 : "Not found"}
             </span>
           </p>
+          <p>
+            <span className="font-semibold">Target Text:</span>{" "}
+            <span className={`${!gloss && blurredStyles}`}>
+              {gloss ? gloss.targetedText : "Not found"}
+            </span>
+          </p>
         </div>
         <div className="rounded-xl shadow-inner">
           <p className={`text-justify ${!gloss && blurredStyles}`}>
