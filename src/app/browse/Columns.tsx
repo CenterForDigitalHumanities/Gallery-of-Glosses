@@ -4,9 +4,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import DataTableCell from "./DataTableCell";
 
-function handleOpenGlossInstance(row: { original: ProcessedGloss }) {
-  const id = (row.original as ProcessedGloss).targetId.split("/id/")[1];
-  window.open(`/gloss/${id}`, "_blank");
+function handleOpenRecordInstance(row: { original: ProcessedGloss | ProcessedWitness }) {
+  const id = (row.original as ProcessedGloss | ProcessedWitness)?.targetId?.split("/id/")?.[1];
+  const link = (row.original as ProcessedGloss) ? `/gloss/${id}` : `/witness/${id}`;
+  window.open(link, "_blank");
 }
 
 /**
@@ -14,7 +15,7 @@ function handleOpenGlossInstance(row: { original: ProcessedGloss }) {
  * @param columnsList - An array of objects representing basic column information.
  * @returns An array of columns.
  */
-export function make_columns(columnsList: { header: string, accessorKey: string, expandable: boolean }[]): ColumnDef<ProcessedGloss>[] {
+export function make_columns(columnsList: { header: string, accessorKey: string, expandable: boolean }[]): ColumnDef<ProcessedGloss | ProcessedWitness>[] {
   return columnsList.map((columnObject) => {
     if (!columnObject.expandable)
       return {
@@ -29,7 +30,7 @@ export function make_columns(columnsList: { header: string, accessorKey: string,
             <div
               className="truncate"
               onClick={() => {
-                handleOpenGlossInstance(row);
+                handleOpenRecordInstance(row);
               }}
             >
               {title as React.ReactNode}

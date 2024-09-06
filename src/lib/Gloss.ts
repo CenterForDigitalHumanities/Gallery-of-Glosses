@@ -46,7 +46,7 @@ interface ProcessedGloss {
   targetCollection: string;
   section: string;
   subsection: string;
-  tags?: string;
+  tags?: string[];
   textFormat?: string;
   textLanguage?: string;
   textValue?: string;
