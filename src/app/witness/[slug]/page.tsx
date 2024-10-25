@@ -6,9 +6,13 @@ import Witness from "./Witness.tsx"
 // We get that error because this script couldn't actually generate the dynamic pages.  man is undefined, bad map()?
 export async function generateStaticParams() {
   const manuscripts = await fetch('https://store.rerum.io/v1/id/610ad6f1ffce846a83e70613').then((res) => res.json()).then((j) => j.itemListElement)
-  return manuscripts.map((man) => {
-    id:man["@id"]
+  let ids = manuscripts.map((man) => { 
+    return {id:man["@id"]}
   })
+  console.log("IDS")
+  console.log("IDS")
+  console.log(ids)
+  return ids
 }
 
 const WitnessInstance = async ({ params }: { params: { id: string }}) => {
