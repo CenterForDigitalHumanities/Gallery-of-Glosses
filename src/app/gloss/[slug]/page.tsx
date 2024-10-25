@@ -13,7 +13,7 @@ export async function generateStaticParams() {
 
 const GlossInstance = async ({ params }: { params: { id: string }}) => {
   const id = await params
-  return <Gloss slug={params.id}/>
+  return <Gloss slug={id}/>
 }
 
 export default GlossInstance;
