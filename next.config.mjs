@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   //output: 'export',
-  //output: 'standalone'
+  output: 'standalone',
   reactStrictMode: true,
   basePath: '/Gallery-of-Glosses',
   distDir: 'site',
