@@ -13,7 +13,7 @@ export async function generateStaticParams() {
 
 const WitnessInstance = async ({ params }: { params: { id: string }}) => {
   const id = await params
-  return <Witness slug={id}/>
+  return <Witness slug={params.id}/>
 };
 
 export default WitnessInstance;
