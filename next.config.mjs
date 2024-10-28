@@ -2,7 +2,6 @@
 const nextConfig = {
   output: 'export',
   reactStrictMode: true,
-  basePath: '/Gallery-of-Glosses'
 }
 
 // const nextConfig = {
