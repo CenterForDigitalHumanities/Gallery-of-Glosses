@@ -4,6 +4,7 @@ const nextConfig = {
   reactStrictMode: true,
   basePath: '/Gallery-of-Glosses',
   assetPrefix: './Gallery-of-Glosses',
+  reactStrictMode: true,
   distDir: 'site',
   crossOrigin: 'anonymous'
 }
