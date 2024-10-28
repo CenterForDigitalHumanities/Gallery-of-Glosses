@@ -3,7 +3,7 @@ const nextConfig = {
   output: 'export',
   distDir: 'out',
   basePath: '/Gallery-of-Glosses',
-  assetPrefix: './Gallery-of-Glosses',
+  assetPrefix: '/Gallery-of-Glosses',
   reactStrictMode: true
 }
 
