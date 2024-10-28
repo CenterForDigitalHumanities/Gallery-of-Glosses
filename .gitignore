@@ -9,9 +9,11 @@
 /coverage
 
 # next.js
+/.next
+
 # DO NOT ignore the build folder
-# /.next
 # /site
+# /out
 
 # misc
 .DS_Store
