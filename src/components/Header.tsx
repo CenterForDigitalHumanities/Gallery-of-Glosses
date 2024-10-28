@@ -32,7 +32,7 @@ const Header: FC<HeaderProps> = ({}) => {
         <div className="mr-4 hidden md:flex">
           <a className="mr-6 flex items-center space-x-2" href="/">
             <Image
-              src="/assets/images/logo.png"
+              src="/Gallery-of-Glosses/assets/images/logo.png"
               alt="icon"
               width="20"
               height="20"
@@ -110,7 +110,7 @@ const Header: FC<HeaderProps> = ({}) => {
             <div className="flex items-center gap-4 ">
               <a href="/">
                 <Image
-                  src="/assets/images/logo.png"
+                  src="/Gallery-of-Glosses/assets/images/logo.png"
                   alt="icon"
                   width="20"
                   height="20"
