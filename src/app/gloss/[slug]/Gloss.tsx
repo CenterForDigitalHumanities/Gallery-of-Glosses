@@ -1,6 +1,7 @@
 "use client";
 
 import { RERUM } from "@/configs/rerum-links";
+import * as NAV from "@/configs/navigation";
 import { useGlossInstance } from "@/hooks/useGlossInstance";
 import { usePathname } from "next/navigation";
 import { make_columns } from "@/app/browse/Columns";
@@ -101,7 +102,7 @@ const Gloss = (props : {  slug: string } ) => {
                 ? gloss.tags.map((tag, tagIndex, tagArray) => (
                     <a
                       key={tagIndex}
-                      href={"./browse/tag?q=" + tag}
+                      href={`${NAV.BASEPATH}/browse/tag?q=${tag}`}
                       className="text-blue-500 hover:underline"
                     >
                       {tag}

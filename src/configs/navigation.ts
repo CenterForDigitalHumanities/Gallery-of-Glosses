@@ -1,56 +1,57 @@
+export const BASEPATH = "/Gallery-of-Glosses"
 export const GETTING_STARTED_LINKS = [
   {
     title: "About",
-    href: "./docs/about",
+    href: BASEPATH + "/docs/about",
   },
   {
     title: "Resources",
-    href: "./docs/resources",
+    href: BASEPATH + "/docs/resources",
   },
   {
     title: "Goals",
-    href: "./docs/goals",
+    href: BASEPATH + "/docs/goals",
   },
   {
     title: "History",
-    href: "./docs/history",
+    href: BASEPATH + "/docs/history",
   },
   {
     title: "Terminology and Abbreviations",
-    href: "./docs/terminology",
+    href: BASEPATH + "/docs/terminology",
   },
   {
     title: "Acknowledgements",
-    href: "./docs/acknowledgements",
+    href: BASEPATH + "/docs/acknowledgements",
   },
 ];
 
 export const BROWSE_GLOSSES_LINKS = [
   {
     title: "Browse All Glosses",
-    href: "./browse",
+    href: BASEPATH + "/browse",
   },
   {
     title: "Browse by Document",
-    href: "./browse/document",
+    href: BASEPATH + "/browse/document",
   },
   {
     title: "Browse by Section",
-    href: "./browse/section",
+    href: BASEPATH + "/browse/section",
   },
   {
     title: "Browse by Tag",
-    href: "./browse/tag",
+    href: BASEPATH + "/browse/tag",
   },
 ];
 
 export const GLOSS_TOOLS_LINKS = [
   {
     title: "Compare Different Glosses",
-    href: "./tools/compare",
+    href: BASEPATH + "/tools/compare",
   },
   {
     title: "Find Glosses on the Map",
-    href: "./tools/map",
+    href: BASEPATH + "/tools/map",
   },
 ];
