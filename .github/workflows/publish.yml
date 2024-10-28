@@ -25,23 +25,8 @@ jobs:
       - name: Setup Node.js ⚙️ - Cache dependencies ⚡ - Install dependencies 🔧
         uses: ./.github/workflows/setup-node
 
-      - name: Build with Next.js 🏗️
+      - name: Build with Next.js and generate the static site (site is output into '/out') 🏗️
         run: npm run build
-
-      - name: What do we have ABOVE here ?????
-        run: ls ../ -a
-
-      - name: What do we have here ?????
-        run: ls -a
-
-      - name: What do we in src ?????
-        run: ls ./src -a
-      
-      - name: What do we in public ?????
-        run: ls ./public -a
-
-      - name: What do we in next ?????
-        run: ls ./.next -a
 
       - name: Upload artifact 📡
         uses: actions/upload-pages-artifact@v3

@@ -12,9 +12,7 @@
 /.next
 
 # Production build results
-# DO NOT ignore the build folder
-# /site
-# /out
+/out
 
 # misc
 .DS_Store

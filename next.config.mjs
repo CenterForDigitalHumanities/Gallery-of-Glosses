@@ -1,15 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  reactStrictMode: true,
-  distDir: 'out'
+  distDir: 'out',
+  basePath: '/Gallery-of-Glosses',
+  assetPrefix: './Gallery-of-Glosses',
+  reactStrictMode: true
 }
 
 // const nextConfig = {
 //   output: 'export',
 //   reactStrictMode: true,
-//   basePath: '/Gallery-of-Glosses',
-//   assetPrefix: './Gallery-of-Glosses',
+//   
 //   distDir: 'site',
 //   crossOrigin: 'anonymous'
 // }
