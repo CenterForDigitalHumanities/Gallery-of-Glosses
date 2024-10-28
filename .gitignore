@@ -11,6 +11,7 @@
 # next.js
 /.next
 
+# Production build results
 # DO NOT ignore the build folder
 # /site
 # /out
