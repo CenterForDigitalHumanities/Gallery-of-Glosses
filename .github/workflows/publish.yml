@@ -36,6 +36,9 @@ jobs:
       - name: What do we have here ?????
         run: ls -a
 
+      - name: What do we have here ?????
+      run: ls ../ -a
+
       - name: Upload artifact 📡
         uses: actions/upload-pages-artifact@v3
         with:
