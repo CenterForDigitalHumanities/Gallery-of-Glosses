@@ -5,10 +5,7 @@ const nextConfig = {
   basePath: '/Gallery-of-Glosses',
   assetPrefix: './Gallery-of-Glosses',
   distDir: 'site',
-  crossOrigin: 'anonymous',
-  images: {
-    unoptimized: true
-  }
+  crossOrigin: 'anonymous'
 }
 
 export default nextConfig;
