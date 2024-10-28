@@ -7,12 +7,4 @@ const nextConfig = {
   reactStrictMode: true
 }
 
-// const nextConfig = {
-//   output: 'export',
-//   reactStrictMode: true,
-//   
-//   distDir: 'site',
-//   crossOrigin: 'anonymous'
-// }
-
 export default nextConfig;
