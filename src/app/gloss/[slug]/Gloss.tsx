@@ -3,8 +3,8 @@
 import { RERUM } from "@/configs/rerum-links";
 import { useGlossInstance } from "@/hooks/useGlossInstance";
 import { usePathname } from "next/navigation";
-import { make_columns } from "@/app./browse/Columns";
-import { DataTable } from "@/app./browse/DataTable";
+import { make_columns } from "@/app/browse/Columns";
+import { DataTable } from "@/app/browse/DataTable";
 import { useGlossWitnesses } from "@/hooks/useGlossWitnesses";
 
 const filterColumn = {

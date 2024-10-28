@@ -2,8 +2,8 @@
 
 import { FC } from "react";
 import { useGlossList } from "@/hooks/useGlossList";
-import { DataTable } from "@/app./browse/DataTable";
-import { make_columns } from "@/app./browse/Columns";
+import { DataTable } from "@/app/browse/DataTable";
+import { make_columns } from "@/app/browse/Columns";
 
 interface ThemeProps {}
 
