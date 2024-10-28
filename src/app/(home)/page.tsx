@@ -13,10 +13,10 @@ export default function Home() {
             insights into historical texts.
           </p>
           <div className="mt-6 sm:mt-10 flex flex-col gap-2 md:flex-row justify-center w-full text-sm">
-            <a href="/docs/about">
+            <a href="./docs/about">
               <Button className="truncate w-[150px]">What are Glosses?</Button>
             </a>
-            <a href="/browse">
+            <a href="./browse">
               <Button className="truncate w-[150px]">Start Browsing</Button>
             </a>
           </div>

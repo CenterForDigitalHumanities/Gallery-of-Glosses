@@ -30,7 +30,7 @@ const Header: FC<HeaderProps> = ({}) => {
     <header className="supports-backdrop-blur:bg-background/60 sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
       <div className="container flex h-14 items-center">
         <div className="mr-4 hidden md:flex">
-          <a className="mr-6 flex items-center space-x-2" href="/">
+          <a className="mr-6 flex items-center space-x-2" href="./">
             <Image
               src="./assets/images/logo.png"
               alt="icon"
@@ -44,13 +44,13 @@ const Header: FC<HeaderProps> = ({}) => {
           <nav className="flex items-center space-x-6 text-sm font-medium">
             <a
               className="transition-colors hover:text-foreground/80 text-foreground/60"
-              href="/docs/about"
+              href="./docs/about"
             >
               About
             </a>
             <a
               className="transition-colors hover:text-foreground/80 text-foreground/60"
-              href="/browse"
+              href="./browse"
             >
               Browse Glosses
             </a>
@@ -108,7 +108,7 @@ const Header: FC<HeaderProps> = ({}) => {
             className="pointer-events-auto fixed h-screen gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 inset-y-0 left-0 w-4/5 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm pr-0"
           >
             <div className="flex items-center gap-4 ">
-              <a href="/">
+              <a href="./">
                 <Image
                   src="./assets/images/logo.png"
                   alt="icon"
@@ -117,7 +117,7 @@ const Header: FC<HeaderProps> = ({}) => {
                 />
               </a>
 
-              <a href="/" className="font-bold right-4 top-6">
+              <a href="./" className="font-bold right-4 top-6">
                 Gallery of Glosses
               </a>
               <button

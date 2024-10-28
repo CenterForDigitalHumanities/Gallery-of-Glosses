@@ -21,7 +21,7 @@ const PageLayout: FC<PageLayoutProps> = ({ children }) => {
           <Sidebar />
           <main
             className={` ${
-              pathname.includes("/docs/") && "xl:grid xl:grid-cols-[1fr_300px]"
+              pathname.includes("./docs/") && "xl:grid xl:grid-cols-[1fr_300px]"
             } relative py-6 lg:gap-10 lg:py-8 h-full w-full`}
           >
             <div className="mx-auto w-full min-w-0 h-full min-h-0">

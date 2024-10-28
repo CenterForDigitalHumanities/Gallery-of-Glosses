@@ -2,8 +2,8 @@
 
 import { RERUM } from "@/configs/rerum-links";
 import { usePathname } from "next/navigation";
-import { make_columns } from "../../browse/Columns";
-import { DataTable } from "../../browse/DataTable";
+import { make_columns } from "../.../browse/Columns";
+import { DataTable } from "../.../browse/DataTable";
 import { useWitnessGlossesList } from "@/hooks/useWitnessGlossesList";
 import { useWitnessInstance } from "@/hooks/useWitnessInstance";
 

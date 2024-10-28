@@ -1,56 +1,56 @@
 export const GETTING_STARTED_LINKS = [
   {
     title: "About",
-    href: "/docs/about",
+    href: "./docs/about",
   },
   {
     title: "Resources",
-    href: "/docs/resources",
+    href: "./docs/resources",
   },
   {
     title: "Goals",
-    href: "/docs/goals",
+    href: "./docs/goals",
   },
   {
     title: "History",
-    href: "/docs/history",
+    href: "./docs/history",
   },
   {
     title: "Terminology and Abbreviations",
-    href: "/docs/terminology",
+    href: "./docs/terminology",
   },
   {
     title: "Acknowledgements",
-    href: "/docs/acknowledgements",
+    href: "./docs/acknowledgements",
   },
 ];
 
 export const BROWSE_GLOSSES_LINKS = [
   {
     title: "Browse All Glosses",
-    href: "/browse",
+    href: "./browse",
   },
   {
     title: "Browse by Document",
-    href: "/browse/document",
+    href: "./browse/document",
   },
   {
     title: "Browse by Section",
-    href: "/browse/section",
+    href: "./browse/section",
   },
   {
     title: "Browse by Tag",
-    href: "/browse/tag",
+    href: "./browse/tag",
   },
 ];
 
 export const GLOSS_TOOLS_LINKS = [
   {
     title: "Compare Different Glosses",
-    href: "/tools/compare",
+    href: "./tools/compare",
   },
   {
     title: "Find Glosses on the Map",
-    href: "/tools/map",
+    href: "./tools/map",
   },
 ];

@@ -3,8 +3,8 @@
 import { RERUM } from "@/configs/rerum-links";
 import { useGlossInstance } from "@/hooks/useGlossInstance";
 import { usePathname } from "next/navigation";
-import { make_columns } from "@/app/browse/Columns";
-import { DataTable } from "@/app/browse/DataTable";
+import { make_columns } from "@/app./browse/Columns";
+import { DataTable } from "@/app./browse/DataTable";
 import { useGlossWitnesses } from "@/hooks/useGlossWitnesses";
 
 const filterColumn = {
@@ -101,7 +101,7 @@ const Gloss = (props : {  slug: string } ) => {
                 ? gloss.tags.map((tag, tagIndex, tagArray) => (
                     <a
                       key={tagIndex}
-                      href={"/browse/tag?q=" + tag}
+                      href={"./browse/tag?q=" + tag}
                       className="text-blue-500 hover:underline"
                     >
                       {tag}
