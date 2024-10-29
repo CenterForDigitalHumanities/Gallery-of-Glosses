@@ -1,3 +1,4 @@
+import * as NAV from "@/configs/navigation";
 import { Button } from "@/components/ui/Button";
 
 export default function Home() {
@@ -13,10 +14,10 @@ export default function Home() {
             insights into historical texts.
           </p>
           <div className="mt-6 sm:mt-10 flex flex-col gap-2 md:flex-row justify-center w-full text-sm">
-            <a href="/docs/about">
+            <a href={`${NAV.BASEPATH}/docs/about`}>
               <Button className="truncate w-[150px]">What are Glosses?</Button>
             </a>
-            <a href="/browse">
+            <a href={`${NAV.BASEPATH}/browse`}>
               <Button className="truncate w-[150px]">Start Browsing</Button>
             </a>
           </div>

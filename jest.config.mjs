@@ -1,5 +1,5 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
-module.exports = {
+const jestConfig= {
   testEnvironment: "node",
   transform: {
     "^.+.(t|j)sx?$": ["ts-jest", {}],
@@ -9,3 +9,5 @@ module.exports = {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
 };
+
+export default jestConfig
