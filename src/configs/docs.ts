@@ -40,18 +40,44 @@ export const ABOUT_CONTENT = [
   }
 ];
 
-export const GOALS_CONTENT = [
-  {
-    title: "",
-    summary: "",
-  },
-];
-
 export const RESOURCES_CONTENT = [
   {
     title: "",
-    summary: "",
+    summary: `This page could include any number of things. At this stage, Gallery of Glosses wishes to highlight some 
+    online resources and digital humanities projects associated with or led by those scholars who served as consultants 
+    during the grant period. All of these projects are considered partners of Gallery of Glosses.`,
   },
+  {
+    title: "Projects",
+    summary: `<p>Of greatest relevance to glosses is the <a href="http://www.glossing.org/" target="_blank">Network for the 
+    Study of Glossing</a>, of which Pádraic Moran is a lead organizer and contributor. The website includes links to many 
+    online editions of glosses, mostly from particular manuscripts on particular works.</p> 
+
+    <p>Dr. Moran is also currently directing a project called <a href="http://glossam.ie/" target="_blank">GLOSSAM</a> 
+    (Global and Local Scholarship on Annotated Manuscripts). This project has many of the same aims as Gallery of 
+    Glosses but works from a different data structure. The data structure of Gallery of Glosses prioritizes the individual 
+    gloss, to which there may be one or many witnesses, which makes it apt for the recording of data on individual glosses 
+    or small groups of glosses as well glosses that exist in multiple manuscript witnesses. The data structure of GLOSSAM 
+    prioritizes the manuscript witness, making it apt for the transcription of all glosses in a particular manuscript. 
+    Scholars interested in publishing gloss transcriptions in a digital platform can decide which program best suits their 
+    scholarly goals.</p>
+
+    <p><a href="https://ccl.rch.uky.edu/" target="_blank">The Carolingian Canon Law Project</a>, created by Abigail Firey, is 
+    a searchable, electronic rendition of works of canon law used by Carolingian readers. Individual manuscript copies of 
+    these works may be glossed. Meanwhile, the <a href="https://scta.info/" target="_blank">Scholastic Commentaries and Texts 
+    Archive</a> and the <a href="https://scta.lombardpress.org/" target="_blank">SCTA Reading Room</a>, the creation of 
+    Jeffrey C. Witt, include all manner of texts in the scholastic tradition in innovative digital editions. Gallery of 
+    Glosses can accommodate references to such digital sites to identify the texts that are being glossed and enable users 
+    to pull up an edition of the text being glossed in tandem with the gloss on that text.</p>
+
+    <p><a href="https://www.digitaldecretals.com/home" target="_blank">The Digital Decretals</a> is a project of Edward Reno. 
+    It renders into electronic form Bernard of Parma’s gloss commentary on the <cite>Liber extra</cite>, the first official 
+    and exclusive collection of canon law for the Catholic Church, which is recognized as the <cite>Glossa ordinaria</cite> 
+    on that text. The version reproduced is that of the <cite>Editio romana</cite> of the <cite>Corpus iuris canonici</cite> 
+    (1582). The site provides Word and PDF versions of the glosses, with standardized citations to the Roman law and canon 
+    law texts referenced therein. Gallery of Glosses is partnering with the Digital Decretals and incorporating all these 
+    glosses into our database.</p>`
+  }
 ];
 
 export const ACKNOWLEDGEMENTS_CONTENT = [

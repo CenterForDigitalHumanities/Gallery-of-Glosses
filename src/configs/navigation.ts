@@ -9,10 +9,6 @@ export const GETTING_STARTED_LINKS = [
     href: BASEPATH + "/docs/resources",
   },
   {
-    title: "Goals",
-    href: BASEPATH + "/docs/goals",
-  },
-  {
     title: "History",
     href: BASEPATH + "/docs/history",
   },
