@@ -1,4 +1,4 @@
-export const BASEPATH = "/Gallery-of-Glosses"
+export const BASEPATH = ""
 export const GETTING_STARTED_LINKS = [
   {
     title: "About",

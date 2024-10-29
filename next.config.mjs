@@ -2,7 +2,7 @@
 const nextConfig = {
   output: 'export',
   distDir: 'out',
-  basePath: '/Gallery-of-Glosses',
+  basePath: '/',
   reactStrictMode: true,
   images: {
       unoptimized: true
