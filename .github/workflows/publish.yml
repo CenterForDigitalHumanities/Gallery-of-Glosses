@@ -3,7 +3,7 @@ name: publish-to-github-pages
 on:
   push:
     branches:
-      - deploy-process
+      - main
 
 permissions:
   contents: read
@@ -17,7 +17,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
@@ -32,6 +31,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
+  
   deploy:
     environment:
       name: github-pages
@@ -39,7 +39,6 @@ jobs:
 
     runs-on: ubuntu-latest
     needs: build
-
     steps:
       - name: Publish to GitHub Pages 🚀
         id: deployment
