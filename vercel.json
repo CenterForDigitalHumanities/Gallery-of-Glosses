@@ -1,7 +1,0 @@
-{
-  "git": {
-    "deploymentEnabled": {
-      "deploy-process": false
-    }
-  }
-}
