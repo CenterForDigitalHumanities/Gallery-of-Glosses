@@ -1,39 +1,43 @@
 export const ABOUT_CONTENT = [
   {
-    title: "Who We Are",
-    summary:
-      "The Gallery of Glosses is an open-access digital platform devoted to revealing the richness of the medieval era through a meticulous study and interpretation of glosses from 12th-century manuscripts.",
+    title: "Purpose",
+    summary: `Gallery of Glosses is a project that aims to make glosses on authoritative texts more accessible to scholars. 
+    Hundreds of thousands of glosses appear in medieval and other manuscripts. Many of these glosses remain hidden away in 
+    manuscripts in remote places or, even if they exist in digitized manuscripts, remain difficult to read or difficult to 
+    find. This site publishes glosses that scholars have transcribed and provides some essential data related to each gloss, 
+    including the textual witness(es) or manuscript(s) where it was found, what work it is glossing, and what language it 
+    is in.`,
   },
   {
-    title: "Our Mission",
-    summary:
-      "Our mission is to bridge the gap between past and present, connecting today's scholars, students, and enthusiasts with the scholars of the medieval era whose voices have been 'lost to the margins for centuries'.",
+    title: "Studying Glosses",
+    summary: `Medievalists of all disciplines frequently come across glosses in copies of works they are studying; Gallery of Glosses 
+    aims to facilitate research on the glosses themselves. These glosses testify to the vibrant and also sometimes mundane 
+    reading and studying of authoritative texts in medieval communities and by individuals. In many cases, the authors of the 
+    glosses remain anonymous; in other cases, they are figures of import whose work became authoritative in their own right. In 
+    both cases, these glosses constitute evidence of knowledge creation and transmission, modes of thought, and hermeneutical 
+    trends.`
   },
   {
-    title: "Our Collection",
-    summary:
-      "We curate a broad collection of annotated manuscripts, primarily from the Gospel of Matthew, enabling a deeper understanding of the thought processes, ideas, and creative doodles of medieval minds.",
+    title: "Extent",
+    summary: `Gallery of Glosses is not limited to genre, language, or time period. The intention is to see the glosses 
+    available to researchers grow to include hundreds of glosses on authoritative philosophical texts (e.g., Aristotle’s 
+    <cite>De anima</cite>), theological texts (e.g., Thomas Aquinas’s <cite>Summa theologiae</cite>), scriptural texts 
+    (e.g., the Epistle to the Romans), legal texts (e.g., Justinian’s <cite>Codex</cite>), literary texts (e.g., 
+    <cite>Beowulf</cite>), and more.`
   },
   {
-    title: "For Educators and Students",
-    summary:
-      "We provide an immersive experience that allows students to engage directly with historical texts, fostering the development of translation and transcription skills, and offer educators a wealth of source material for their courses.",
+    title: "Gallery Website",
+    summary: `This website is the public collection of the Gallery of Glosses data, managed at <a href="https://glossing.rerum.io" 
+    target="_blank">glossing.rerum.io</a>. That site is where scholars can go if they want to contribute glosses to Gallery of 
+    Glosses. A user account is required to work in the data-management platform wing of Gallery of Glosses; this public site 
+    is open and available for browsing to anyone.`
   },
   {
-    title: "Our Legacy",
-    summary:
-      "With the Gallery of Glosses, we hope to have created a project with longevity, shedding light on medieval scholarship in a way that resonates through the centuries and influences future interpretations.",
-  },
-  {
-    title: "What is a Gloss?",
-    summary:
-      "A gloss is a note or explanation inserted in the margins or between lines of a text to explain, translate, or expand on difficult or complex passages. They serve as a valuable insight into the scholarly and interpretative practices of the past, providing context and interpretations for text that can aid in our understanding of medieval theology, philosophy, and law.",
-  },
-  {
-    title: "Why Study Glosses?",
-    summary:
-      "Glosses provide a unique perspective on the ways medieval scholars understood and interpreted canonical texts. By studying these annotations, we gain insights into the intellectual landscape of the medieval period, and how scholars grappled with the complexities of the texts they studied.",
-  },
+    title: "The Team",
+    summary: `Gallery of Glosses is a team project at Saint Louis University. The Principal Investigator of Gallery of Glosses 
+    is Atria A. Larson, PhD. Senior personnel performing the software development work are Patrick M. Cuba and Bryan 
+    Haberberger of the university’s Research Computing Group.`
+  }
 ];
 
 export const GOALS_CONTENT = [
