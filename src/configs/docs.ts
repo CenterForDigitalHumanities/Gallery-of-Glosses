@@ -130,28 +130,43 @@ export const HISTORY_CONTENT = [
   {
     title: "Introduction",
     summary:
-      "This project has benefited from two internal grants from Saint Louis University (SLU) and one external grant from the American Philosophical Society (APS). It began with an intention to create an analogue edition of early twelfth-century glosses on the gospel of Matthew, prior to the formation c.1200 of the Glossa ordinaria on the Bible.",
+    `Gallery of Glosses is a digital humanities project that was born in the traditional world of scholarship with 
+    the aim of producing an analogue, print edition. The focus of study was glosses on the Gospel of Matthew. Early 
+    research indicated that project would only be worthwhile and advance scholarship beyond what was readily available 
+    in the <cite>editio princeps</cite> of the <cite>Glossa ordinaria</cite> of Adolph Rusch (1480/81) if textual 
+    development of the glosses in twelfth-century manuscripts was discernible. In fact, such textual development was 
+    discernible, but the complex array of variant glosses and numbers of glosses and positions of glosses created 
+    seemingly insurmountable obstacles to a print edition. More to the point, a print edition with standard 
+    <cite>apparatus</cite> seemed insufficient and not the ideal format in which to present the data. As a result, the 
+    project turned into a digital humanities one.`
   },
   {
-    title: "Initial Funding and Research (2019)",
+    title: "Prototyping",
     summary:
-      "The project received a Franklin Research Grant from the APS amounting to $4,000, and a Summer Research Award in the Humanities from SLU amounting to $6,390. The objective was to acquire more digital manuscript copies of glossed Matthews and work on transcribing glosses. Eventually, Larson and Cuba decided to expand the project's scope, envisioning a digital humanities infrastructure for multiple medieval authoritative texts.",
+    `In 2020, Atria Larson, with the support and partnership of Patrick Cuba, won an internal research grant from Saint 
+    Louis University, a President’s Research Fund award. The grant allowed the creation of “Glossing Matthew,” where the 
+    test case for the first RERUM platform for recording glosses consisted of glosses from sixteen twelfth-century 
+    manuscripts on Matthew 5. This grant served as seed funding to demonstrate proof of concept that could be beneficial 
+    in applications for an external award.`
   },
   {
-    title: "President's Research Fund Award (2020)",
+    title: "The Gospel of Matthew",
     summary:
-      "A 13-month grant of $21,000 was awarded. With this funding, more manuscript copies were purchased and two graduate student summer workers were employed for transcription. Additionally, Cuba and Haberberger developed digital humanities tools and platforms. There was refinement of the transcription software TPEN, development of a data-management tool titled “Glossing Matthew”, and plans were made for a public-facing web application.",
-  },
-  {
-    title: "Research Outcomes",
-    summary:
-      'The project achieved a complete transcription of glosses on Matthew 5 from sixteen twelfth-century manuscripts. Data was organized on the Glossing Matthew GitHub site. Patrick Cuba and Bryan Haberberger presented a paper titled "Building a IIIF-Aware Ecosystem" at the IIIF Annual Conference on June 23, 2021. A draft research article by Atria A. Larson was submitted to the journal Quaderni di storia religiosa medievale. Additionally, a poster titled "Digital Humanities Tools for Capturing Glosses on Authoritative Texts" was accepted for the 16th International Congress of Medieval Canon Law in July 2022.',
-  },
-  {
-    title: "Future Directions",
-    summary:
-      "The next iteration will transition from “Glossing Matthew” to the “Gallery of Glosses.” This will involve a broader use of manuscripts, refinement of transcription processes, and continued utilization of manuscripts of Matthew for transcription. The project will also collaborate with Saint Louis University’s Vatican Film Library (VFL) for research in medieval canon law and partner with the Walter J. Ong Center for Digital Humanities for ongoing projects.",
-  },
+    `<p>The external grant application expanded “Glossing Matthew” into “Gallery of Glosses.” The intent was to open the 
+    platform to multiple genres of text and ensure that the workflow of the data-management platform facilitated usage 
+    by scholars in different disciplines working with glosses on different kinds of texts. The grant application for a 
+    Level II Digital Humanities Advancement Grant from the National Endowment for the Humanities was successful; it was 
+    awarded in August 2022.</p>
+    
+    <p>The two-year grant funded significant development work on the RERUM site, the creation of large amounts of data in 
+    the form of hundreds of transcribed glosses with attendant data, and this first iteration of a public-facing website. 
+    The grant also supported the participation of a group of external test users. All of them have expertise in digital 
+    humanities and an interest in glosses, and they come from different disciplines. These participants provided feedback 
+    in the second year of the grant through an online meeting and in-person workshops and a panel at the 11th Annual 
+    Symposium on Medieval and Renaissance Studies at Saint Louis University, June 10-12, 2024. Additionally, the grant 
+    funded travel to and a presentation on Gallery of Glosses to the world of canon law scholarship at the 17th 
+    International Congress of Medieval Canon Law, held in Canterbury, England in July 2024.</p>`,
+  }
 ];
 
 export const TERMINOLOGY_CONTENT = [
