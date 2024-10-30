@@ -11,6 +11,7 @@ export async function generateStaticParams() {
 
 const GlossInstance = async ({ params }: { params: { slug: string }}) => {
   const { slug } = await params
+  console.log("GlossInstace component calling for Gloss component")
   return <Gloss slug={slug}/>
 }
 

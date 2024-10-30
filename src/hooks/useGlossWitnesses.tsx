@@ -8,12 +8,14 @@ import {
 } from "@/lib/utils";
 
 export const useGlossWitnesses = (targetId: string) => {
+  console.log("USE GLOSS WITNESSES")
   const [witnesses, setWitnesses] = useState<ProcessedWitness[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   async function fetchTranscriptionWitnessAndProcessProperties(
     witnessFragment: ProcessedTranscriptionAnnotations,
   ) {
+    console.log("fetchTranscriptionWitnessAndProcessProperties")
     if (!witnessFragment.identifier) return;
     const fetchedWitness = await grabWitnessFromFragment(
       witnessFragment.identifier,
@@ -32,6 +34,7 @@ export const useGlossWitnesses = (targetId: string) => {
   }
 
   async function fetchGlossWitnessesAndProcessProperties() {
+    console.log("fetchGlossWitnessesAndProcessProperties")
     const witnessFragmentList = await grabGlossWitnessFragments(targetId);
 
     if (witnessFragmentList && witnessFragmentList.length > 1) {
@@ -54,6 +57,7 @@ export const useGlossWitnesses = (targetId: string) => {
   }
 
   useEffect(() => {
+    console.log("use effect in useGlossWitnesses")
     fetchGlossWitnessesAndProcessProperties();
   }, [targetId]);
 
