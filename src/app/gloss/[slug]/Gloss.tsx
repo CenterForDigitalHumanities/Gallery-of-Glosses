@@ -2,11 +2,13 @@
 
 import { RERUM } from "@/configs/rerum-links";
 import * as NAV from "@/configs/navigation";
-import { useGlossInstance } from "@/hooks/useGlossInstance";
 import { usePathname } from "next/navigation";
 import { make_columns } from "@/app/browse/Columns";
 import { DataTable } from "@/app/browse/DataTable";
-import { useGlossWitnesses } from "@/hooks/useGlossWitnesses";
+import { use } from 'react'
+import { useGlossContext } from "@/contexts/GlossContext"
+//import { useGlossInstance } from "@/hooks/useGlossInstance";
+//import { useGlossWitnesses } from "@/hooks/useGlossWitnesses";
 
 const filterColumn = {
   header: "Witness",
@@ -22,22 +24,26 @@ const columns = make_columns([
   },
 ]);
 
+
+
 const Gloss = (props : {  slug: string } ) => {
+
+  let glossPromise = useGlossContext()
+  let gloss = use(glossPromise)
+
   console.log("Gloss Component - Props")
   console.log(props)
-  const pathname = usePathname();
-  const targetId = props.slug
-  const gloss = useGlossInstance(targetId);
-  const witnessesResult = useGlossWitnesses(targetId);
-  let witnesses = witnessesResult.witnesses;
+  
+  //const witnessesResult = useGlossWitnesses(targetId);
+  //let witnesses = witnessesResult.witnesses;
 
   const blurredStyles = "filter blur-md opacity-50";
 
   console.log("Gloss")
   console.log(gloss)
 
-  console.log("Witnesses Result")
-  console.log(witnessesResult)
+  //console.log("Witnesses Result")
+  //console.log(witnessesResult)
 
   return (
     <div>
@@ -110,15 +116,15 @@ const Gloss = (props : {  slug: string } ) => {
             {gloss && gloss.textValue ? gloss.textValue : "Not found"}
           </p>
         </div>
-        <h2 className={`text-xl font-bold mb-4 ${!witnesses && blurredStyles}`}>
+        {/*<h2 className={`text-xl font-bold mb-4 ${!witnesses && blurredStyles}`}>
           Witness References
         </h2>
-        <DataTable
+        {<DataTable
           columns={columns}
           data={witnesses}
           loading={witnessesResult.loading}
           filterColumn={filterColumn}
-        />
+        />}*/}
       </div>
     </div>
   );
