@@ -2,19 +2,11 @@
 
 import { RERUM } from "@/configs/rerum-links";
 import * as NAV from "@/configs/navigation";
-//import { useGlossInstance } from "@/hooks/useGlossInstance";
-//import { useGlossWitnesses } from "@/hooks/useGlossWitnesses";
+import { useGlossInstance } from "@/hooks/useGlossInstance";
 import { usePathname } from "next/navigation";
 import { make_columns } from "@/app/browse/Columns";
 import { DataTable } from "@/app/browse/DataTable";
-
-import {
-  grabGlossWitnessFragments,
-  grabProperties,
-  grabWitnessFromFragment,
-  processTranscriptionAnnotations,
-  processWitness,
-} from "@/lib/utils";
+import { useGlossWitnesses } from "@/hooks/useGlossWitnesses";
 
 const filterColumn = {
   header: "Witness",
@@ -30,70 +22,12 @@ const columns = make_columns([
   },
 ]);
 
-
-
-
-async function fetchGlossAndProcessProperties() {
-  console.log("fetch for id "+targetId);
-  const res = await grabProperties(targetId);
-  const data = await res.json();
-  console.log("result")
-  console.log(data)
-  const gloss = data.map((item: { body: any }) => item.body);
-  setGloss(processGloss(gloss, targetId));
-}
-
-async function fetchTranscriptionWitnessAndProcessProperties(
-    witnessFragment: ProcessedTranscriptionAnnotations,
-  ) {
-    console.log("fetchTranscriptionWitnessAndProcessProperties")
-    if (!witnessFragment.identifier) return;
-    const fetchedWitness = await grabWitnessFromFragment(
-      witnessFragment.identifier,
-    );
-    if (fetchedWitness) {
-      const res = await grabProperties(fetchedWitness["@id"]);
-      const data = await res.json();
-
-      const witnessProperties = data.map((item: { body: any }) => item.body);
-      const processedWitness = processWitness(
-        witnessProperties,
-        fetchedWitness["@id"],
-      );
-      setWitnesses((prevWitnesses) => [...prevWitnesses, processedWitness]);
-    }
-  }
-
-async function fetchGlossWitnessesAndProcessProperties() {
-  console.log("fetchGlossWitnessesAndProcessProperties")
-  const witnessFragmentList = await grabGlossWitnessFragments(targetId);
-
-  if (witnessFragmentList && witnessFragmentList.length > 1) {
-    for (let item of witnessFragmentList) {
-      const fragmentTargetId = item["@id"];
-      const res = await grabProperties(fragmentTargetId);
-      const data = await res.json();
-
-      const annotations = data.map((item: { body: any }) => item.body);
-      const processedTranscriptionAnnotations =
-        processTranscriptionAnnotations(annotations, fragmentTargetId);
-
-      fetchTranscriptionWitnessAndProcessProperties(
-        processedTranscriptionAnnotations,
-      );
-    }
-  }
-
-  setLoading(false);
-}
-
 const Gloss = (props : {  slug: string } ) => {
   console.log("Gloss Component - Props")
   console.log(props)
-
   const pathname = usePathname();
   const targetId = props.slug
-  const gloss = fetchGlossAndProcessProperties(targetId);
+  const gloss = useGlossInstance(targetId);
   const witnessesResult = useGlossWitnesses(targetId);
   let witnesses = witnessesResult.witnesses;
 
