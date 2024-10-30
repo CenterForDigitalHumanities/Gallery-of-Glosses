@@ -4,6 +4,7 @@ import axios from "axios";
 import {
   PRODUCTION_GLOSS_COLLECTION,
   TINY,
+  RERUM,
   PRODUCTION_WITNESS_COLLECTION,
 } from "@/configs/rerum-links";
 
@@ -61,6 +62,8 @@ export async function makePagedQuery(
     let objects: ObjectData[] = [];
 
     while (true) {
+      console.log(`${url}?limit=${limit}&skip=${skip}`)
+      console.log(data)
       const response = await axios.post(
         `${url}?limit=${limit}&skip=${skip}`,
         data,
@@ -99,7 +102,10 @@ export async function makePagedQuery(
  */
 export async function grabProperties(targetId: string): Promise<Response> {
   try {
-    let queryObj = getQueryFromId(targetId);
+    const id = RERUM + targetId
+    let queryObj = getQueryFromId(id);
+    console.log("grabProperties query")
+    console.log(queryObj)
     return await makePagedQuery(`${TINY}/query`, queryObj);
   } catch (error) {
     console.error("Error querying objects:", error);
