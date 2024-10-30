@@ -8,10 +8,10 @@ import {
 } from "@/lib/utils";
 
 export const useGlossWitnesses = (targetId: string) => {
-  console.log("USE GLOSS WITNESSES")
+  console.log("USE GLOSS WITNESSES for id "+targetId)
   const [witnesses, setWitnesses] = useState<ProcessedWitness[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
+  console.log(" ... ")
   async function fetchTranscriptionWitnessAndProcessProperties(
     witnessFragment: ProcessedTranscriptionAnnotations,
   ) {
@@ -33,31 +33,34 @@ export const useGlossWitnesses = (targetId: string) => {
     }
   }
 
-  async function fetchGlossWitnessesAndProcessProperties() {
-    console.log("fetchGlossWitnessesAndProcessProperties")
-    const witnessFragmentList = await grabGlossWitnessFragments(targetId);
 
-    if (witnessFragmentList && witnessFragmentList.length > 1) {
-      for (let item of witnessFragmentList) {
-        const fragmentTargetId = item["@id"];
-        const res = await grabProperties(fragmentTargetId);
-        const data = await res.json();
-
-        const annotations = data.map((item: { body: any }) => item.body);
-        const processedTranscriptionAnnotations =
-          processTranscriptionAnnotations(annotations, fragmentTargetId);
-
-        fetchTranscriptionWitnessAndProcessProperties(
-          processedTranscriptionAnnotations,
-        );
-      }
-    }
-
-    setLoading(false);
-  }
 
   useEffect(() => {
     console.log("use effect in useGlossWitnesses")
+
+    async function fetchGlossWitnessesAndProcessProperties() {
+      console.log("fetchGlossWitnessesAndProcessProperties")
+      const witnessFragmentList = await grabGlossWitnessFragments(targetId);
+
+      if (witnessFragmentList && witnessFragmentList.length > 1) {
+        for (let item of witnessFragmentList) {
+          const fragmentTargetId = item["@id"];
+          const res = await grabProperties(fragmentTargetId);
+          const data = await res.json();
+
+          const annotations = data.map((item: { body: any }) => item.body);
+          const processedTranscriptionAnnotations =
+            processTranscriptionAnnotations(annotations, fragmentTargetId);
+
+          fetchTranscriptionWitnessAndProcessProperties(
+            processedTranscriptionAnnotations,
+          );
+        }
+      }
+
+      setLoading(false);
+    }
+
     fetchGlossWitnessesAndProcessProperties();
   }, [targetId]);
 
