@@ -17,6 +17,10 @@ export const GETTING_STARTED_LINKS = [
     href: BASEPATH + "/docs/terminology",
   },
   {
+    title: "Browsing Tips",
+    href: BASEPATH + "/docs/tips",
+  },
+  {
     title: "Acknowledgements",
     href: BASEPATH + "/docs/acknowledgements",
   },

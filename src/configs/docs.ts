@@ -255,3 +255,57 @@ export const TERMINOLOGY_CONTENT = [
     </dl>`,
   },
 ];
+export const TIPS_CONTENT = [
+  {
+    title: "Searching",
+    summary: `
+    <p>At this stage of development, users may “Browse All Glosses,” “Browse by Witness,” and “Browse by Tag.” In all cases,
+    the search function allows for fuzzy searches.</p>
+    <p>The following pairs have been implemented to allow for searching irrespective of the most common orthographical
+    variations:</p>
+    <ul>
+    <li>v <> u</li>
+    <li>i <> j</li>
+    <li>i <> y</li>
+    <li>e <> ae, oe</li>
+    <li>c<>t</li>
+    <li>exp <> exsp</li>
+    </ul>
+    <p>When you Browse All Glosses, you can type any word, and the system will search all text within both the incipit and
+    the gloss text. You can then click on the incipit to see full details about that gloss, including its full text,
+    language, tags, and witnesses.</p>
+    <p>When you Browse by Witness, you are searching for or selecting a particular witness to glosses contained in Gallery of
+    Glosses. You can then click on the witness (a shelfmark or short bibliographical citation) to move to a page where all
+    glosses contained within that witness, with the gloss text of that witness, can be seen. Clicking on an individual gloss
+    incipit will take you back to the details page for that gloss (which may have multiple witnesses).</p>`
+  },
+  {
+    title: "Tags",
+    summary: `
+    <p>When you Browse by Tag, you will be searching for or wading through keywords or features of glosses.</p>
+    <p>The team at Saint Louis University applied the following tags:</p>
+    <dl>
+    <dt class="font-semibold dark:text-white text-gray-900">OT citation</dt>
+    <dd> i.e., the gloss text includes a quotation or clear paraphrase from an Old Testament passage</dd>
+    <dt class="font-semibold dark:text-white text-gray-900">NT citation</dt>
+    <dd> i.e., the gloss text includes a quotation or clear paraphrase from a New Testament passage</dd>
+    <dt class="font-semibold dark:text-white text-gray-900">Linguistic observation</dt> i.e., the gloss includes 
+    an observation about a term in Greek, about a Latin translation of a
+    Greek or Hebrew term, about the origins of a name in Hebrew, etc.</dd>
+    <dt class="font-semibold dark:text-white text-gray-900">Explicit spiritual interpretation</dt>
+    <dd> i.e., when the gloss specifies that the interpretation to follow reads the meaning
+    of passage <em>spiritualiter</em> or <em>mistice</em></dd>
+    <dt class="font-semibold dark:text-white text-gray-900">Key terms</dt>
+    <dd> e.g. <em>iustitia</em>, <em>lex</em>, <em>ius</em>, <em>fides</em>, <em>gehenna</em>, 
+    <em>natura</em>, <em>penitentia</em>. These appear in Latin in the nominative case, no matter the declension of 
+    the noun in the gloss text.</dd>
+    <dt class="font-semibold dark:text-white text-gray-900">Key names and persons of the Trinity</dt>
+    <dd> e.g. Moses, Abraham, David, God the Father, Holy Spirit. These appear in English.
+    Standardized references are applied so that “Simonus Petrus” appears as “Peter” and <em>Spiritus</em> as “Holy 
+    Spirit.”</dd>
+    </dl>
+    <p>Other creators of gloss entries in glossing.rerum.io may apply other tags that are appropriate to their glosses 
+    and research interests.</p>
+    `
+  }
+];
