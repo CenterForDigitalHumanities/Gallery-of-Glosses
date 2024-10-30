@@ -8,14 +8,12 @@ import {
 } from "@/lib/utils";
 
 export const useGlossWitnesses = (targetId: string) => {
-  console.log("USE GLOSS WITNESSES for id "+targetId)
   const [witnesses, setWitnesses] = useState<ProcessedWitness[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  console.log(" ... ")
+
   async function fetchTranscriptionWitnessAndProcessProperties(
     witnessFragment: ProcessedTranscriptionAnnotations,
   ) {
-    console.log("fetchTranscriptionWitnessAndProcessProperties")
     if (!witnessFragment.identifier) return;
     const fetchedWitness = await grabWitnessFromFragment(
       witnessFragment.identifier,
@@ -33,34 +31,29 @@ export const useGlossWitnesses = (targetId: string) => {
     }
   }
 
+  async function fetchGlossWitnessesAndProcessProperties() {
+    const witnessFragmentList = await grabGlossWitnessFragments(targetId);
 
+    if (witnessFragmentList && witnessFragmentList.length > 1) {
+      for (let item of witnessFragmentList) {
+        const fragmentTargetId = item["@id"];
+        const res = await grabProperties(fragmentTargetId);
+        const data = await res.json();
 
-  useEffect(() => {
-    console.log("use effect in useGlossWitnesses")
+        const annotations = data.map((item: { body: any }) => item.body);
+        const processedTranscriptionAnnotations =
+          processTranscriptionAnnotations(annotations, fragmentTargetId);
 
-    async function fetchGlossWitnessesAndProcessProperties() {
-      console.log("fetchGlossWitnessesAndProcessProperties")
-      const witnessFragmentList = await grabGlossWitnessFragments(targetId);
-
-      if (witnessFragmentList && witnessFragmentList.length > 1) {
-        for (let item of witnessFragmentList) {
-          const fragmentTargetId = item["@id"];
-          const res = await grabProperties(fragmentTargetId);
-          const data = await res.json();
-
-          const annotations = data.map((item: { body: any }) => item.body);
-          const processedTranscriptionAnnotations =
-            processTranscriptionAnnotations(annotations, fragmentTargetId);
-
-          fetchTranscriptionWitnessAndProcessProperties(
-            processedTranscriptionAnnotations,
-          );
-        }
+        fetchTranscriptionWitnessAndProcessProperties(
+          processedTranscriptionAnnotations,
+        );
       }
-
-      setLoading(false);
     }
 
+    setLoading(false);
+  }
+
+  useEffect(() => {
     fetchGlossWitnessesAndProcessProperties();
   }, [targetId]);
 
