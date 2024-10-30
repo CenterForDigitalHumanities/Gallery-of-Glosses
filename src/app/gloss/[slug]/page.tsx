@@ -18,20 +18,23 @@ const GlossInstance = async ({ params }: { params: { slug: string }}) => {
 
   async function expand(targetId:string) {
     try{
-      console.log("fetch for id "+targetId);
+      console.log("expand for id "+targetId);
       const res = await grabProperties(targetId);
       const data = await res.json();
-      console.log("result")
-      console.log(data)
-      const constructedGloss = data.map((item: { body: any }) => item.body); 
-      return Promise.resolve(constructedGloss)
+      // console.log("result")
+      // console.log(data)
+      let constructed = {}
+      for(const item of data){
+        if(!item?.body) continue
+        const key = Object.keys(item.body)[0]
+        constructed[key] = item.body[key].value ?? item.body[key]
+      }
+      return Promise.resolve(constructed)
     }
     catch(err){
       return Promise.reject(err)
     }
   }
-
-  console.log("GlossInstace component calling for Gloss component")
   return <GlossProvider glossPromise={promise}><Gloss slug={slug} /></GlossProvider>
 }
 
