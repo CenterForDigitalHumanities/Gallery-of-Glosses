@@ -21,8 +21,7 @@ const Terminology: FC<TerminologyProps> = ({}) => {
             <div key={index}>
               <h2 className="font-medium">{content.title}</h2>
               <hr className="text-muted-foreground" />
-              <p className="leading-7 mt-2 text-muted-foreground">
-                {content.summary}
+              <p className="leading-7 mt-2 text-muted-foreground" dangerouslySetInnerHTML={ {__html: content.summary} }>
               </p>
             </div>
           ))}

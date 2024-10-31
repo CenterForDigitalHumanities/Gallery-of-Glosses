@@ -1,152 +1,311 @@
+import { title } from "process";
+
 export const ABOUT_CONTENT = [
   {
-    title: "Who We Are",
-    summary:
-      "The Gallery of Glosses is an open-access digital platform devoted to revealing the richness of the medieval era through a meticulous study and interpretation of glosses from 12th-century manuscripts.",
+    title: "Purpose",
+    summary: `Gallery of Glosses is a project that aims to make glosses on authoritative texts more accessible to scholars. 
+    Hundreds of thousands of glosses appear in medieval and other manuscripts. Many of these glosses remain hidden away in 
+    manuscripts in remote places or, even if they exist in digitized manuscripts, remain difficult to read or difficult to 
+    find. This site publishes glosses that scholars have transcribed and provides some essential data related to each gloss, 
+    including the textual witness(es) or manuscript(s) where it was found, what work it is glossing, and what language it 
+    is in.`,
   },
   {
-    title: "Our Mission",
-    summary:
-      "Our mission is to bridge the gap between past and present, connecting today's scholars, students, and enthusiasts with the scholars of the medieval era whose voices have been 'lost to the margins for centuries'.",
+    title: "Studying Glosses",
+    summary: `Medievalists of all disciplines frequently come across glosses in copies of works they are studying; Gallery of Glosses 
+    aims to facilitate research on the glosses themselves. These glosses testify to the vibrant and also sometimes mundane 
+    reading and studying of authoritative texts in medieval communities and by individuals. In many cases, the authors of the 
+    glosses remain anonymous; in other cases, they are figures of import whose work became authoritative in their own right. In 
+    both cases, these glosses constitute evidence of knowledge creation and transmission, modes of thought, and hermeneutical 
+    trends.`
   },
   {
-    title: "Our Collection",
-    summary:
-      "We curate a broad collection of annotated manuscripts, primarily from the Gospel of Matthew, enabling a deeper understanding of the thought processes, ideas, and creative doodles of medieval minds.",
+    title: "Extent",
+    summary: `Gallery of Glosses is not limited to genre, language, or time period. The intention is to see the glosses 
+    available to researchers grow to include hundreds of glosses on authoritative philosophical texts (e.g., Aristotle’s 
+    <cite>De anima</cite>), theological texts (e.g., Thomas Aquinas’s <cite>Summa theologiae</cite>), scriptural texts 
+    (e.g., the Epistle to the Romans), legal texts (e.g., Justinian’s <cite>Codex</cite>), literary texts (e.g., 
+    <cite>Beowulf</cite>), and more.`
   },
   {
-    title: "For Educators and Students",
-    summary:
-      "We provide an immersive experience that allows students to engage directly with historical texts, fostering the development of translation and transcription skills, and offer educators a wealth of source material for their courses.",
+    title: "Gallery Website",
+    summary: `This website is the public collection of the Gallery of Glosses data, managed at <a href="https://glossing.rerum.io" 
+    target="_blank">glossing.rerum.io</a>. That site is where scholars can go if they want to contribute glosses to Gallery of 
+    Glosses. A user account is required to work in the data-management platform wing of Gallery of Glosses; this public site 
+    is open and available for browsing to anyone.`
   },
   {
-    title: "Our Legacy",
-    summary:
-      "With the Gallery of Glosses, we hope to have created a project with longevity, shedding light on medieval scholarship in a way that resonates through the centuries and influences future interpretations.",
-  },
-  {
-    title: "What is a Gloss?",
-    summary:
-      "A gloss is a note or explanation inserted in the margins or between lines of a text to explain, translate, or expand on difficult or complex passages. They serve as a valuable insight into the scholarly and interpretative practices of the past, providing context and interpretations for text that can aid in our understanding of medieval theology, philosophy, and law.",
-  },
-  {
-    title: "Why Study Glosses?",
-    summary:
-      "Glosses provide a unique perspective on the ways medieval scholars understood and interpreted canonical texts. By studying these annotations, we gain insights into the intellectual landscape of the medieval period, and how scholars grappled with the complexities of the texts they studied.",
-  },
-];
-
-export const GOALS_CONTENT = [
-  {
-    title: "",
-    summary: "",
-  },
+    title: "The Team",
+    summary: `Gallery of Glosses is a team project at Saint Louis University. The Principal Investigator of Gallery of Glosses 
+    is Atria A. Larson, PhD. Senior personnel performing the software development work are Patrick M. Cuba and Bryan 
+    Haberberger of the university’s Research Computing Group.`
+  }
 ];
 
 export const RESOURCES_CONTENT = [
   {
     title: "",
-    summary: "",
+    summary: `This page could include any number of things. At this stage, Gallery of Glosses wishes to highlight some 
+    online resources and digital humanities projects associated with or led by those scholars who served as consultants 
+    during the grant period. All of these projects are considered partners of Gallery of Glosses.`,
   },
+  {
+    title: "Projects",
+    summary: `<p>Of greatest relevance to glosses is the <a href="http://www.glossing.org/" target="_blank">Network for the 
+    Study of Glossing</a>, of which Pádraic Moran is a lead organizer and contributor. The website includes links to many 
+    online editions of glosses, mostly from particular manuscripts on particular works.</p> 
+
+    <p>Dr. Moran is also currently directing a project called <a href="http://glossam.ie/" target="_blank">GLOSSAM</a> 
+    (Global and Local Scholarship on Annotated Manuscripts). This project has many of the same aims as Gallery of 
+    Glosses but works from a different data structure. The data structure of Gallery of Glosses prioritizes the individual 
+    gloss, to which there may be one or many witnesses, which makes it apt for the recording of data on individual glosses 
+    or small groups of glosses as well glosses that exist in multiple manuscript witnesses. The data structure of GLOSSAM 
+    prioritizes the manuscript witness, making it apt for the transcription of all glosses in a particular manuscript. 
+    Scholars interested in publishing gloss transcriptions in a digital platform can decide which program best suits their 
+    scholarly goals.</p>
+
+    <p><a href="https://ccl.rch.uky.edu/" target="_blank">The Carolingian Canon Law Project</a>, created by Abigail Firey, is 
+    a searchable, electronic rendition of works of canon law used by Carolingian readers. Individual manuscript copies of 
+    these works may be glossed. Meanwhile, the <a href="https://scta.info/" target="_blank">Scholastic Commentaries and Texts 
+    Archive</a> and the <a href="https://scta.lombardpress.org/" target="_blank">SCTA Reading Room</a>, the creation of 
+    Jeffrey C. Witt, include all manner of texts in the scholastic tradition in innovative digital editions. Gallery of 
+    Glosses can accommodate references to such digital sites to identify the texts that are being glossed and enable users 
+    to pull up an edition of the text being glossed in tandem with the gloss on that text.</p>
+
+    <p><a href="https://www.digitaldecretals.com/home" target="_blank">The Digital Decretals</a> is a project of Edward Reno. 
+    It renders into electronic form Bernard of Parma’s gloss commentary on the <cite>Liber extra</cite>, the first official 
+    and exclusive collection of canon law for the Catholic Church, which is recognized as the <cite>Glossa ordinaria</cite> 
+    on that text. The version reproduced is that of the <cite>Editio romana</cite> of the <cite>Corpus iuris canonici</cite> 
+    (1582). The site provides Word and PDF versions of the glosses, with standardized citations to the Roman law and canon 
+    law texts referenced therein. Gallery of Glosses is partnering with the Digital Decretals and incorporating all these 
+    glosses into our database.</p>`
+  }
 ];
 
 export const ACKNOWLEDGEMENTS_CONTENT = [
   {
-    title: "Funding Bodies and Research Support",
-    items: [
-      "Office of the Vice President for Research",
-      "David Borgmeyer",
-      "Christine Luebbert",
-      "Ann Scales",
-    ],
-  },
+    title: "Lead Team at Saint Louis University",
+    summary: `Principal Investigator: 
+    <br />
+    Atria A. Larson, PhD, 
+    <br />
+    Department of Theological Studies, Center for Medieval and
+    Renaissance Studies, Center for Religious and Legal History,
+    <a href="mailto:atria.larson@slu.edu">atria.larson@slu.edu</a>
+    <br /><br />
+    Patrick M. Cuba, Research Computing Group
+    <br /><br />
+    Bryan J. Haberberger, Research Computing Group
+    `},
   {
-    title: "Software Development",
-    items: [
-      "Patrick M. Cuba, Research Computing Group",
-      "Bryan J. Haberberger, Research Computing Group",
-    ],
-  },
+    title: "Graduate Student Assistants",
+    summary: `Lead:
+    <br />
+    Joseph Grone, Department of Theological Studies
+    <br /><br />
+    Additional GAs:
+    <br />
+    Clayton J. Killion, Department of Theological Studies
+    <br />
+    Abner Chacon, Department of History
+    <br />
+    Mattheis Lorimor, Department of History
+    `},
   {
-    title: "Digital Humanities Advising",
-    items: ["John McEwan, Walter J. Ong SJ Center for Digital Humanities"],
-  },
+    title: "Past Graduate Assistants who contributed to Glossing Matthew",
+    summary: `Amanda Berg
+    <br />
+    Alex Coffey
+    <br />
+    Mitchell Stevens
+    `},
   {
-    title: "Graduate Assistants",
-    items: [
-      "Amanda Berg",
-      "Abner Chacon",
-      "Joseph Grone",
-      "Clayton J. Killion",
-      "Matheis Lorimor",
-      "Mitchell Stevens",
-    ],
-  },
+    title: "External Test Users/Consultants on Gallery of Glosses",
+    summary: `Abigail Firey, University of Kentucky
+    <br />
+    Brandon Hawk, Rhode Island College
+    <br />
+    Pádraic Moran, University of Galway
+    <br />
+    Edward Reno, Adelphi University
+    <br />
+    Jeffrey C. Witt, Loyola University (Maryland)
+    `},
   {
-    title: "Website Development",
-    items: ["Tu N. Tran", "Josh Cohen", "Kameron Bustos"],
-  },
-  {
-    title: "External Advisors",
-    items: [
-      "Abigail Firey, University of Kentucky",
-      "Pádraic Moran, University of Galloway",
-      "Jeffrey C. Witt, Loyola University Maryland",
-    ],
-  },
+    title: "Funding Sources",
+    summary: `President’s Research Fund, Saint Louis University (2020-2021; $21,000)
+    <br />
+    Level II Digital Humanities Advancement Grant, National Endowment for the Humanities (2022-2024; $149,835; 
+    Federal Award ID Number: HAA-287674-22)
+    `}
 ];
 
 export const HISTORY_CONTENT = [
   {
     title: "Introduction",
     summary:
-      "This project has benefited from two internal grants from Saint Louis University (SLU) and one external grant from the American Philosophical Society (APS). It began with an intention to create an analogue edition of early twelfth-century glosses on the gospel of Matthew, prior to the formation c.1200 of the Glossa ordinaria on the Bible.",
+      `Gallery of Glosses is a digital humanities project that was born in the traditional world of scholarship with 
+    the aim of producing an analogue, print edition. The focus of study was glosses on the Gospel of Matthew. Early 
+    research indicated that project would only be worthwhile and advance scholarship beyond what was readily available 
+    in the <cite>editio princeps</cite> of the <cite>Glossa ordinaria</cite> of Adolph Rusch (1480/81) if textual 
+    development of the glosses in twelfth-century manuscripts was discernible. In fact, such textual development was 
+    discernible, but the complex array of variant glosses and numbers of glosses and positions of glosses created 
+    seemingly insurmountable obstacles to a print edition. More to the point, a print edition with standard 
+    <cite>apparatus</cite> seemed insufficient and not the ideal format in which to present the data. As a result, the 
+    project turned into a digital humanities one.`
   },
   {
-    title: "Initial Funding and Research (2019)",
+    title: "Prototyping",
     summary:
-      "The project received a Franklin Research Grant from the APS amounting to $4,000, and a Summer Research Award in the Humanities from SLU amounting to $6,390. The objective was to acquire more digital manuscript copies of glossed Matthews and work on transcribing glosses. Eventually, Larson and Cuba decided to expand the project's scope, envisioning a digital humanities infrastructure for multiple medieval authoritative texts.",
+      `In 2020, Atria Larson, with the support and partnership of Patrick Cuba, won an internal research grant from Saint 
+    Louis University, a President’s Research Fund award. The grant allowed the creation of “Glossing Matthew,” where the 
+    test case for the first RERUM platform for recording glosses consisted of glosses from sixteen twelfth-century 
+    manuscripts on Matthew 5. This grant served as seed funding to demonstrate proof of concept that could be beneficial 
+    in applications for an external award.`
   },
   {
-    title: "President's Research Fund Award (2020)",
+    title: "The Gospel of Matthew",
     summary:
-      "A 13-month grant of $21,000 was awarded. With this funding, more manuscript copies were purchased and two graduate student summer workers were employed for transcription. Additionally, Cuba and Haberberger developed digital humanities tools and platforms. There was refinement of the transcription software TPEN, development of a data-management tool titled “Glossing Matthew”, and plans were made for a public-facing web application.",
-  },
-  {
-    title: "Research Outcomes",
-    summary:
-      'The project achieved a complete transcription of glosses on Matthew 5 from sixteen twelfth-century manuscripts. Data was organized on the Glossing Matthew GitHub site. Patrick Cuba and Bryan Haberberger presented a paper titled "Building a IIIF-Aware Ecosystem" at the IIIF Annual Conference on June 23, 2021. A draft research article by Atria A. Larson was submitted to the journal Quaderni di storia religiosa medievale. Additionally, a poster titled "Digital Humanities Tools for Capturing Glosses on Authoritative Texts" was accepted for the 16th International Congress of Medieval Canon Law in July 2022.',
-  },
-  {
-    title: "Future Directions",
-    summary:
-      "The next iteration will transition from “Glossing Matthew” to the “Gallery of Glosses.” This will involve a broader use of manuscripts, refinement of transcription processes, and continued utilization of manuscripts of Matthew for transcription. The project will also collaborate with Saint Louis University’s Vatican Film Library (VFL) for research in medieval canon law and partner with the Walter J. Ong Center for Digital Humanities for ongoing projects.",
-  },
+      `<p>The external grant application expanded “Glossing Matthew” into “Gallery of Glosses.” The intent was to open the 
+    platform to multiple genres of text and ensure that the workflow of the data-management platform facilitated usage 
+    by scholars in different disciplines working with glosses on different kinds of texts. The grant application for a 
+    Level II Digital Humanities Advancement Grant from the National Endowment for the Humanities was successful; it was 
+    awarded in August 2022.</p>
+    
+    <p>The two-year grant funded significant development work on the RERUM site, the creation of large amounts of data in 
+    the form of hundreds of transcribed glosses with attendant data, and this first iteration of a public-facing website. 
+    The grant also supported the participation of a group of external test users. All of them have expertise in digital 
+    humanities and an interest in glosses, and they come from different disciplines. These participants provided feedback 
+    in the second year of the grant through an online meeting and in-person workshops and a panel at the 11th Annual 
+    Symposium on Medieval and Renaissance Studies at Saint Louis University, June 10-12, 2024. Additionally, the grant 
+    funded travel to and a presentation on Gallery of Glosses to the world of canon law scholarship at the 17th 
+    International Congress of Medieval Canon Law, held in Canterbury, England in July 2024.</p>`,
+  }
 ];
 
 export const TERMINOLOGY_CONTENT = [
   {
-    title: "Gloss",
+    title: "",
     summary:
-      "A gloss is an individual version of an explanation or interpretation found in one or more manuscripts. It provides brief marginal or interlinear annotations explaining the meaning of a word or wording in a text.",
+      `Gallery of Glosses attempts to serve the needs of many scholarly disciplines in the study of the pre-modern 
+      world. As a result, Gallery of Glosses includes standard scholarly abbreviations and citations within individual 
+      disciplines within the data. When it comes to labels for different categories of data, Gallery of Glosses must 
+      accommodate various terminology and, in some cases, has adopted its own terminology that attempts generically to 
+      cover the types of information in view.`
   },
   {
-    title: "Meta-Gloss",
+    title: "Standard Scholarly Terminology and Abbreviations",
     summary:
-      "A meta-gloss represents the abstract idea of a gloss, of which various individual glosses are instances or versions.",
+      `<p>Gallery of Glosses assumes that the user is familiar with the norms of citation and abbreviation in relevant 
+      fields.</p> 
+      <p>Thus, if a user finds that the work being glossed is “X 1.13.6,” the user is expected to know (or learn through 
+      other means) that the text referred to is the <cite>Liber Extra</cite> or <cite>Decretales Gregorii noni</cite> 
+      issued under Pope Gregory IX in 1234, and to the sixth chapter or decretal within the thirteenth title of Book 1. 
+      Similarly, if a gloss on Thomas Aquinas’s <cite>Summa</cite> includes the abbreviation ‘s.c.’, the user is expected 
+      to know (or learn through other means) that this refers to the <cite>sed contra</cite> section of the article.</p>
+      <p>Within transcriptions themselves, those who entered the transcription may include commonly used abbreviations 
+      for individual words or for works quoted. Thus, “B. Augustinus” may appear for “Beatus Augustinus.” “Is 6:1” would 
+      refer to the Old Testament book of Isaiah, chapter 6, verse 1. “R.” might appear for “Respondeo.”</p>`,
   },
   {
-    title: "Glossary",
-    summary: "A curated collection of glosses.",
+    title: "Terminology for Categories Specific to Gallery of Glosses",
+    summary:
+      `The terminology of this public Gallery of Glosses website aligns with the vocabulary established to encode the data.
+    <dl>
+    <dt class="font-semibold text-gray-900 dark:text-white">Label for Display/Incipit</dt>
+    <dd>This is the <em>incipit</em> or first few words of the gloss. Contributors may have entered a different label for 
+    an individual gloss, but we encourage users to utilize the <em>incipit</em>. What differentiates two glosses that 
+    share an incipit? The canonical reference locator attached to that gloss (see below).</dd>
+    <dt class="font-semibold text-gray-900 dark:text-white">Gloss Text</dt>
+    <dd>This is the full text of any given gloss in question.
+    <blockquote>N.B. When you are on the page for the gloss, the “gloss text” is the version of the gloss that the creator 
+    of the entry has chosen to identify as the standard or authoritative version of the gloss. In some cases, this will 
+    have been determined through collation of multiple witnesses. In other cases, this will simply be the first instance 
+    of the gloss found, in a single manuscript, and the specifics of this gloss text might change if additional witnesses 
+    to the gloss are found.
+    When you are on the page for the “Witness” (see below), the “gloss text” is the version of the gloss in that particular 
+    witness. A different witness to this gloss may have a somewhat different “gloss text” if there are textual variants.
+    </blockquote></dd>
+    <dt class="font-semibold text-gray-900 dark:text-white">Gloss Witness</dt>
+    <dd>This is the manuscript or printed source from which the gloss text is transcribed. Each source serves as a witness 
+    to a gloss but might not be the only one in existence. At this stage of Gallery of Glosses, each “gloss witness” is 
+    referred to in a short, succinct way. A future iteration of Gallery of Glosses intends to include more metadata about 
+    them.
+    <p>A manuscript “witness” will be referred to by its shelfmark.</p>
+    <p>A printed “witness” (e.g. an article published in 1925 that included transcriptions of glosses from a manuscript in 
+    Prague) will be referred to by a short-hand bibliographical citation.</p>
+    </dd>
+    <dt class="font-semibold text-gray-900 dark:text-white">Canonical Reference Locator</dt>
+    <dd>This is the location in the source text being glossed, e.g. “Matthew 5:1” or “Sententiae, liber 2, dist. 17” or 
+    “Decretum C.32 q.1 c.3.” Ideally, the “canonical reference locator” matches the way a medieval text would be cited in 
+    a footnote in a scholarly publication in the discipline.</dd>
+    <dt>Target Text</dt>
+    <dd>This is the lemma or the word or phrase within the text referenced in the “canonical reference locator” that is 
+    being glossed, e.g. “s.v. potestas” or “In principio.” These do not exist for every gloss.</dd>
+    <dt class="font-semibold text-gray-900 dark:text-white">Language</dt>
+    <dd>This is the language in which a gloss has been found. In theory, the same gloss might appear in one manuscript in 
+    Latin but be translated into Middle French in another. Gallery of Glosses allows for this possibility, even if it is 
+    rare.</dd>
+    <dt class="font-semibold text-gray-900 dark:text-white">Tags</dt>
+    <dd>These are key terms or features of the gloss, e.g. “incarnatio” or “OT citation” or “linguistic observation.” They
+    may also identify specific citations to other texts or allegations found within the gloss text, e.g. “X 3.16.4.” Tags
+    are subject to the creator of them. The tags found in Gallery of Glosses should not be considered comprehensive or
+    scholarly meaningful in and of themselves. They are intended merely to help facilitate searches on various terms or
+    gloss features.</dd>
+    </dl>`,
+  },
+];
+export const TIPS_CONTENT = [
+  {
+    title: "Searching",
+    summary: `
+    <p>At this stage of development, users may “Browse All Glosses,” “Browse by Witness,” and “Browse by Tag.” In all cases,
+    the search function allows for fuzzy searches.</p>
+    <p>The following pairs have been implemented to allow for searching irrespective of the most common orthographical
+    variations:</p>
+    <ul>
+    <li>v <> u</li>
+    <li>i <> j</li>
+    <li>i <> y</li>
+    <li>e <> ae, oe</li>
+    <li>c<>t</li>
+    <li>exp <> exsp</li>
+    </ul>
+    <p>When you Browse All Glosses, you can type any word, and the system will search all text within both the incipit and
+    the gloss text. You can then click on the incipit to see full details about that gloss, including its full text,
+    language, tags, and witnesses.</p>
+    <p>When you Browse by Witness, you are searching for or selecting a particular witness to glosses contained in Gallery of
+    Glosses. You can then click on the witness (a shelfmark or short bibliographical citation) to move to a page where all
+    glosses contained within that witness, with the gloss text of that witness, can be seen. Clicking on an individual gloss
+    incipit will take you back to the details page for that gloss (which may have multiple witnesses).</p>`
   },
   {
-    title: "Mt",
-    summary:
-      "This stands for the Gospel of Matthew, a part of the Bible. It is used as an authoritative text for the context of some glosses.",
-  },
-  {
-    title: "[##:##]",
-    summary:
-      "A canonical reference system common in theological studies, where the numbers before and after the colon respectively represent the section and subsection of a book or document from the Bible, e.g., Matthew 5:16 refers to Chapter 5, Verse 16 of the Gospel of Matthew.",
-  },
+    title: "Tags",
+    summary: `
+    <p>When you Browse by Tag, you will be searching for or wading through keywords or features of glosses.</p>
+    <p>The team at Saint Louis University applied the following tags:</p>
+    <dl>
+    <dt class="font-semibold dark:text-white text-gray-900">OT citation</dt>
+    <dd> i.e., the gloss text includes a quotation or clear paraphrase from an Old Testament passage</dd>
+    <dt class="font-semibold dark:text-white text-gray-900">NT citation</dt>
+    <dd> i.e., the gloss text includes a quotation or clear paraphrase from a New Testament passage</dd>
+    <dt class="font-semibold dark:text-white text-gray-900">Linguistic observation</dt> i.e., the gloss includes 
+    an observation about a term in Greek, about a Latin translation of a
+    Greek or Hebrew term, about the origins of a name in Hebrew, etc.</dd>
+    <dt class="font-semibold dark:text-white text-gray-900">Explicit spiritual interpretation</dt>
+    <dd> i.e., when the gloss specifies that the interpretation to follow reads the meaning
+    of passage <em>spiritualiter</em> or <em>mistice</em></dd>
+    <dt class="font-semibold dark:text-white text-gray-900">Key terms</dt>
+    <dd> e.g. <em>iustitia</em>, <em>lex</em>, <em>ius</em>, <em>fides</em>, <em>gehenna</em>, 
+    <em>natura</em>, <em>penitentia</em>. These appear in Latin in the nominative case, no matter the declension of 
+    the noun in the gloss text.</dd>
+    <dt class="font-semibold dark:text-white text-gray-900">Key names and persons of the Trinity</dt>
+    <dd> e.g. Moses, Abraham, David, God the Father, Holy Spirit. These appear in English.
+    Standardized references are applied so that “Simonus Petrus” appears as “Peter” and <em>Spiritus</em> as “Holy 
+    Spirit.”</dd>
+    </dl>
+    <p>Other creators of gloss entries in glossing.rerum.io may apply other tags that are appropriate to their glosses 
+    and research interests.</p>
+    `
+  }
 ];
