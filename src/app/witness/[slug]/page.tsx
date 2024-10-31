@@ -18,7 +18,6 @@ const WitnessInstance = async ({ params }: { params: { slug: string }}) => {
 
   async function expand(targetId:string) {
     try{
-      console.log("expand for id "+targetId)
       const res = await grabProperties(targetId)
       const data = await res.json()
       let constructed = {}

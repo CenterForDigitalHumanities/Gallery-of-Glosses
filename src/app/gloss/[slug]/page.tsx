@@ -12,13 +12,17 @@ export async function generateStaticParams() {
   return ids
 }
 
+// const GlossInstance = async ({ params }: { params: { slug: string }}) => {
+//   const { slug } = await params
+//   return <Gloss slug={slug}/>
+// }
+
 const GlossInstance = async ({ params }: { params: { slug: string }}) => {
   const { slug } = await params
   const promise = expand(slug)
 
   async function expand(targetId:string) {
     try{
-      console.log("expand for id "+targetId)
       const res = await grabProperties(targetId)
       const data = await res.json()
       let constructed = {}

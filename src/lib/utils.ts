@@ -115,7 +115,8 @@ export async function grabProperties(targetId: string): Promise<Response> {
 }
 
 // created a temporary any[] because don't think necessary to create an interface for temporary array of gloss properties
-export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
+export function processGloss(gloss: any, targetId: string): ProcessedGloss {
+  console.log("PROCESSED GLOSS")
   let processedGloss: ProcessedGloss = {
     targetId: "",
     title: "",
@@ -135,39 +136,35 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
   };
 
   processedGloss.targetId = targetId;
-
-  gloss.forEach((item) => {
-    if (!item) return;
-
-    if (item.title && item.title.value) {
-      processedGloss.title = item.title.value;
-    } else if (item.targetCollection) {
-      processedGloss.targetCollection = item.targetCollection;
-    } else if (item._section && item._section.value) {
-      processedGloss.section = item._section.value;
-    } else if (item._subsection && item._subsection.value) {
-      processedGloss.subsection = item._subsection.value;
-    } else if (item.tags && item.tags.items) {
-      processedGloss.tags = item.tags.items;
-    } else if (item.text) {
-      processedGloss.textFormat = item.text.format;
-      processedGloss.textLanguage = item.text.language;
-      processedGloss.textValue = item.text.textValue;
-    } else if (item.creator && item.creator.value) {
-      processedGloss.creator = item.creator.value;
-    } else if (item._document && item._document.value) {
-      processedGloss.document = item._document.value;
-    } else if (item.themes && item.themes.value) {
-      processedGloss.themes = item.themes.value;
-    } else if (item.canonicalReference && item.canonicalReference.value) {
-      processedGloss.canonicalReference = item.canonicalReference.value;
-    } else if (item.description && item.description.value) {
-      processedGloss.description = item.description.value;
-    } else if (item.targetedText && item.targetedText.value) {
-      processedGloss.targetedText = item.targetedText.value;
+  for (const prop in gloss){
+    if(prop === "title" && gloss.title.value) {
+      processedGloss.title = gloss.title.value;
+    } else if(prop === "targetCollection") {
+      processedGloss.targetCollection = gloss.targetCollection;
+    } else if(prop === "_section" && gloss._section.value) {
+      processedGloss.section = gloss._section.value;
+    } else if(prop === "_subsection" && gloss._subsection.value) {
+      processedGloss.subsection = gloss._subsection.value;
+    } else if(prop === "tags" && gloss.tags.props) {
+      processedGloss.tags = gloss.tags.props;
+    } else if(prop === "text") {
+      processedGloss.textFormat = gloss.text.format;
+      processedGloss.textLanguage = gloss.text.language;
+      processedGloss.textValue = gloss.text.textValue;
+    } else if(prop === "creator" && gloss.creator.value) {
+      processedGloss.creator = gloss.creator.value;
+    } else if(prop === "_document" && gloss._document.value) {
+      processedGloss.document = gloss._document.value;
+    } else if(prop === "themes" && gloss.themes.value) {
+      processedGloss.themes = gloss.themes.value;
+    } else if(prop === "canonicalReference" && gloss.canonicalReference.value) {
+      processedGloss.canonicalReference = gloss.canonicalReference.value;
+    } else if(prop === "description" && gloss.description.value) {
+      processedGloss.description = gloss.description.value;
+    } else if(prop === "targetedText" && gloss.targetedText.value) {
+      processedGloss.targetedText = gloss.targetedText.value;
     }
-  });
-
+  }
   return processedGloss;
 }
 

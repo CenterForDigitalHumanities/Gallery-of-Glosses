@@ -17,7 +17,13 @@ export const useGlossList = () => {
         const targetId = item["@id"];
         const res = await grabProperties(targetId);
         const data = await res.json();
-        const gloss = data.map((item: { body: any }) => item.body);
+        let gloss = {}
+        for(const item of data){
+          if(!item?.body) continue
+          const key = Object.keys(item.body)[0]
+          gloss[key] = item.body[key].value ?? item.body[key]
+        }
+        //const gloss = data.map((item: { body: any }) => item.body);
         const processedGloss = processGloss(gloss, targetId);
 
         setGlosses((prevGlosses) => [...prevGlosses, processedGloss]);

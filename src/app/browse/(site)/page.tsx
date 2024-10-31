@@ -24,8 +24,6 @@ let columns = make_columns([
 
 const BrowseAllGlosses: FC<BrowseAllGlossesProps> = ({}) => {
   const { glosses, loading } = useGlossList();
-  console.log("browse these glosses")
-  console.log(glosses)
   return (
     <div>
       {
