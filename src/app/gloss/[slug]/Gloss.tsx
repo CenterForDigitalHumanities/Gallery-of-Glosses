@@ -5,7 +5,7 @@ import * as NAV from "@/configs/navigation";
 import { usePathname } from "next/navigation";
 import { make_columns } from "@/app/browse/Columns";
 import { DataTable } from "@/app/browse/DataTable";
-import { use } from 'react'
+import { use } from "react"
 import { useGlossContext } from "@/contexts/GlossContext"
 //import { useGlossInstance } from "@/hooks/useGlossInstance";
 //import { useGlossWitnesses } from "@/hooks/useGlossWitnesses";
@@ -98,7 +98,7 @@ const Gloss = (props : {  slug: string } ) => {
           </p>
         </div>
         <div className="rounded-xl shadow-inner">
-          <p className={`text-justify ${!gloss && blurredStyles}`}>
+          <p className="text-justify">
             {gloss?.text?.textValue ?? "Not found"}
           </p>
         </div>

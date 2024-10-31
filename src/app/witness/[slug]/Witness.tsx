@@ -1,11 +1,14 @@
 "use client";
 
-import { RERUM } from "@/configs/rerum-links";
-import { usePathname } from "next/navigation";
-import { make_columns } from "@/app/browse/Columns";
-import { DataTable } from "@/app/browse/DataTable";
-import { useWitnessGlossesList } from "@/hooks/useWitnessGlossesList";
-import { useWitnessInstance } from "@/hooks/useWitnessInstance";
+import { RERUM } from "@/configs/rerum-links"
+import * as NAV from "@/configs/navigation"
+import { usePathname } from "next/navigation"
+import { make_columns } from "@/app/browse/Columns"
+import { DataTable } from "@/app/browse/DataTable"
+import { use } from "react"
+import { useWitnessContext } from "@/contexts/WitnessContext"
+// import { useWitnessGlossesList } from "@/hooks/useWitnessGlossesList";
+// import { useWitnessInstance } from "@/hooks/useWitnessInstance";
 
 let filterColumn = {
   header: "Incipit",
@@ -23,74 +26,75 @@ let columns = make_columns([
 ]);
 
 const Witness = (props : {  slug: string } ) => {
-  const pathname = usePathname();
-
   const targetId = props.slug
-  const witness = useWitnessInstance(targetId);
+  let witnessPromise = useWitnessContext()
+  let witness = use(witnessPromise)
+  // if(!witness){
+  //   return (<div> Data could not be found </div>)
+  // }
 
   const blurredStyles = "filter blur-md opacity-50";
-
-  let { glosses, loading } = useWitnessGlossesList(witness?.identifier);
+  // let { witnesses, loading } = useWitnessesList(witness?.identifier);
 
   return (
     <div>
       <div className="text-foreground p-4 md:p-8">
-        <h1 className={`text-2xl font-bold mb-4 ${!witness && blurredStyles}`}>
-          {witness ? witness.identifier : "Not found"}
+        <h1 className="text-2xl font-bold mb-4">
+          {witness?.identifier ?? "Not found"}
         </h1>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
           <p>
             <span className="font-semibold">Repository:</span>{" "}
-            <span className={`${!witness && blurredStyles}`}>
-              {witness ? witness.repository : "Not found"}
+            <span>
+              {witness?.repository ?? "Not found"}
             </span>
-          </p>{" "}
+          </p>
           <p>
             <span className="font-semibold">City:</span>{" "}
-            <span className={`${!witness && blurredStyles}`}>
-              {witness ? witness.city : "Not found"}
+            <span>
+              {witness?.city ?? "Not found"}
             </span>
           </p>
           <p>
             <span className="font-semibold">Institution:</span>{" "}
-            <span className={`${!witness && blurredStyles}`}>
-              {witness ? witness.institution : "Not found"}
+            <span>
+              {witness?.institution ?? "Not found"}
             </span>
           </p>
           <p>
             <span className="font-semibold">Provenance:</span>{" "}
-            <span className={`${!witness && blurredStyles}`}>
-              {witness ? witness.provenance : "Not found"}
+            <span>
+              {witness?.provenance ?? "Not found"}
             </span>
           </p>
           <p>
             <span className="font-semibold">Region:</span>{" "}
-            <span className={`${!witness && blurredStyles}`}>
-              {witness ? witness.region : "Not found"}
+            <span>
+              {witness?.region ?? "Not found"}
             </span>
           </p>
           <p>
             <span className="font-semibold">Data URL:</span>{" "}
-            <span className={`${!witness && blurredStyles}`}>
-              {witness ? witness.url : "Not found"}
+            <span>
+              {witness?.url ?? "Not found"}
             </span>
           </p>
           <p>
             <span className="font-semibold">Base Project:</span>{" "}
-            <span className={`${!witness && blurredStyles}`}>
-              {witness ? witness.baseProject : "Not found"}
+            <span>
+              {witness?.baseProject ?? "Not found"}
             </span>
           </p>
         </div>
-        <h2 className={`text-xl font-bold mb-4 ${!witness && blurredStyles}`}>
+        {/*<h2 className={`text-xl font-bold mb-4 ${!witness && blurredStyles}`}>
           Attached Glosses
         </h2>
         <DataTable
           columns={columns}
-          data={glosses}
+          data={witnesses}
           loading={loading}
           filterColumn={filterColumn}
-        />
+        />*/}
       </div>
     </div>
   );

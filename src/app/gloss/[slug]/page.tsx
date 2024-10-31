@@ -18,11 +18,9 @@ const GlossInstance = async ({ params }: { params: { slug: string }}) => {
 
   async function expand(targetId:string) {
     try{
-      console.log("expand for id "+targetId);
-      const res = await grabProperties(targetId);
-      const data = await res.json();
-      // console.log("result")
-      // console.log(data)
+      console.log("expand for id "+targetId)
+      const res = await grabProperties(targetId)
+      const data = await res.json()
       let constructed = {}
       for(const item of data){
         if(!item?.body) continue
@@ -38,4 +36,4 @@ const GlossInstance = async ({ params }: { params: { slug: string }}) => {
   return <GlossProvider glossPromise={promise}><Gloss slug={slug} /></GlossProvider>
 }
 
-export default GlossInstance;
+export default GlossInstance
