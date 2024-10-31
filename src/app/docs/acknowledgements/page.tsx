@@ -1,5 +1,7 @@
 import { ACKNOWLEDGEMENTS_CONTENT } from "@/configs/docs";
+import * as NAV from "@/configs/navigation";
 import { FC } from "react";
+import Image from "next/image";
 
 interface AcknowledgementsProps {}
 
@@ -21,15 +23,46 @@ const Acknowledgements: FC<AcknowledgementsProps> = ({}) => {
         <div className="flex flex-col gap-10">
           {ACKNOWLEDGEMENTS_CONTENT.map((content, index) => (
             <div key={index}>
-              <h2 className="font-medium">{content.title}</h2>
-              <hr className="text-muted-foreground" />
-              <div className="leading-7 mt-2 text-muted-foreground">
-                {content.items.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </div>
-            </div>
+            <h2 className="font-medium">{content.title}</h2>
+            <hr className="text-muted-foreground" />
+            <p className="leading-7 mt-2 text-muted-foreground" dangerouslySetInnerHTML={ {__html: content.summary} }>
+            </p>
+          </div>
           ))}
+        </div>
+        <div className="flex gap-10">
+          <div className="flex-col">
+          <Image
+            className="dark:hidden"
+            src={`${NAV.BASEPATH}/assets/images/slu-primary-blue-rgb.png`}
+            alt="SLU logo"
+            width={400}
+            height={400}
+          />
+          <Image
+            className="dark:block hidden"
+            src={`${NAV.BASEPATH}/assets/images/slu-primary-white-rgb.png`}
+            alt="SLU logo"
+            width={400}
+            height={400}
+          />
+          </div>
+          <div className="flex-col">
+          <Image
+            className="dark:hidden"
+            src={`${NAV.BASEPATH}/assets/images/NEH-seal.jpg`}
+            alt="NEH logo"
+            width={400}
+            height={400}
+          />
+          <Image
+            className="dark:block hidden"
+            src={`${NAV.BASEPATH}/assets/images/NEH-dark.png`}
+            alt="NEH logo"
+            width={400}
+            height={400}
+          />
+          </div>
         </div>
       </div>
     </>
