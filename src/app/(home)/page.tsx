@@ -17,12 +17,15 @@ export default function Home() {
             <a href={`${NAV.BASEPATH}/docs/about`}>
               <Button className="truncate w-[150px]">What are Glosses?</Button>
             </a>
-            <a href={`${NAV.BASEPATH}/browse/glosses`}>
+            <a href={`${NAV.BASEPATH}/browse`}>
+              <Button className="truncate w-[150px]">Start Browsing</Button>
+            </a>
+            {/*<a href={`${NAV.BASEPATH}/browse/glosses`}>
               <Button className="truncate w-[150px]">Start Browsing Glosses</Button>
             </a>
-            <a href={`${NAV.BASEPATH}/browse/glosses`}>
+            <a href={`${NAV.BASEPATH}/browse/manuscripts`}>
               <Button className="truncate w-[150px]">Start Browsing Manuscripts</Button>
-            </a>
+            </a>*/}
           </div>
         </div>
       </section>

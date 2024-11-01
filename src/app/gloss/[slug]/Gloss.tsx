@@ -9,7 +9,7 @@ import { use } from "react"
 import { useGlossContext } from "@/contexts/GlossContext"
 
 const filterColumn = {
-  header: "Witness",
+  header: "Manuscript",
   accessorKey: "identifier",
   expandable: false,
 };

@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
 import {
   grabProperties,
-  GrabProductionGlosses,
+  grabProductionGlosses,
   processGloss,
 } from "@/lib/utils";
 
 export const useGlossList = () => {
   const [glosses, setGlosses] = useState<ProcessedGloss[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  
   async function fetchGlossAndProcessProperties() {
-    const collectionList = await GrabProductionGlosses();
+    const collectionList = await grabProductionGlosses();
     if (collectionList && collectionList.itemListElement) {
       for (let item of collectionList.itemListElement) {
         const targetId = item["@id"];

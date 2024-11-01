@@ -1,17 +1,38 @@
+"use client";
+
 import { FC } from "react";
-import * as NAV from "@/configs/navigation";
+import { make_columns } from "../Columns";
+import { DataTable } from "../DataTable";
+import { useManuscriptList } from "@/hooks/useManuscriptList";
 
-interface SoonProps {}
+interface BrowseAllManuscriptsProps {}
 
-const Soon: FC<SoonProps> = ({}) => {
+let filterColumn = {
+  header: "Shelfmark",
+  accessorKey: "identifier",
+  expandable: false,
+};
+let columns = make_columns([
+  filterColumn,
+  { header: "Full Bibliographic Citation", accessorKey: "_citation", expandable: true },
+]);
+
+const BrowseAllManuscripts: FC<BrowseAllManuscriptsProps> = ({}) => {
+  const { manuscripts, loading } = useManuscriptList();
   return (
-    <>
-      <div className="mb-4 flex items-center space-x-1 text-sm text-muted-foreground"></div>
-      <div className="space-y-2">
-        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">SOON</h1>
-      </div>
-    </>
+    <div>
+      <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">Published Manuscripts</h1>
+      <div className="pt-8"></div>
+      {
+        <DataTable
+          columns={columns}
+          data={manuscripts}
+          loading={loading}
+          filterColumn={filterColumn}
+        />
+      }
+    </div>
   );
 };
 
-export default Soon;
+export default BrowseAllManuscripts;

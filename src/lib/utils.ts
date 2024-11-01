@@ -5,7 +5,7 @@ import {
   PRODUCTION_GLOSS_COLLECTION,
   TINY,
   RERUM,
-  PRODUCTION_WITNESS_COLLECTION,
+  PRODUCTION_MANUSCRIPT_COLLECTION,
 } from "@/configs/rerum-links";
 
 export function cn(...inputs: ClassValue[]) {
@@ -133,9 +133,9 @@ export function processGloss(gloss: any, targetId: string): ProcessedGloss {
     description: undefined,
     targetedText: undefined,
   };
+  if(!gloss || !targetId) return processedGloss;
   processedGloss.targetId = targetId;
   for (const prop in gloss){
-    processedGloss[prop] = gloss[prop]
     if(prop === "text") {
       processedGloss.textValue = gloss.text?.textValue;
       processedGloss.textLanguage = gloss.text?.language;
@@ -151,7 +151,35 @@ export function processGloss(gloss: any, targetId: string): ProcessedGloss {
   return processedGloss;
 }
 
-export async function GrabProductionGlosses() {
+/**
+ * Processes properties for a Manuscript
+ * @param witness Manuscript to process
+ * @param targetId ID of the Manuscript
+ */
+export function processManuscript(manuscript: any, targetId: string): ProcessedManuscript {
+  let processedManuscript: ProcessedManuscript = {
+    targetId: undefined,
+    provenance: undefined,
+    url: undefined,
+    identifier: undefined,
+    city: undefined,
+    alternative: undefined,
+    repository: undefined,
+    title: undefined,
+    institution: undefined,
+    baseProject: undefined,
+    region: undefined,
+  };
+  if(!manuscript || !targetId) return processedManuscript;
+  processedManuscript.targetId = targetId;
+  for (const prop in manuscript){
+    // May have to account for values that are not flat strings.  I think all the ones above are flat strings.
+    processedManuscript[prop] = manuscript[prop]
+  }
+  return processedManuscript;
+}
+
+export async function grabProductionGlosses() {
   try {
     const response = await axios.get(PRODUCTION_GLOSS_COLLECTION);
     return response.data;
@@ -161,9 +189,19 @@ export async function GrabProductionGlosses() {
   }
 }
 
+export async function GrabProductionManuscripts() {
+  try {
+    const response = await axios.get(PRODUCTION_MANUSCRIPT_COLLECTION);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
+}
+
 export async function grabProductionWitnesses() {
   try {
-    const response = await axios.get(PRODUCTION_WITNESS_COLLECTION);
+    const response = await axios.get(PRODUCTION_MANUSCRIPT_COLLECTION);
     return response.data;
   } catch (error) {
     console.error("Error fetching data:", error);

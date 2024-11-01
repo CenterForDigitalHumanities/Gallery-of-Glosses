@@ -26,6 +26,8 @@ const BrowseAllGlosses: FC<BrowseAllGlossesProps> = ({}) => {
   const { glosses, loading } = useGlossList();
   return (
     <div>
+      <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">Published Glosses</h1>
+      <div className="pt-8"></div>
       {
         <DataTable
           columns={columns}

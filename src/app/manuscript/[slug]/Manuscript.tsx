@@ -6,9 +6,7 @@ import { usePathname } from "next/navigation"
 import { make_columns } from "@/app/browse/Columns"
 import { DataTable } from "@/app/browse/DataTable"
 import { use } from "react"
-import { useWitnessContext } from "@/contexts/WitnessContext"
-// import { useWitnessGlossesList } from "@/hooks/useWitnessGlossesList";
-// import { useWitnessInstance } from "@/hooks/useWitnessInstance";
+import { useManuscriptContext } from "@/contexts/ManuscriptContext"
 
 let filterColumn = {
   header: "Incipit",
@@ -25,73 +23,73 @@ let columns = make_columns([
   { header: "Gloss Text", accessorKey: "textValue", expandable: true },
 ]);
 
-const Witness = (props : {  slug: string } ) => {
+const Manuscript = (props : {  slug: string } ) => {
   const targetId = props.slug
-  let witnessPromise = useWitnessContext()
-  let witness = use(witnessPromise)
-  // if(!witness){
+  let manuscriptPromise = useManuscriptContext()
+  let manuscript = use(manuscriptPromise)
+  // if(!manuscript){
   //   return (<div> Data could not be found </div>)
   // }
 
   const blurredStyles = "filter blur-md opacity-50";
-  // let { witnesses, loading } = useWitnessesList(witness?.identifier);
+  // let { manuscripts, loading } = useManuscriptList(manuscript?.identifier);
 
   return (
     <div>
       <div className="text-foreground p-4 md:p-8">
         <h1 className="text-2xl font-bold mb-4">
-          {witness?.identifier ?? "Not found"}
+          {manuscript?.identifier ?? "Not found"}
         </h1>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
           <p>
             <span className="font-semibold">Repository:</span>{" "}
             <span>
-              {witness?.repository ?? "Not found"}
+              {manuscript?.repository ?? "Not found"}
             </span>
           </p>
           <p>
             <span className="font-semibold">City:</span>{" "}
             <span>
-              {witness?.city ?? "Not found"}
+              {manuscript?.city ?? "Not found"}
             </span>
           </p>
           <p>
             <span className="font-semibold">Institution:</span>{" "}
             <span>
-              {witness?.institution ?? "Not found"}
+              {manuscript?.institution ?? "Not found"}
             </span>
           </p>
           <p>
             <span className="font-semibold">Provenance:</span>{" "}
             <span>
-              {witness?.provenance ?? "Not found"}
+              {manuscript?.provenance ?? "Not found"}
             </span>
           </p>
           <p>
             <span className="font-semibold">Region:</span>{" "}
             <span>
-              {witness?.region ?? "Not found"}
+              {manuscript?.region ?? "Not found"}
             </span>
           </p>
           <p>
             <span className="font-semibold">Data URL:</span>{" "}
             <span>
-              {witness?.url ?? "Not found"}
+              {manuscript?.url ?? "Not found"}
             </span>
           </p>
           <p>
             <span className="font-semibold">Base Project:</span>{" "}
             <span>
-              {witness?.baseProject ?? "Not found"}
+              {manuscript?.baseProject ?? "Not found"}
             </span>
           </p>
         </div>
-        {/*<h2 className={`text-xl font-bold mb-4 ${!witness && blurredStyles}`}>
+        {/*<h2 className={`text-xl font-bold mb-4 ${!manuscript && blurredStyles}`}>
           Attached Glosses
         </h2>
         <DataTable
           columns={columns}
-          data={witnesses}
+          data={manuscripts}
           loading={loading}
           filterColumn={filterColumn}
         />*/}
@@ -100,4 +98,4 @@ const Witness = (props : {  slug: string } ) => {
   );
 };
 
-export default Witness;
+export default Manuscript;

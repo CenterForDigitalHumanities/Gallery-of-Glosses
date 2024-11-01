@@ -1,18 +1,18 @@
-import { RERUM, PRODUCTION_WITNESS_COLLECTION } from "@/configs/rerum-links";
+import { RERUM, PRODUCTION_MANUSCRIPT_COLLECTION } from "@/configs/rerum-links";
 import { grabProperties } from "@/lib/utils";
 
-import { WitnessProvider } from "@/contexts/WitnessContext"
-import Witness from "./Witness.tsx"
+import { ManuscriptProvider } from "@/contexts/ManuscriptContext"
+import Manuscript from "./Manuscript.tsx"
 
 export async function generateStaticParams() {
-  const witnesses = await fetch(PRODUCTION_WITNESS_COLLECTION).then((res) => res.json()).then((j) => j.itemListElement)
-  let ids = witnesses.map((witness) => { 
-    return {slug:witness["@id"].split("/").pop()}
+  const manuscripts = await fetch(PRODUCTION_MANUSCRIPT_COLLECTION).then((res) => res.json()).then((j) => j.itemListElement)
+  let ids = manuscripts.map((manuscript) => { 
+    return {slug:manuscript["@id"].split("/").pop()}
   })
   return ids
 }
 
-const WitnessInstance = async ({ params }: { params: { slug: string }}) => {
+const ManuscriptInstance = async ({ params }: { params: { slug: string }}) => {
   const { slug } = await params
   const promise = expand(slug)
 
@@ -32,7 +32,7 @@ const WitnessInstance = async ({ params }: { params: { slug: string }}) => {
       return Promise.reject(err)
     }
   }
-  return <WitnessProvider witnessPromise={promise}><Witness slug={slug} /></WitnessProvider>
+  return <ManuscriptProvider manuscriptPromise={promise}><Manuscript slug={slug} /></ManuscriptProvider>
 }
 
-export default WitnessInstance
+export default ManuscriptInstance
