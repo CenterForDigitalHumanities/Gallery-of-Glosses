@@ -3,7 +3,7 @@ name: publish-to-github-pages
 on:
   push:
     branches:
-      - main
+      - see-glosses-and-witnesses
 
 permissions:
   contents: read
