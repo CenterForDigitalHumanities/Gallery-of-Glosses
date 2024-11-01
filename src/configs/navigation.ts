@@ -50,18 +50,6 @@ export const BROWSE_MANUSCRIPTS_LINKS = [
     title: "Browse All Manuscripts",
     href: BASEPATH + "/browse/manuscripts",
   },
-  {
-    title: "Browse by Document",
-    href: BASEPATH + "/browse/manuscripts/document",
-  },
-  {
-    title: "Browse by Section",
-    href: BASEPATH + "/browse/manuscripts/section",
-  },
-  {
-    title: "Browse by Tag",
-    href: BASEPATH + "/browse/manuscripts/tag",
-  },
 ];
 
 export const GLOSS_TOOLS_LINKS = [
