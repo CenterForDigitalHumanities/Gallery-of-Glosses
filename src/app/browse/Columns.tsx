@@ -7,7 +7,7 @@ import DataTableCell from "./DataTableCell";
 
 function handleOpenRecordInstance(row: { original: ProcessedGloss | ProcessedManuscript }) {
   const id = (row.original as ProcessedGloss | ProcessedManuscript)?.targetId?.split("/id/")?.[1];
-  const link = (row.original as ProcessedGloss) ? `${NAV.BASEPATH}/gloss/${id}` : `${NAV.BASEPATH}/manuscript/${id}`;
+  const link = (row.original.targetCollection.includes("Gloss")) ? `${NAV.BASEPATH}/gloss/${id}` : `${NAV.BASEPATH}/manuscript/${id}`;
   window.open(link, "_blank");
 }
 
