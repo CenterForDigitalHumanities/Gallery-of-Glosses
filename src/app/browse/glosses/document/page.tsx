@@ -1,13 +1,17 @@
 "use client";
 
-import { make_columns } from "../Columns";
-import { DataTable } from "../DataTable";
+import { make_columns } from "../../Columns";
+import { DataTable } from "../../DataTable";
 import { FC } from "react";
 import { useGlossList } from "@/hooks/useGlossList";
 
-interface TagProps {}
+interface DocumentProps {}
 
-let filterColumn = { header: "Tags", accessorKey: "tags", expandable: false };
+let filterColumn = {
+  header: "Document",
+  accessorKey: "document",
+  expandable: false,
+};
 let columns = make_columns([
   { header: "Incipit", accessorKey: "title", expandable: false },
   {
@@ -19,7 +23,7 @@ let columns = make_columns([
   { header: "Gloss Text", accessorKey: "textValue", expandable: true },
 ]);
 
-const Tag: FC<TagProps> = ({}) => {
+const Document: FC<DocumentProps> = ({}) => {
   const { glosses, loading } = useGlossList();
 
   return (
@@ -36,4 +40,4 @@ const Tag: FC<TagProps> = ({}) => {
   );
 };
 
-export default Tag;
+export default Document;

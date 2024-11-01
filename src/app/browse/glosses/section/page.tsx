@@ -1,15 +1,15 @@
 "use client";
 
-import { make_columns } from "../Columns";
-import { DataTable } from "../DataTable";
+import { make_columns } from "../../Columns";
+import { DataTable } from "../../DataTable";
 import { FC } from "react";
 import { useGlossList } from "@/hooks/useGlossList";
 
-interface DocumentProps {}
+interface SectionProps {}
 
 let filterColumn = {
-  header: "Document",
-  accessorKey: "document",
+  header: "Section",
+  accessorKey: "section",
   expandable: false,
 };
 let columns = make_columns([
@@ -23,7 +23,7 @@ let columns = make_columns([
   { header: "Gloss Text", accessorKey: "textValue", expandable: true },
 ]);
 
-const Document: FC<DocumentProps> = ({}) => {
+const Section: FC<SectionProps> = ({}) => {
   const { glosses, loading } = useGlossList();
 
   return (
@@ -40,4 +40,4 @@ const Document: FC<DocumentProps> = ({}) => {
   );
 };
 
-export default Document;
+export default Section;

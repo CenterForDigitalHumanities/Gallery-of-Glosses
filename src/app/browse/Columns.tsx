@@ -26,7 +26,6 @@ export function make_columns(columnsList: { header: string, accessorKey: string,
         ),
         cell: ({ row }) => {
           const title = row.getValue(columnObject.accessorKey);
-
           return (
             <div
               className="truncate"

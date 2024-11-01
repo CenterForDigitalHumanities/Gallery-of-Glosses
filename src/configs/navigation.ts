@@ -29,19 +29,38 @@ export const GETTING_STARTED_LINKS = [
 export const BROWSE_GLOSSES_LINKS = [
   {
     title: "Browse All Glosses",
-    href: BASEPATH + "/browse",
+    href: BASEPATH + "/browse/glosses",
   },
   {
     title: "Browse by Document",
-    href: BASEPATH + "/browse/document",
+    href: BASEPATH + "/browse/glosses/document",
   },
   {
     title: "Browse by Section",
-    href: BASEPATH + "/browse/section",
+    href: BASEPATH + "/browse/glosses/section",
   },
   {
     title: "Browse by Tag",
-    href: BASEPATH + "/browse/tag",
+    href: BASEPATH + "/browse/glosses/tag",
+  },
+];
+
+export const BROWSE_MANUSCRIPTS_LINKS = [
+  {
+    title: "Browse All Manuscripts",
+    href: BASEPATH + "/browse/manuscripts",
+  },
+  {
+    title: "Browse by Document",
+    href: BASEPATH + "/browse/manuscripts/document",
+  },
+  {
+    title: "Browse by Section",
+    href: BASEPATH + "/browse/manuscripts/section",
+  },
+  {
+    title: "Browse by Tag",
+    href: BASEPATH + "/browse/manuscripts/tag",
   },
 ];
 

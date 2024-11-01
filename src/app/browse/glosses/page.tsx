@@ -1,31 +1,29 @@
 "use client";
 
+import { FC } from "react";
 import { make_columns } from "../Columns";
 import { DataTable } from "../DataTable";
-import { FC } from "react";
 import { useGlossList } from "@/hooks/useGlossList";
 
-interface SectionProps {}
+interface BrowseAllGlossesProps {}
 
 let filterColumn = {
-  header: "Section",
-  accessorKey: "section",
+  header: "Incipit",
+  accessorKey: "title",
   expandable: false,
 };
 let columns = make_columns([
-  { header: "Incipit", accessorKey: "title", expandable: false },
+  filterColumn,
   {
     header: "Canonical Reference Locator",
     accessorKey: "canonicalReference",
     expandable: false,
   },
-  filterColumn,
   { header: "Gloss Text", accessorKey: "textValue", expandable: true },
 ]);
 
-const Section: FC<SectionProps> = ({}) => {
+const BrowseAllGlosses: FC<BrowseAllGlossesProps> = ({}) => {
   const { glosses, loading } = useGlossList();
-
   return (
     <div>
       {
@@ -40,4 +38,4 @@ const Section: FC<SectionProps> = ({}) => {
   );
 };
 
-export default Section;
+export default BrowseAllGlosses;

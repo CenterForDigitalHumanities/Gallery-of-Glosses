@@ -100,7 +100,7 @@ export async function makePagedQuery(
  */
 export async function grabProperties(targetId: string): Promise<Response> {
   try {
-    const id = RERUM + targetId
+    const id = targetId.includes("store.rerum.io") ? targetId : RERUM + targetId
     let queryObj = getQueryFromId(id);
     return await makePagedQuery(`${TINY}/query`, queryObj);
   } catch (error) {
@@ -114,16 +114,15 @@ export async function grabProperties(targetId: string): Promise<Response> {
   }
 }
 
-// created a temporary any[] because don't think necessary to create an interface for temporary array of gloss properties
+// created a temporary any because don't think necessary to create an interface for temporary array of gloss properties
 export function processGloss(gloss: any, targetId: string): ProcessedGloss {
-  console.log("PROCESSED GLOSS")
   let processedGloss: ProcessedGloss = {
     targetId: "",
     title: "",
     targetCollection: "",
     section: "",
     subsection: "",
-    tags: undefined,
+    tags: [],
     textFormat: undefined,
     textLanguage: undefined,
     textValue: undefined,
@@ -134,35 +133,19 @@ export function processGloss(gloss: any, targetId: string): ProcessedGloss {
     description: undefined,
     targetedText: undefined,
   };
-
   processedGloss.targetId = targetId;
   for (const prop in gloss){
-    if(prop === "title" && gloss.title.value) {
-      processedGloss.title = gloss.title.value;
-    } else if(prop === "targetCollection") {
-      processedGloss.targetCollection = gloss.targetCollection;
-    } else if(prop === "_section" && gloss._section.value) {
-      processedGloss.section = gloss._section.value;
-    } else if(prop === "_subsection" && gloss._subsection.value) {
-      processedGloss.subsection = gloss._subsection.value;
-    } else if(prop === "tags" && gloss.tags.props) {
-      processedGloss.tags = gloss.tags.props;
-    } else if(prop === "text") {
-      processedGloss.textFormat = gloss.text.format;
-      processedGloss.textLanguage = gloss.text.language;
-      processedGloss.textValue = gloss.text.textValue;
-    } else if(prop === "creator" && gloss.creator.value) {
-      processedGloss.creator = gloss.creator.value;
-    } else if(prop === "_document" && gloss._document.value) {
-      processedGloss.document = gloss._document.value;
-    } else if(prop === "themes" && gloss.themes.value) {
-      processedGloss.themes = gloss.themes.value;
-    } else if(prop === "canonicalReference" && gloss.canonicalReference.value) {
-      processedGloss.canonicalReference = gloss.canonicalReference.value;
-    } else if(prop === "description" && gloss.description.value) {
-      processedGloss.description = gloss.description.value;
-    } else if(prop === "targetedText" && gloss.targetedText.value) {
-      processedGloss.targetedText = gloss.targetedText.value;
+    processedGloss[prop] = gloss[prop]
+    if(prop === "text") {
+      processedGloss.textValue = gloss.text?.textValue;
+      processedGloss.textLanguage = gloss.text?.language;
+      processedGloss.textFormat = gloss.text?.format;
+    } 
+    else if (prop === "tags"){
+      processedGloss.tags = gloss.tags.items ?? []
+    }
+    else{
+      processedGloss[prop] = gloss[prop]
     }
   }
   return processedGloss;
