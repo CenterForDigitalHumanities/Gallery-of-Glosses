@@ -10,7 +10,7 @@ import {
  * @param fragmentIdentifier The identifier value of the Witness fragment.
  */
 export const useTranscriptionWitness = (fragmentIdentifier: string) => {
-  const [witness, setWitness] = useState<ProcessedWitness>();
+  const [witness, setWitness] = useState<ProcessedManuscript>();
 
   async function fetchWitnessAndProcessProperties() {
     const fetchedWitness = await grabWitnessFromFragment(fragmentIdentifier);

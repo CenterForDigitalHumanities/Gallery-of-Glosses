@@ -20,6 +20,12 @@ export default function Home() {
             <a href={`${NAV.BASEPATH}/browse`}>
               <Button className="truncate w-[150px]">Start Browsing</Button>
             </a>
+            {/*<a href={`${NAV.BASEPATH}/browse/glosses`}>
+              <Button className="truncate w-[150px]">Start Browsing Glosses</Button>
+            </a>
+            <a href={`${NAV.BASEPATH}/browse/manuscripts`}>
+              <Button className="truncate w-[150px]">Start Browsing Manuscripts</Button>
+            </a>*/}
           </div>
         </div>
       </section>

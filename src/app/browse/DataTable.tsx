@@ -43,7 +43,6 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
-
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} filterColumn={filterColumn} />
