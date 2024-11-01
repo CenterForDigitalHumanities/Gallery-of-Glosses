@@ -6,7 +6,7 @@ import {
 } from "@/lib/utils";
 
 export const useWitnessList = () => {
-  const [witnesses, setWitnesses] = useState<ProcessedManuscript[]>([]);
+  const [witnesses, setWitnesses] = useState<ProcessedWitness[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   async function fetchWitnessAndProcessProperties() {

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { grabProperties, processWitness } from "@/lib/utils";
 
 export const useWitnessInstance = (targetId: string) => {
-  const [witness, setWitness] = useState<ProcessedManuscript>();
+  const [witness, setWitness] = useState<ProcessedWitness>();
 
   async function fetchWitnessAndProcessProperties() {
     const res = await grabProperties(targetId);
