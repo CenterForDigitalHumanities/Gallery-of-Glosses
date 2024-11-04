@@ -8,7 +8,7 @@ import {
 } from "@/lib/utils";
 
 export const useGlossWitnesses = (targetId: string) => {
-  const [witnesses, setWitnesses] = useState<ProcessedManuscript[]>([]);
+  const [witnesses, setWitnesses] = useState<ProcessedWitness[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   async function fetchTranscriptionWitnessAndProcessProperties(
