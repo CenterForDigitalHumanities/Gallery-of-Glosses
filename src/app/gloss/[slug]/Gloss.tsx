@@ -29,8 +29,6 @@ const Gloss = (props : {  slug: string } ) => {
   
   //const witnessesResult = useGlossWitnesses(targetId);
   //let witnesses = witnessesResult.witnesses;
-
-  const blurredStyles = "filter blur-md opacity-50";
   
   return (
     <div>
@@ -86,7 +84,7 @@ const Gloss = (props : {  slug: string } ) => {
             {gloss?.text?.textValue ?? "Not found"}
           </p>
         </div>
-        {/*<h2 className={`text-xl font-bold mb-4 ${!witnesses && blurredStyles}`}>
+        {/*<h2 className="text-xl font-bold mb-4">
           Witness References
         </h2>
         {<DataTable

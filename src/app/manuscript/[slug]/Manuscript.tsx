@@ -27,13 +27,6 @@ const Manuscript = (props : {  slug: string } ) => {
   const targetId = props.slug
   let manuscriptPromise = useManuscriptContext()
   let manuscript = use(manuscriptPromise)
-  // if(!manuscript){
-  //   return (<div> Data could not be found </div>)
-  // }
-
-  const blurredStyles = "filter blur-md opacity-50";
-  // let { manuscripts, loading } = useManuscriptList(manuscript?.identifier);
-
   return (
     <div>
       <div className="text-foreground p-4 md:p-8">
@@ -84,12 +77,12 @@ const Manuscript = (props : {  slug: string } ) => {
             </span>
           </p>
         </div>
-        {/*<h2 className={`text-xl font-bold mb-4 ${!manuscript && blurredStyles}`}>
+        {/*<h2 className="text-xl font-bold mb-4">
           Attached Glosses
         </h2>
         <DataTable
           columns={columns}
-          data={manuscripts}
+          data={glosses}
           loading={loading}
           filterColumn={filterColumn}
         />*/}

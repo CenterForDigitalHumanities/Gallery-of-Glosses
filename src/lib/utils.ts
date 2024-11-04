@@ -6,6 +6,7 @@ import {
   TINY,
   RERUM,
   PRODUCTION_MANUSCRIPT_COLLECTION,
+  GENERATOR
 } from "@/configs/rerum-links";
 
 export function cn(...inputs: ClassValue[]) {
@@ -38,6 +39,7 @@ export function getQueryFromId(targetId: string) {
     queryObj = {
       $or: targetConditions,
       "__rerum.history.next": { $exists: true, $size: 0 },
+      "__rerum.generatedBy": GENERATOR
     };
   } else {
     queryObj["target"] = targetId;
