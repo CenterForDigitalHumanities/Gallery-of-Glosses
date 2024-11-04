@@ -1,12 +1,12 @@
-import { RERUM, PRODUCTION_GLOSS_COLLECTION } from "@/configs/rerum-links";
-import { grabProperties } from "@/lib/utils";
+import { RERUM } from "@/configs/rerum-links";
+import { grabProperties, grabProductionGlosses } from "@/lib/utils";
 
 import { GlossProvider } from "@/contexts/GlossContext"
 import Gloss from "./Gloss.tsx"
 
 export async function generateStaticParams() {
-  const glosses = await fetch(PRODUCTION_GLOSS_COLLECTION).then((res) => res.json()).then((j) => j.itemListElement)
-  let ids = glosses.map((gloss) => { 
+  const glosses = await grabProductionGlosses()
+  let ids = glosses.itemListElement.map((gloss) => { 
     return {slug:gloss["@id"].split("/").pop()}
   })
   return ids

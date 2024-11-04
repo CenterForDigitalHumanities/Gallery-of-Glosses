@@ -189,7 +189,7 @@ export async function grabProductionGlosses() {
   }
 }
 
-export async function GrabProductionManuscripts() {
+export async function grabProductionManuscripts() {
   try {
     const response = await axios.get(PRODUCTION_MANUSCRIPT_COLLECTION);
     return response.data;

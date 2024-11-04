@@ -1,12 +1,12 @@
-import { RERUM, PRODUCTION_MANUSCRIPT_COLLECTION } from "@/configs/rerum-links";
-import { grabProperties } from "@/lib/utils";
+import { RERUM } from "@/configs/rerum-links";
+import { grabProperties, grabProductionManuscripts } from "@/lib/utils";
 
 import { ManuscriptProvider } from "@/contexts/ManuscriptContext"
 import Manuscript from "./Manuscript.tsx"
 
 export async function generateStaticParams() {
-  const manuscripts = await fetch(PRODUCTION_MANUSCRIPT_COLLECTION).then((res) => res.json()).then((j) => j.itemListElement)
-  let ids = manuscripts.map((manuscript) => { 
+  const manuscripts = await grabProductionManuscripts()
+  let ids = manuscripts.itemListElement.map((manuscript) => { 
     return {slug:manuscript["@id"].split("/").pop()}
   })
   return ids

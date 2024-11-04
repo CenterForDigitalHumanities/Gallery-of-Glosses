@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   grabProperties,
-  GrabProductionManuscripts,
+  grabProductionManuscripts,
   processManuscript,
 } from "@/lib/utils";
 
@@ -10,7 +10,7 @@ export const useManuscriptList = () => {
   const [loading, setLoading] = useState<boolean>(true);
   
   async function fetchManuscriptAndProcessProperties() {
-    const collectionList = await GrabProductionManuscripts();
+    const collectionList = await grabProductionManuscripts();
     if (collectionList && collectionList.itemListElement) {
       for (let item of collectionList.itemListElement) {
         const targetId = item["@id"];
