@@ -6,6 +6,7 @@ export const PRODUCTION_MANUSCRIPT_COLLECTION =
 
 export const RERUM = "https://store.rerum.io/v1/id/";
 export const TINY = "https://tinymatt.rerum.io/gloss";
+export const GENERATOR = "http://store.rerum.io/v1/id/61043ad4ffce846a83e700dd"
 
 // Stage for dev if you please
 // export const PRODUCTION_GLOSS_COLLECTION =
