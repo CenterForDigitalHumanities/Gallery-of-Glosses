@@ -1,41 +1,23 @@
-"use client";
-
 import { FC } from "react";
-import { make_columns } from "../Columns";
-import { DataTable } from "../DataTable";
-import { useGlossList } from "@/hooks/useGlossList";
+import * as NAV from "@/configs/navigation";
 
-interface BrowseAllGlossesProps {}
+interface BrowseProps {}
 
-let filterColumn = {
-  header: "Incipit",
-  accessorKey: "title",
-  expandable: false,
-};
-let columns = make_columns([
-  filterColumn,
-  {
-    header: "Canonical Reference Locator",
-    accessorKey: "canonicalReference",
-    expandable: false,
-  },
-  { header: "Gloss Text", accessorKey: "textValue", expandable: true },
-]);
-
-const BrowseAllGlosses: FC<BrowseAllGlossesProps> = ({}) => {
-  const { glosses, loading } = useGlossList();
+const Browse: FC<BrowseProps> = ({}) => {
   return (
-    <div>
-      {
-        <DataTable
-          columns={columns}
-          data={glosses}
-          loading={loading}
-          filterColumn={filterColumn}
-        />
-      }
-    </div>
+    <>
+      <div className="mb-4 flex items-center space-x-1 text-sm text-muted-foreground"></div>
+      <div className="space-y-2">
+        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">Browsing Options</h1>
+      </div>
+      <div className="pb-12 pt-8">
+        <div className="flex flex-col gap-10">
+          <a href={`${NAV.BASEPATH}/browse/glosses`}>Browse Glosses</a>
+          <a href={`${NAV.BASEPATH}/browse/manuscripts`}>Browse Manuscripts</a>
+        </div>
+      </div>
+    </>
   );
 };
 
-export default BrowseAllGlosses;
+export default Browse;

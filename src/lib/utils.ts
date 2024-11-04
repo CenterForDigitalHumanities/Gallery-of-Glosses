@@ -4,7 +4,9 @@ import axios from "axios";
 import {
   PRODUCTION_GLOSS_COLLECTION,
   TINY,
-  PRODUCTION_WITNESS_COLLECTION,
+  RERUM,
+  PRODUCTION_MANUSCRIPT_COLLECTION,
+  GENERATOR
 } from "@/configs/rerum-links";
 
 export function cn(...inputs: ClassValue[]) {
@@ -37,6 +39,7 @@ export function getQueryFromId(targetId: string) {
     queryObj = {
       $or: targetConditions,
       "__rerum.history.next": { $exists: true, $size: 0 },
+      "__rerum.generatedBy": GENERATOR
     };
   } else {
     queryObj["target"] = targetId;
@@ -99,7 +102,8 @@ export async function makePagedQuery(
  */
 export async function grabProperties(targetId: string): Promise<Response> {
   try {
-    let queryObj = getQueryFromId(targetId);
+    const id = targetId.includes("store.rerum.io") ? targetId : RERUM + targetId
+    let queryObj = getQueryFromId(id);
     return await makePagedQuery(`${TINY}/query`, queryObj);
   } catch (error) {
     console.error("Error querying objects:", error);
@@ -112,15 +116,15 @@ export async function grabProperties(targetId: string): Promise<Response> {
   }
 }
 
-// created a temporary any[] because don't think necessary to create an interface for temporary array of gloss properties
-export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
+// created a temporary any because don't think necessary to create an interface for temporary array of gloss properties
+export function processGloss(gloss: any, targetId: string): ProcessedGloss {
   let processedGloss: ProcessedGloss = {
     targetId: "",
     title: "",
     targetCollection: "",
     section: "",
     subsection: "",
-    tags: undefined,
+    tags: [],
     textFormat: undefined,
     textLanguage: undefined,
     textValue: undefined,
@@ -131,45 +135,53 @@ export function processGloss(gloss: any[], targetId: string): ProcessedGloss {
     description: undefined,
     targetedText: undefined,
   };
-
+  if(!gloss || !targetId) return processedGloss;
   processedGloss.targetId = targetId;
-
-  gloss.forEach((item) => {
-    if (!item) return;
-
-    if (item.title && item.title.value) {
-      processedGloss.title = item.title.value;
-    } else if (item.targetCollection) {
-      processedGloss.targetCollection = item.targetCollection;
-    } else if (item._section && item._section.value) {
-      processedGloss.section = item._section.value;
-    } else if (item._subsection && item._subsection.value) {
-      processedGloss.subsection = item._subsection.value;
-    } else if (item.tags && item.tags.items) {
-      processedGloss.tags = item.tags.items;
-    } else if (item.text) {
-      processedGloss.textFormat = item.text.format;
-      processedGloss.textLanguage = item.text.language;
-      processedGloss.textValue = item.text.textValue;
-    } else if (item.creator && item.creator.value) {
-      processedGloss.creator = item.creator.value;
-    } else if (item._document && item._document.value) {
-      processedGloss.document = item._document.value;
-    } else if (item.themes && item.themes.value) {
-      processedGloss.themes = item.themes.value;
-    } else if (item.canonicalReference && item.canonicalReference.value) {
-      processedGloss.canonicalReference = item.canonicalReference.value;
-    } else if (item.description && item.description.value) {
-      processedGloss.description = item.description.value;
-    } else if (item.targetedText && item.targetedText.value) {
-      processedGloss.targetedText = item.targetedText.value;
+  for (const prop in gloss){
+    if(prop === "text") {
+      processedGloss.textValue = gloss.text?.textValue;
+      processedGloss.textLanguage = gloss.text?.language;
+      processedGloss.textFormat = gloss.text?.format;
+    } 
+    else if (prop === "tags"){
+      processedGloss.tags = gloss.tags.items ?? []
     }
-  });
-
+    else{
+      processedGloss[prop] = gloss[prop]
+    }
+  }
   return processedGloss;
 }
 
-export async function GrabProductionGlosses() {
+/**
+ * Processes properties for a Manuscript
+ * @param witness Manuscript to process
+ * @param targetId ID of the Manuscript
+ */
+export function processManuscript(manuscript: any, targetId: string): ProcessedManuscript {
+  let processedManuscript: ProcessedManuscript = {
+    targetId: undefined,
+    provenance: undefined,
+    url: undefined,
+    identifier: undefined,
+    city: undefined,
+    alternative: undefined,
+    repository: undefined,
+    title: undefined,
+    institution: undefined,
+    baseProject: undefined,
+    region: undefined,
+  };
+  if(!manuscript || !targetId) return processedManuscript;
+  processedManuscript.targetId = targetId;
+  for (const prop in manuscript){
+    // May have to account for values that are not flat strings.  I think all the ones above are flat strings.
+    processedManuscript[prop] = manuscript[prop]
+  }
+  return processedManuscript;
+}
+
+export async function grabProductionGlosses() {
   try {
     const response = await axios.get(PRODUCTION_GLOSS_COLLECTION);
     return response.data;
@@ -179,9 +191,19 @@ export async function GrabProductionGlosses() {
   }
 }
 
+export async function grabProductionManuscripts() {
+  try {
+    const response = await axios.get(PRODUCTION_MANUSCRIPT_COLLECTION);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
+}
+
 export async function grabProductionWitnesses() {
   try {
-    const response = await axios.get(PRODUCTION_WITNESS_COLLECTION);
+    const response = await axios.get(PRODUCTION_MANUSCRIPT_COLLECTION);
     return response.data;
   } catch (error) {
     console.error("Error fetching data:", error);

@@ -1,7 +1,7 @@
 "use client";
 
-import { make_columns } from "../Columns";
-import { DataTable } from "../DataTable";
+import { make_columns } from "../../Columns";
+import { DataTable } from "../../DataTable";
 import { FC } from "react";
 import { useGlossList } from "@/hooks/useGlossList";
 

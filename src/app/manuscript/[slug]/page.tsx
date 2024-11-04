@@ -1,18 +1,18 @@
 import { RERUM } from "@/configs/rerum-links";
-import { grabProperties, grabProductionGlosses } from "@/lib/utils";
+import { grabProperties, grabProductionManuscripts } from "@/lib/utils";
 
-import { GlossProvider } from "@/contexts/GlossContext"
-import Gloss from "./Gloss.tsx"
+import { ManuscriptProvider } from "@/contexts/ManuscriptContext"
+import Manuscript from "./Manuscript.tsx"
 
 export async function generateStaticParams() {
-  const glosses = await grabProductionGlosses()
-  let ids = glosses.itemListElement.map((gloss) => { 
-    return {slug:gloss["@id"].split("/").pop()}
+  const manuscripts = await grabProductionManuscripts()
+  let ids = manuscripts.itemListElement.map((manuscript) => { 
+    return {slug:manuscript["@id"].split("/").pop()}
   })
   return ids
 }
 
-const GlossInstance = async ({ params }: { params: { slug: string }}) => {
+const ManuscriptInstance = async ({ params }: { params: { slug: string }}) => {
   const { slug } = await params
   const promise = expand(slug)
 
@@ -32,7 +32,7 @@ const GlossInstance = async ({ params }: { params: { slug: string }}) => {
       return Promise.reject(err)
     }
   }
-  return <GlossProvider glossPromise={promise}><Gloss slug={slug} /></GlossProvider>
+  return <ManuscriptProvider manuscriptPromise={promise}><Manuscript slug={slug} /></ManuscriptProvider>
 }
 
-export default GlossInstance
+export default ManuscriptInstance
