@@ -181,6 +181,51 @@ export function processManuscript(manuscript: any, targetId: string): ProcessedM
   return processedManuscript;
 }
 
+/**
+ * Processes properties for a Manuscript
+ * @param witness Manuscript to process
+ * @param targetId ID of the Manuscript
+ */
+export function processedFragment(fragment: any, targetId: string): ProcessedFragment {
+  let processedFragment: ProcessedFragment = {
+    identifier: undefined,
+    glossLocation: undefined,
+    glossFormat: undefined,
+    folio: undefined,
+    tags: undefined,
+    textFormat: undefined,
+    textLanguage: undefined,
+    textValue: undefined,
+    creator: undefined,
+    notes: undefined,
+    partOf: undefined,
+    source: undefined
+  }
+  
+  if(!fragment || !targetId) return processedFragment;
+  processedFragment.targetId = targetId;
+  for (const prop in fragment){
+    // May have to account for values that are not flat strings.  I think all the ones above are flat strings.
+    processedFragment[prop] = fragment[prop]
+  }
+  return processedFragment;
+}
+
+export async function grabProductionManuscriptFragments() {
+  try {
+    let fragmentsQueryObj = 
+    {
+      "@type": "WitnessFragment_BRYAN",
+      "__rerum.history.next": {$exists:true, $size: 0},
+      "__rerum.generatedBy": GENERATOR
+    }
+    return await makePagedQuery(`${TINY}/query`, fragmentsQueryObj).then(resp => resp.json())
+  } catch (error) {
+    console.error("Error fetching data:", error)
+    return null
+  }
+}
+
 export async function grabProductionGlosses() {
   try {
     const response = await axios.get(PRODUCTION_GLOSS_COLLECTION);

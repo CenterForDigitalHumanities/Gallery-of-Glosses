@@ -62,7 +62,7 @@ const Gloss = (props : {  slug: string } ) => {
                 ? gloss.tags.items.map((tag, tagIndex, tagArray) => (
                     <a
                       key={tagIndex}
-                      href={`${NAV.BASEPATH}/browse/tag?q=${tag}`}
+                      href={`${NAV.BASEPATH}/browse/glosses/tag?q=${tag}`}
                       className="text-blue-500 hover:underline"
                     >
                       {tag}
