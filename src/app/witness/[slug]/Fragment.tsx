@@ -12,7 +12,8 @@ const ManuscriptFragment = (props : {  slug: string } ) => {
   const targetId = props.slug
   let fragmentPromise = useFragmentContext()
   let fragment = use(fragmentPromise)
-  fragment.depiction = "https://image-api.iiif.io/api/image/3.0/example/reference/9ee11092dfd2782634f5e8e2c87c16d5-uclamss_1841_diary_07_02/90,100,1750,100/max/0/default.jpg"
+  // Hack so something is in the Image area.
+  if(!fragment.depiction) fragment.depiction = "https://image-api.iiif.io/api/image/3.0/example/reference/9ee11092dfd2782634f5e8e2c87c16d5-uclamss_1841_diary_07_02/90,100,1750,100/max/0/default.jpg"
   
   return (
     <div>
@@ -71,15 +72,15 @@ const ManuscriptFragment = (props : {  slug: string } ) => {
             </span>
           </p>
         </div>
-        <div className="lineSnippet">
+        <div className="fragmentImage">
         {fragment?.depiction ? 
           <Image
               alt="Witness Image"
               src={`${fragment?.depiction}`}
               fill
-              sizes="(max-width: 80vw)"
               style={{
                 objectFit: 'contain', // cover, contain, none
+                objectPosition: 'top left',
               }}
             />
           : "Image Not Found"

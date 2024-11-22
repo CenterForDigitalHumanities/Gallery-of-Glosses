@@ -60,7 +60,6 @@ interface ProcessedFragment {
   creator?: string;
   notes?: string;
   partOf?: string;
-  source?: string;
   references?: string[];
   selections?: string[];
   source?: string;

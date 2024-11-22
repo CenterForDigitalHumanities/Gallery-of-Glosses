@@ -75,11 +75,10 @@
   }
 }
 
-.lineSnippet {
-  height:  125px;
+.fragmentImage {
+  height:  400px;
   width: auto;
   max-width: 100%;
   position:  relative;
   display:  block;
-  object-position: 0 0;
 }

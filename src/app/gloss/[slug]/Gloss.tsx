@@ -7,29 +7,44 @@ import { make_columns } from "@/app/browse/Columns";
 import { DataTable } from "@/app/browse/DataTable";
 import { use } from "react"
 import { useGlossContext } from "@/contexts/GlossContext"
+import { useManuscriptsReferencingGloss } from "@/hooks/useManuscriptsReferencingGloss"
+import { useWitnessFragmentsReferencingGloss } from "@/hooks/useWitnessFragmentsReferencingGloss"
 
 const filterColumn = {
-  header: "Manuscript",
+  header: "Shelfmark",
   accessorKey: "identifier",
   expandable: false,
-};
+}
+
 const columns = make_columns([
   filterColumn,
   {
-    header: "Witness Details (under construction)",
-    accessorKey: "city",
-    expandable: false,
+    header: "Text",
+    accessorKey: "textValue",
+    expandable: true,
   },
+  {
+    header: "Resource",
+    accessorKey: "source",
+    expandable: false,
+  }
+  
 ]);
 
 const Gloss = (props : {  slug: string } ) => {
   const pathname = usePathname();
   let glossPromise = useGlossContext()
   let gloss = use(glossPromise)
+  gloss["@id"] = RERUM+props.slug
   
-  //const witnessesResult = useGlossWitnesses(targetId);
-  //let witnesses = witnessesResult.witnesses;
-  
+  // Which Manuscripts contain this Gloss?
+  //const manuscriptsResult = useManuscriptsReferencingGloss(gloss["@id"]);
+  //let manuscripts = manuscriptsResult.manuscripts;
+
+  // Which Witness Fragments reference this Gloss?
+  const witnessFragmentsResult = useWitnessFragmentsReferencingGloss(gloss["@id"]);
+  let fragments = witnessFragmentsResult.witnessFragments;
+
   return (
     <div>
       <div className="text-foreground p-4 md:p-8">
@@ -84,15 +99,19 @@ const Gloss = (props : {  slug: string } ) => {
             {gloss?.text?.textValue ?? "Not found"}
           </p>
         </div>
-        {/*<h2 className="text-xl font-bold mb-4">
-          Witness References
+        <h2 className="text-xl font-bold mb-4">
+          Witness Fragments for this Gloss
         </h2>
-        {<DataTable
+        {
+        fragments.length ?
+        <DataTable
           columns={columns}
-          data={witnesses}
-          loading={witnessesResult.loading}
+          data={fragments}
+          loading={witnessFragmentsResult.loading}
           filterColumn={filterColumn}
-        />}*/}
+        />
+        : "No Fragments Found"
+        }
       </div>
     </div>
   );
