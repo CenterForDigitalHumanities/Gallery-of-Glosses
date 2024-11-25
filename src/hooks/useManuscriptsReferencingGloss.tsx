@@ -30,7 +30,7 @@ export const useManuscriptsReferencingGloss = (glossId: string) => {
   }
 
   async function fetchGlossWitnessesAndProcessProperties() {
-    const manuscriptsList = await grabManuscriptsContainingGloss(glossId);
+    const manuscriptsList: string[] = await grabManuscriptsContainingGloss(glossId);
     if (manuscriptsList && manuscriptsList.length > 0) {
       for (let item of manuscriptsList) {
         const manuscriptId = item["@id"];

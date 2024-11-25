@@ -188,20 +188,20 @@ export function processManuscript(manuscript: any, targetId: string): ProcessedM
  */
 export function processWitnessFragment(fragment: any, targetId: string): ProcessedFragment {
   let processedFragment: ProcessedFragment = {
-    identifier: undefined,
-    glossLocation: undefined,
-    glossFormat: undefined,
-    folio: undefined,
-    tags: undefined,
-    textFormat: undefined,
-    textLanguage: undefined,
-    textValue: undefined,
-    creator: undefined,
-    notes: undefined,
-    partOf: undefined,
-    source: undefined,
-    references: undefined,
-    selections: undefined
+    identifier: "",
+    glossLocation: "",
+    glossFormat: "",
+    folio: "",
+    tags: [],
+    textFormat: "",
+    textLanguage: "",
+    textValue: "",
+    creator: "",
+    notes: "",
+    partOf: "",
+    source: "",
+    references: [],
+    selections: []
   }
   
   if(!fragment || !targetId) return processedFragment;
@@ -278,13 +278,13 @@ export async function grabProductionWitnesses() {
  * @return An Array of Manuscript Witness URIs
  */
 async function getAllManuscriptWitnessesOfGloss(glossURI) {
-    const historyWildcard = { "$exists": true, "$size": 0 }
     const gloss_witness_annos_query = {
-        "body.references.value": httpsIdArray(glossURI),
-        '__rerum.history.next': { $exists: true, $type: 'array', $eq: [] },
-        "__rerum.generatedBy": httpsIdArray(__constants.generator)
+        "body.references.value": glossURI,
+        '__rerum.history.next': { $exists: true, $size:0 },
+        "__rerum.generatedBy": GENERATOR
     }
-    let fragmentUriSet = await getPagedQuery(100, 0, gloss_witness_annos_query)
+    let fragmentUriSet = await makePagedQuery(`${TINY}/query`, gloss_witness_annos_query)
+        .then(resp => resp.json())
         .then(async (annos) => {
             const fragments = annos.map(async (anno) => {
                 const entity = await fetch(anno.target).then(resp => resp.json()).catch(err => { throw err })
@@ -292,7 +292,7 @@ async function getAllManuscriptWitnessesOfGloss(glossURI) {
                     return anno.target
                 }
                 // This will end up in the Set
-                return undefined
+                return "!"
             })
             const fragmentsOnly = await Promise.all(fragments).catch(err => { throw err })
             return new Set(fragmentsOnly)
@@ -302,30 +302,23 @@ async function getAllManuscriptWitnessesOfGloss(glossURI) {
             throw err
         })
     // Remove the undefined entry if present
-    fragmentUriSet.delete(undefined)
+    fragmentUriSet.delete("!")
     if (fragmentUriSet.size === 0) {
         console.log(`There are no Manuscript Witnesses that reference the Gloss '${glossURI}'`)
-        return new Set()
+        return new Array<string>()
     }
     // There are many fragments that reference this Gloss.  Those fragments are all a part of different Manuscript Witnesses.
     // Put all of thise different Manuscript Witnesses into a Set to return.
-    let allManuscriptWitnesses = new Set()
+    let allManuscriptWitnesses = new Set<string>()
     for await (const fragmentURI of [...fragmentUriSet.values()]) {
         //each fragment has partOf Annotations letting you know the Manuscripts it is a part of.
         const partOfAnnosQuery = {
             "body.partOf.value": { "$exists": true },
-            "target": httpsIdArray(fragmentURI),
-            "__rerum.history.next": historyWildcard,
-            "__rerum.generatedBy": httpsIdArray(__constants.generator)
+            "target": fragmentURI,
+            "__rerum.history.next": { $exists: true, $size:0 },
+            "__rerum.generatedBy": GENERATOR
         }
-        let manuscriptUriSet = await fetch(`${__constants.tiny}/query?limit=1&skip=0`, {
-            method: "POST",
-            mode: 'cors',
-            headers: {
-                "Content-Type": "application/json;charset=utf-8"
-            },
-            body: JSON.stringify(partOfAnnosQuery)
-        })
+        let manuscriptUriSet: Set<string> = await makePagedQuery(`${TINY}/query`, partOfAnnosQuery)
             .then(response => response.json())
             .then(async (annos) => {
                 const manuscripts = annos.map(async (anno) => {
@@ -334,16 +327,16 @@ async function getAllManuscriptWitnessesOfGloss(glossURI) {
                         return anno.body.partOf.value
                     }
                     // This will end up in the Set
-                    return undefined
+                    return "!"
                 })
                 const manuscriptWitnessesOnly = await Promise.all(manuscripts).catch(err => { throw err })
-                return new Set(manuscriptWitnessesOnly)
+                return new Set<string>(manuscriptWitnessesOnly)
             })
             .catch(err => {
                 console.error(err)
                 throw err
             })
-        manuscriptUriSet.delete(undefined)
+        manuscriptUriSet.delete("!")
         if (manuscriptUriSet.size === 0) {
             console.error(`There is no Manuscript Witness for fragment '${fragmentURI}'`)
             continue
@@ -352,10 +345,10 @@ async function getAllManuscriptWitnessesOfGloss(glossURI) {
             console.error("There are many Manuscript Witnesses when we only expect one.")
             continue
         }
-        allManuscriptWitnesses = new Set([...allManuscriptWitnesses, ...manuscriptUriSet])
+        allManuscriptWitnesses = new Set<string>([...allManuscriptWitnesses, ...manuscriptUriSet])
     }
-
-    return [...allManuscriptWitnesses]
+    let witnesses: string[] = Array.from(allManuscriptWitnesses.values())
+    return witnesses
 }
 
 
@@ -383,7 +376,7 @@ export async function grabManuscriptsContainingGloss(glossId: string) {
                 return anno.target
             }
             // This will end up in the Set
-            return undefined
+            return "!"
         })
         const fragmentsOnly = await Promise.all(fragments).catch(err => { throw err })
         return new Set(fragmentsOnly)
@@ -393,15 +386,15 @@ export async function grabManuscriptsContainingGloss(glossId: string) {
         throw err
     })
     // Remove the undefined entry if present
-    fragmentUriSet.delete(undefined)
+    fragmentUriSet.delete("!")
     if (fragmentUriSet.size === 0) {
         console.log(`There are no Manuscript Witnesses that reference the Gloss '${glossId}'`)
-        return new Set()
+        return new Array<string>()
     }
 
     // There are many fragments that reference this Gloss.  Those fragments are all a part of different Manuscript Witnesses.
     // Put all of thise different Manuscript Witnesses into a Set to return.
-    let allManuscriptWitnesses = new Set()
+    let allManuscriptWitnesses = new Set<string>()
     for await (const fragmentURI of [...fragmentUriSet.values()]) {
       //each fragment has partOf Annotations letting you know the Manuscripts it is a part of.
       const partOfAnnosQuery = {
@@ -423,16 +416,16 @@ export async function grabManuscriptsContainingGloss(glossId: string) {
                   return anno.body.partOf.value
               }
               // This will end up in the Set
-              return undefined
+              return "!"
           })
           const manuscriptWitnessesOnly = await Promise.all(manuscripts).catch(err => { throw err })
-          return new Set(manuscriptWitnessesOnly)
+          return new Set<string>(manuscriptWitnessesOnly)
       })
       .catch(err => {
           console.error(err)
           throw err
       })
-      manuscriptUriSet.delete(undefined)
+      manuscriptUriSet.delete("!")
       if (manuscriptUriSet.size === 0) {
           console.error(`There is no Manuscript Witness for fragment '${fragmentURI}'`)
           continue
@@ -441,13 +434,14 @@ export async function grabManuscriptsContainingGloss(glossId: string) {
           console.error("There are many Manuscript Witnesses when we only expect one.")
           continue
       }
-      allManuscriptWitnesses = new Set([...allManuscriptWitnesses, ...manuscriptUriSet])
+      allManuscriptWitnesses = new Set<string>([...allManuscriptWitnesses, ...manuscriptUriSet])
     }
-    return [...allManuscriptWitnesses]
+    let witnesses: string[] = Array.from(allManuscriptWitnesses.values())
+    return witnesses
   } 
   catch (error) {
     console.error("Error fetching data:", error);
-    return null;
+    throw error
   }
 }
 
@@ -477,7 +471,7 @@ export async function grabWitnessFragmentsReferencingGloss(glossId: string) {
                 return anno.target
             }
             // This will end up in the Set
-            return undefined
+            return "!"
         })
         const fragmentsOnly = await Promise.all(fragments).catch(err => { throw err })
         return new Set(fragmentsOnly)
@@ -487,16 +481,17 @@ export async function grabWitnessFragmentsReferencingGloss(glossId: string) {
         throw err
     })
     // Remove the undefined entry if present
-    fragmentUriSet.delete(undefined)
+    fragmentUriSet.delete("!")
     if (fragmentUriSet.size === 0) {
         console.log(`There are no Manuscript Witnesses that reference the Gloss '${glossId}'`)
-        return []
+        return new Array<string>()
     }
-    return [...fragmentUriSet]
+    const fragments: string[] = Array.from(fragmentUriSet.values())
+    return fragments
   } 
   catch (error) {
     console.error("Error fetching data:", error);
-    return null;
+    throw error
   }
 }
 
@@ -512,8 +507,7 @@ export async function grabGlossWitnessFragments(targetId: string) {
       "body.references.value": targetId,
       "__rerum.history.next": {
         $exists: true,
-        $type: "array",
-        $eq: [],
+        $size:0
       },
     });
 
@@ -587,17 +581,17 @@ export function processWitness(
   targetId: string,
 ): ProcessedWitness {
   let processedWitness: ProcessedWitness = {
-    targetId: undefined,
-    provenance: undefined,
-    url: undefined,
-    identifier: undefined,
-    city: undefined,
-    alternative: undefined,
-    repository: undefined,
-    title: undefined,
-    institution: undefined,
-    baseProject: undefined,
-    region: undefined,
+    targetId: "",
+    provenance: "",
+    url: "",
+    identifier: "",
+    city: "",
+    alternative: "",
+    repository: "",
+    title: "",
+    institution: "",
+    baseProject: "",
+    region: "",
   };
 
   processedWitness.targetId = targetId;
