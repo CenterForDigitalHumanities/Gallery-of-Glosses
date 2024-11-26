@@ -5,10 +5,15 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import DataTableCell from "./DataTableCell";
 
-function handleOpenRecordInstance(row: { original: ProcessedGloss | ProcessedManuscript }) {
-  const id = (row.original as ProcessedGloss | ProcessedManuscript)?.targetId?.split("/id/")?.[1];
-  const link = (row.original.targetCollection.includes("Gloss")) ? `${NAV.BASEPATH}/gloss/${id}` : `${NAV.BASEPATH}/manuscript/${id}`;
-  window.open(link, "_blank");
+function handleOpenRecordInstance(row: { original: ProcessedGloss | ProcessedManuscript | ProcessedFrament}) {
+  const id = (row.original as ProcessedGloss | ProcessedManuscript | processedFragment)?.targetId?.split("/id/")?.[1];
+  const link = 
+  (row.original.targetCollection?.includes("Gloss")) ? `${NAV.BASEPATH}/gloss/${id}` : 
+  (row.original.targetCollection?.includes("Manuscript")) ? `${NAV.BASEPATH}/manuscript/${id}` :
+  (row.original.targetCollection?.includes("Fragment")) ? `${NAV.BASEPATH}/witness/${id}` :
+  undefined
+  if(link) window.open(link, "_blank");
+  return
 }
 
 /**

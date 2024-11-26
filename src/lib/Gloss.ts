@@ -1,8 +1,9 @@
 interface Gloss {
+  targetId?:string;
+  targetCollection?: string;
   title?: {
     value: string;
   };
-  targetCollection?: string;
   _section?: {
     value: string;
   };

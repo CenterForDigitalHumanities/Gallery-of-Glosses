@@ -24,9 +24,9 @@ let columns = make_columns([
 ]);
 
 const Manuscript = (props : {  slug: string } ) => {
-  const targetId = props.slug
   let manuscriptPromise = useManuscriptContext()
   let manuscript = use(manuscriptPromise)
+  manuscript["@id"] = RERUM+props.slug
   return (
     <div>
       <div className="text-foreground p-4 md:p-8">

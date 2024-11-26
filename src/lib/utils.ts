@@ -121,7 +121,7 @@ export function processGloss(gloss: any, targetId: string): ProcessedGloss {
   let processedGloss: ProcessedGloss = {
     targetId: "",
     title: "",
-    targetCollection: "",
+    targetCollection: "GoG-Named-Glosses",
     section: "",
     subsection: "",
     tags: [],
@@ -161,6 +161,7 @@ export function processGloss(gloss: any, targetId: string): ProcessedGloss {
 export function processManuscript(manuscript: any, targetId: string): ProcessedManuscript {
   let processedManuscript: ProcessedManuscript = {
     targetId: undefined,
+    targetCollection: "GoG-Manuscripts",
     provenance: undefined,
     url: undefined,
     identifier: undefined,
@@ -188,6 +189,8 @@ export function processManuscript(manuscript: any, targetId: string): ProcessedM
  */
 export function processWitnessFragment(fragment: any, targetId: string): ProcessedFragment {
   let processedFragment: ProcessedFragment = {
+    targetId: "",
+    targetCollection: "GoG-Witness-Fragments",
     identifier: "",
     glossLocation: "",
     glossFormat: "",
@@ -206,8 +209,6 @@ export function processWitnessFragment(fragment: any, targetId: string): Process
   
   if(!fragment || !targetId) return processedFragment;
   processedFragment.targetId = targetId;
-
-
 
   for (const prop in fragment){
 

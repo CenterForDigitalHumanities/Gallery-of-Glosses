@@ -9,9 +9,9 @@ import Image from "next/image";
 
 
 const ManuscriptFragment = (props : {  slug: string } ) => {
-  const targetId = props.slug
   let fragmentPromise = useFragmentContext()
   let fragment = use(fragmentPromise)
+  fragment["@id"] = RERUM+props.slug
   // Hack so something is in the Image area.
   if(!fragment.depiction) fragment.depiction = "https://image-api.iiif.io/api/image/3.0/example/reference/9ee11092dfd2782634f5e8e2c87c16d5-uclamss_1841_diary_07_02/90,100,1750,100/max/0/default.jpg"
   
