@@ -8,13 +8,22 @@ import { DataTable } from "@/app/browse/DataTable"
 import { use } from "react"
 import { useManuscriptContext } from "@/contexts/ManuscriptContext"
 
-let filterColumn = {
+//TODO
+import { useGlossesFromManuscript } from "@/hooks/useGlossesFromManuscript"
+import { useWitnessFragmentsFromManuscript } from "@/hooks/useWitnessFragmentsFromManuscript"
+
+let filterColumn_glosses = {
   header: "Incipit",
   accessorKey: "title",
   expandable: false,
 };
-let columns = make_columns([
-  filterColumn,
+let filterColumn_fragments = {
+  header: "Shelfmark",
+  accessorKey: "identifier",
+  expandable: false,
+};
+let columns_glosses = make_columns([
+  filterColumn_glosses,
   {
     header: "Canonical Reference Locator",
     accessorKey: "canonicalReference",
@@ -22,11 +31,31 @@ let columns = make_columns([
   },
   { header: "Gloss Text", accessorKey: "textValue", expandable: true },
 ]);
+let columns_fragments = make_columns([
+  filterColumn_fragments,
+  {
+    header: "Text",
+    accessorKey: "textValue",
+    expandable: true,
+  },
+  {
+    header: "Resource",
+    accessorKey: "source",
+    expandable: false,
+  }
+]);
 
 const Manuscript = (props : {  slug: string } ) => {
   let manuscriptPromise = useManuscriptContext()
   let manuscript = use(manuscriptPromise)
   manuscript["@id"] = RERUM+props.slug
+
+  let glossesResult = useGlossesFromManuscript(manuscript["@id"])
+  let glosses = glossesResult.glosses
+
+  // Which Witness Fragments belong to this Manuscript?
+  //const witnessFragmentsResult = useWitnessFragmentsFromManuscript(manuscript["@id"]);
+  //let fragments = witnessFragmentsResult.witnessFragments;
   return (
     <div>
       <div className="text-foreground p-4 md:p-8">
@@ -78,14 +107,31 @@ const Manuscript = (props : {  slug: string } ) => {
           </p>
         </div>
         {/*<h2 className="text-xl font-bold mb-4">
-          Attached Glosses
+          Witness Fragments Within this Manuscript
         </h2>
+        {
+        fragments.length ?
         <DataTable
-          columns={columns}
+          columns={columns_fragments}
+          data={fragments}
+          loading={witnessFragmentsResult.loading}
+          filterColumn={filterColumn_fragments}
+        />
+        : "No Fragments Found"
+        }*/}
+        <h2 className="text-xl font-bold mb-4">
+          Glosses Within this Manuscript
+        </h2>
+        {
+        glosses.length ?
+        <DataTable
+          columns={columns_glosses}
           data={glosses}
-          loading={loading}
-          filterColumn={filterColumn}
-        />*/}
+          loading={glossesResult.loading}
+          filterColumn={filterColumn_glosses}
+        />
+        : "No Glosses Found"
+        }
       </div>
     </div>
   );

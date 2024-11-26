@@ -2,18 +2,23 @@ import { useState, useEffect } from "react";
 import { grabProperties, processManuscript } from "@/lib/utils";
 
 export const useManuscriptInstance = (targetId: string) => {
-  const [Manuscript, setManuscript] = useState<ProcessedManuscript>();
+  const [manuscript, setManuscript] = useState<ProcessedManuscript>();
 
   async function fetchManuscriptAndProcessProperties() {
     const res = await grabProperties(targetId);
     const data = await res.json();
-    const Manuscript = data.map((item: { body: any }) => item.body);
-    setManuscript(processManuscript(Manuscript, targetId));
+    let man = {}
+    for(const item of data){
+      if(!item?.body) continue
+      const key = Object.keys(item.body)[0]
+      man[key] = item.body[key].value ?? item.body[key]
+    }
+    setManuscript(processManuscript(man, targetId));
   }
 
   useEffect(() => {
     fetchManuscriptAndProcessProperties();
   }, [targetId]);
 
-  return Manuscript;
+  return manuscript;
 };
