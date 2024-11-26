@@ -50,10 +50,13 @@ const Manuscript = (props : {  slug: string } ) => {
   let manuscript = use(manuscriptPromise)
   manuscript["@id"] = RERUM+props.slug
 
-  let glossesResult = useGlossesFromManuscript(manuscript["@id"])
-  let glosses = glossesResult.glosses
+  // What Glosses can be found in this Manuscript
+  // FIXME this is too expensive to do this way, but it works if you have 10 minutes to wait.
+  //let glossesResult = useGlossesFromManuscript(manuscript["@id"])
+  //let glosses = glossesResult.glosses
 
   // Which Witness Fragments belong to this Manuscript?
+  // FIXME this is too expensive to do this way, but it works if you have 10 minutes to wait.
   //const witnessFragmentsResult = useWitnessFragmentsFromManuscript(manuscript["@id"]);
   //let fragments = witnessFragmentsResult.witnessFragments;
   return (
@@ -119,7 +122,7 @@ const Manuscript = (props : {  slug: string } ) => {
         />
         : "No Fragments Found"
         }*/}
-        <h2 className="text-xl font-bold mb-4">
+        {/*<h2 className="text-xl font-bold mb-4">
           Glosses Within this Manuscript
         </h2>
         {
@@ -131,7 +134,7 @@ const Manuscript = (props : {  slug: string } ) => {
           filterColumn={filterColumn_glosses}
         />
         : "No Glosses Found"
-        }
+        }*/}
       </div>
     </div>
   );

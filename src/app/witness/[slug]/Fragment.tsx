@@ -21,12 +21,6 @@ const ManuscriptFragment = (props : {  slug: string } ) => {
 
   // Hack so something is in the Image area.
   if(!fragment.depiction) fragment.depiction = "https://image-api.iiif.io/api/image/3.0/example/reference/9ee11092dfd2782634f5e8e2c87c16d5-uclamss_1841_diary_07_02/90,100,1750,100/max/0/default.jpg"
-
-  console.log("GLOSS")
-  console.log(gloss)
-
-  console.log("MANUSCRIPT")
-  console.log(manuscript)
   return (
     <div>
       <div className="text-foreground p-4 md:p-8">
