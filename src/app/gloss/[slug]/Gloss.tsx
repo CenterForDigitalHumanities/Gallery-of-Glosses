@@ -94,9 +94,12 @@ const Gloss = (props : {  slug: string } ) => {
             </span>
           </p>
         </div>
-        <div className="rounded-xl shadow-inner">
-          <p className="text-justify">
+        <div className="mb-4">
+          <span className="font-semibold">Gloss Text:</span>
+          <p className="text-value-reference">
+            &lsquo; &nbsp;
             {gloss?.text?.textValue ?? "Not found"}
+            &nbsp; &rsquo;
           </p>
         </div>
         <h2 className="text-xl font-bold mb-4">

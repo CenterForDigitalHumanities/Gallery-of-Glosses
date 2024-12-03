@@ -24,35 +24,11 @@ const ManuscriptFragment = (props : {  slug: string } ) => {
   return (
     <div>
       <div className="text-foreground p-4 md:p-8">
-        <h4 className="text-xl font-bold mb-4">
+        <h4 className="text-xl font-bold mb-4 text-value-reference">
           &lsquo; &nbsp;
           {fragment?.text?.textValue ?? "ERROR - NO TEXT FOUND"}
           &nbsp; &rsquo;
         </h4>
-        <div className="mb-8">
-          <p>
-            <span className="font-semibold">Manuscript Shelfmark</span>{" "}
-            <a href=
-            {`/manuscript/${ 
-              manuscript?.targetId.split("/").pop() ?? "error"
-            }`}>
-            {
-              manuscript?.identifier ?? "Unknown"
-            }
-            </a>
-          </p>
-          <p>
-            <span className="font-semibold">Gloss Title</span>{" "}
-            <a href=
-            {`/gloss/${ 
-              gloss?.targetId.split("/").pop() ?? "error"
-            }`}>
-            {
-              gloss?.title ?? "Unknown"
-            }
-            </a>
-          </p>
-        </div>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
           <p>
             <span className="font-semibold">Folio or Page:</span>{" "}
@@ -96,6 +72,29 @@ const ManuscriptFragment = (props : {  slug: string } ) => {
             </span>
           </p>
         </div>
+        <div className="font-semibold">Parent Manuscript Link</div>
+        <div className="mb-4">
+          <a href=
+            {`/manuscript/${ 
+              manuscript?.targetId.split("/").pop() ?? "error"
+            }`}>
+            {
+              manuscript?.identifier ?? "Unknown"
+            }
+          </a>
+        </div>
+        <div className="font-semibold">Referenced Gloss Link</div>
+        <div className="mb-4">
+          <a href=
+          {`/gloss/${ 
+            gloss?.targetId.split("/").pop() ?? "error"
+          }`}>
+          {
+            gloss?.title ?? "Unknown"
+          }
+          </a>
+        </div>
+        <div className="font-semibold">Manuscript Image Fragment</div>
         <div className="fragmentImage">
         {fragment?.depiction ? 
           <Image

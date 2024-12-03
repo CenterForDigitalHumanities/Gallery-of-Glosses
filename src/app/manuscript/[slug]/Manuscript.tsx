@@ -59,6 +59,7 @@ const Manuscript = (props : {  slug: string } ) => {
   // FIXME this is too expensive to do this way, but it works if you have 10 minutes to wait.
   //const witnessFragmentsResult = useWitnessFragmentsFromManuscript(manuscript["@id"]);
   //let fragments = witnessFragmentsResult.witnessFragments;
+  
   return (
     <div>
       <div className="text-foreground p-4 md:p-8">
