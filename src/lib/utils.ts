@@ -121,7 +121,7 @@ export function processGloss(gloss: any, targetId: string): ProcessedGloss {
   let processedGloss: ProcessedGloss = {
     targetId: "",
     title: "",
-    targetCollection: "",
+    targetCollection: "GoG-Named-Glosses",
     section: "",
     subsection: "",
     tags: [],
@@ -161,6 +161,7 @@ export function processGloss(gloss: any, targetId: string): ProcessedGloss {
 export function processManuscript(manuscript: any, targetId: string): ProcessedManuscript {
   let processedManuscript: ProcessedManuscript = {
     targetId: undefined,
+    targetCollection: "GoG-Manuscripts",
     provenance: undefined,
     url: undefined,
     identifier: undefined,
@@ -179,6 +180,66 @@ export function processManuscript(manuscript: any, targetId: string): ProcessedM
     processedManuscript[prop] = manuscript[prop]
   }
   return processedManuscript;
+}
+
+/**
+ * Processes properties for a Manuscript
+ * @param witness Manuscript to process
+ * @param targetId ID of the Manuscript
+ */
+export function processWitnessFragment(fragment: any, targetId: string): ProcessedFragment {
+  let processedFragment: ProcessedFragment = {
+    targetId: "",
+    targetCollection: "GoG-Witness-Fragments",
+    identifier: "",
+    glossLocation: "",
+    glossFormat: "",
+    folio: "",
+    tags: [],
+    textFormat: "",
+    textLanguage: "",
+    textValue: "",
+    creator: "",
+    notes: "",
+    partOf: "",
+    source: "",
+    references: [],
+    selections: []
+  }
+  
+  if(!fragment || !targetId) return processedFragment;
+  processedFragment.targetId = targetId;
+
+  for (const prop in fragment){
+
+    if(prop === "text") {
+      processedFragment.textValue = fragment.text?.textValue;
+      processedFragment.textLanguage = fragment.text?.language;
+      processedFragment.textFormat = fragment.text?.format;
+    } 
+    else if (prop === "tags"){
+      processedFragment.tags = fragment.tags.items ?? []
+    }
+    else{
+      processedFragment[prop] = fragment[prop]
+    }
+  }
+  return processedFragment;
+}
+
+export async function grabProductionManuscriptFragments() {
+  try {
+    let fragmentsQueryObj = 
+    {
+      "@type": "WitnessFragment",
+      "__rerum.history.next": {$exists:true, $size: 0},
+      "__rerum.generatedBy": GENERATOR
+    }
+    return await makePagedQuery(`${TINY}/query`, fragmentsQueryObj).then(resp => resp.json())
+  } catch (error) {
+    console.error("Error fetching data:", error)
+    return null
+  }
 }
 
 export async function grabProductionGlosses() {
@@ -201,200 +262,273 @@ export async function grabProductionManuscripts() {
   }
 }
 
-export async function grabProductionWitnesses() {
-  try {
-    const response = await axios.get(PRODUCTION_MANUSCRIPT_COLLECTION);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return null;
-  }
-}
-
 /**
- * Fetches Witness fragments for a Gloss.
- * @param targetId
- * @returns An array of Witness fragments
+ * Determines which Manuscripts contain (reference) a particular Gloss
+ * @param glossId
+ * @returns An Array that represents a Set of Manuscript URIs
  */
-export async function grabGlossWitnessFragments(targetId: string) {
+export async function grabManuscriptsContainingGloss(glossId: string) {
   // Fetch annotations referencing the Gloss
   try {
-    const annotationResponse = await makePagedQuery(`${TINY}/query`, {
-      "body.references.value": targetId,
+    let fragmentUriSet = await makePagedQuery(`${TINY}/query`, {
+      "body.references.value": glossId,
       "__rerum.history.next": {
         $exists: true,
-        $type: "array",
-        $eq: [],
+        $size: 0,
       },
-    });
+      "__rerum.generatedBy": GENERATOR
+    })
+    .then(resp => resp.json())
+    .then(async (annos) => {
+        const fragments = annos.map(async (anno) => {
+            const entity = await axios.get(anno.target).then(resp => resp.data)
+            if (entity["@type"] && entity["@type"] === "WitnessFragment") {
+                return anno.target
+            }
+            // This will end up in the Set
+            return "!"
+        })
+        const fragmentsOnly = await Promise.all(fragments).catch(err => { throw err })
+        return new Set(fragmentsOnly)
+    })
+    .catch(err => {
+        console.error(err)
+        throw err
+    })
+    // Remove the undefined entry if present
+    fragmentUriSet.delete("!")
+    if (fragmentUriSet.size === 0) {
+        console.log(`There are no Manuscript Witnesses that reference the Gloss '${glossId}'`)
+        return new Array<string>()
+    }
 
-    // Filter out those whose targets are not Witness fragments
-    const responseData = await annotationResponse.json();
-    return await filterDataAtTargets(
-      responseData,
-      (item: any) => item["@type"] === "Text",
-    );
-  } catch (error) {
+    // There are many fragments that reference this Gloss.  Those fragments are all a part of different Manuscript Witnesses.
+    // Put all of thise different Manuscript Witnesses into a Set to return.
+    let allManuscriptWitnesses = new Set<string>()
+    for await (const fragmentURI of [...fragmentUriSet.values()]) {
+      //each fragment has partOf Annotations letting you know the Manuscripts it is a part of.
+      const partOfAnnosQuery = {
+          "body.partOf.value": { "$exists": true },
+          "target": fragmentURI,
+          "__rerum.history.next": {
+            $exists: true,
+            $size: 0,
+          },
+          "__rerum.generatedBy": GENERATOR
+      }
+
+      let manuscriptUriSet = await makePagedQuery(`${TINY}/query`, partOfAnnosQuery)
+      .then(response => response.json())
+      .then(async (annos) => {
+          const manuscripts = annos.map(async (anno) => {
+              const entity = await fetch(anno.body.partOf.value).then(resp => resp.json()).catch(err => { throw err })
+              if (entity["@type"] && entity["@type"] === "ManuscriptWitness") {
+                  return anno.body.partOf.value
+              }
+              // This will end up in the Set
+              return "!"
+          })
+          const manuscriptWitnessesOnly = await Promise.all(manuscripts).catch(err => { throw err })
+          return new Set<string>(manuscriptWitnessesOnly)
+      })
+      .catch(err => {
+          console.error(err)
+          throw err
+      })
+      manuscriptUriSet.delete("!")
+      if (manuscriptUriSet.size === 0) {
+          console.error(`There is no Manuscript Witness for fragment '${fragmentURI}'`)
+          continue
+      }
+      else if (manuscriptUriSet.size > 1) {
+          console.error("There are many Manuscript Witnesses when we only expect one.")
+          continue
+      }
+      allManuscriptWitnesses = new Set<string>([...allManuscriptWitnesses, ...manuscriptUriSet])
+    }
+    let witnesses: string[] = Array.from(allManuscriptWitnesses.values())
+    return witnesses
+  } 
+  catch (error) {
     console.error("Error fetching data:", error);
-    return null;
+    throw error
   }
 }
 
 /**
- * Processes annotations for a Witness fragment
- * @param annotations Array of annotations to process
- * @param targetId ID of the Witness fragment
+ * Determines which Witness Fragments reference a particular Gloss
+ * @param glossId
+ * @returns An array that represents a Set of Witness Fragment URIs
  */
-export function processTranscriptionAnnotations(
-  annotations: any[],
-  targetId: string,
-): ProcessedTranscriptionAnnotations {
-  let processedAnnotations: ProcessedTranscriptionAnnotations = {
-    targetId: undefined,
-    title: undefined,
-    identifier: undefined,
-    creator: undefined,
-    source: undefined,
-    selections: undefined,
-    references: undefined,
-    textFormat: undefined,
-    textLanguage: undefined,
-    textValue: undefined,
-  };
-
-  processedAnnotations.targetId = targetId;
-
-  annotations.forEach((annotation: TranscriptionAnnotation) => {
-    if (!annotation) return;
-
-    if (annotation.title) {
-      processedAnnotations.title = annotation.title.value;
-    } else if (annotation.identifier) {
-      processedAnnotations.identifier = annotation.identifier.value;
-    } else if (annotation.creator) {
-      processedAnnotations.creator = annotation.creator.value;
-    } else if (annotation.source) {
-      processedAnnotations.source = annotation.source.value;
-    } else if (annotation.selections) {
-      processedAnnotations.selections = annotation.selections.value;
-    } else if (annotation.references) {
-      processedAnnotations.references = annotation.references.value;
-    } else if (annotation.text) {
-      processedAnnotations.textFormat = annotation.text.format;
-      processedAnnotations.textLanguage = annotation.text.language;
-      processedAnnotations.textValue = annotation.text.textValue;
-    }
-  });
-  return processedAnnotations;
-}
-
-/**
- * Processes properties for a Witness
- * @param witness Witness to process
- * @param targetId ID of the Witness
- */
-export function processWitness(
-  witness: any[],
-  targetId: string,
-): ProcessedWitness {
-  let processedWitness: ProcessedWitness = {
-    targetId: undefined,
-    provenance: undefined,
-    url: undefined,
-    identifier: undefined,
-    city: undefined,
-    alternative: undefined,
-    repository: undefined,
-    title: undefined,
-    institution: undefined,
-    baseProject: undefined,
-    region: undefined,
-  };
-
-  processedWitness.targetId = targetId;
-
-  witness.forEach((witness: Witness) => {
-    if (!witness) return;
-
-    if (witness.provenance) {
-      processedWitness.provenance = witness.provenance.value;
-    } else if (witness.url) {
-      processedWitness.url = witness.url.value;
-    } else if (witness.identifier) {
-      processedWitness.identifier = witness.identifier.value;
-    } else if (witness.city) {
-      processedWitness.city = witness.city.value;
-    } else if (witness.alternative) {
-      processedWitness.alternative = witness.alternative.value;
-    } else if (witness.Repository) {
-      processedWitness.repository = witness.Repository.value;
-    } else if (witness.title) {
-      processedWitness.title = witness.title.value;
-    } else if (witness.institution) {
-      processedWitness.institution = witness.institution.value;
-    } else if (witness["tpen://base-project"]) {
-      processedWitness.baseProject = witness["tpen://base-project"].value;
-    } else if (witness.region) {
-      processedWitness.region = witness.region.value;
-    }
-  });
-  return processedWitness;
-}
-
-/**
- * Grabs the fragments of a Witness
- * @param witnessIdentifier The identifier Witness to get fragments for
- */
-export async function grabWitnessFragments(witnessIdentifier: string) {
-  // Fetch annotations referencing the identifier
+export async function grabWitnessFragmentsReferencingGloss(glossId: string) {
+  // Fetch annotations referencing the Gloss
   try {
-    const annotationResponse = await makePagedQuery(`${TINY}/query`, {
-      "body.identifier.value": witnessIdentifier,
+    const obj = {
+      "body.references.value": glossId,
       "__rerum.history.next": {
         $exists: true,
-        $type: "array",
-        $eq: [],
+        $size: 0
       },
-    });
-
-    // Filter out those whose targets are not Witness fragments
-    const responseData = await annotationResponse.json();
-    return await filterDataAtTargets(
-      responseData,
-      (item: any) => item["@type"] === "Text",
-    );
-  } catch (error) {
+      "__rerum.generatedBy": GENERATOR
+    }
+    let fragmentUriSet = await makePagedQuery(`${TINY}/query`, obj)
+    .then(resp => resp.json())
+    .then(async (annos) => {
+        const fragments = annos.map(async (anno) => {
+            const entity = await axios.get(anno.target).then(resp => resp.data)
+            if (entity["@type"] && entity["@type"] === "WitnessFragment") {
+                return anno.target
+            }
+            // This will end up in the Set
+            return "!"
+        })
+        const fragmentsOnly = await Promise.all(fragments).catch(err => { throw err })
+        return new Set(fragmentsOnly)
+    })
+    .catch(err => {
+        console.error(err)
+        throw err
+    })
+    // Remove the undefined entry if present
+    fragmentUriSet.delete("!")
+    if (fragmentUriSet.size === 0) {
+        console.log(`There are no Manuscript Witnesses that reference the Gloss '${glossId}'`)
+        return new Array<string>()
+    }
+    const fragments: string[] = Array.from(fragmentUriSet.values())
+    return fragments
+  } 
+  catch (error) {
     console.error("Error fetching data:", error);
-    return null;
+    throw error
   }
 }
 
 /**
- * Grabs the Witness from a Witness fragment
- * @param fragmentIdentifier The identifier of the Witness fragment
+ * Determines which Glosses appear in a particular Manuscript
+ * @param manuscriptId
  */
-export async function grabWitnessFromFragment(fragmentIdentifier: string) {
-  // Fetch annotations referencing the identifier
+export async function grabGlossesFromManuscript(manuscriptId: string){
   try {
-    const annotationResponse = await makePagedQuery(`${TINY}/query`, {
-      "body.identifier.value": fragmentIdentifier,
+    let fragmentUriSet = await makePagedQuery(`${TINY}/query`, {
+      "body.partOf.value": manuscriptId,
       "__rerum.history.next": {
         $exists: true,
-        $type: "array",
-        $eq: [],
+        $size: 0
       },
-    });
+      "__rerum.generatedBy": GENERATOR
+    })
+    .then(resp => resp.json())
+    .then(annos => {
+        // const fragments = annos.map(async (anno) => {
+        //     const entity = await axios.get(anno.target).then(resp => resp.data)
+        //     if (entity["@type"] && entity["@type"] === "WitnessFragment") {
+        //         return anno.target
+        //     }
+        //     // This will end up in the Set
+        //     return "!"
+        // })
+        // const fragmentsOnly = await Promise.all(fragments).catch(err => { throw err })
+        const fragmentsOnly = annos.map( anno => anno.target)
+        return new Set(fragmentsOnly)
+    })
+    .catch(err => {
+        console.error(err)
+        throw err
+    })
+    // Remove the undefined entry if present
+    fragmentUriSet.delete("!")
+    if (fragmentUriSet.size === 0) {
+        console.log(`There are no Manuscript Witnesses that reference the Gloss '${glossId}'`)
+        return new Array<string>()
+    }
 
-    // Filter out those whose targets are not Witness fragments
-    const responseData = await annotationResponse.json();
-    const filteredData = await filterDataAtTargets(
-      responseData,
-      (item: any) => item["@type"] === "manuscript",
-    );
-    return filteredData[0];
-  } catch (error) {
+    let allGlosses = new Set<string>()
+    for await (const fragmentURI of [...fragmentUriSet.values()]) {
+      const referencesAnnosAnnosQuery = {
+          "body.references.value": { "$exists": true },
+          "target": fragmentURI,
+          "__rerum.history.next": {
+            $exists: true,
+            $size: 0,
+          },
+          "__rerum.generatedBy": GENERATOR
+      }
+
+      let glossUriSet = await makePagedQuery(`${TINY}/query`, referencesAnnosAnnosQuery)
+      .then(response => response.json())
+      .then(annos => {
+          // const glosses = annos.map(async (anno) => {
+          //     const entity = await fetch(anno.body.references.value[0]).then(resp => resp.json()).catch(err => { throw err })
+          //     if (entity["@type"] && (entity["@type"] === "Gloss" || entity["@type"] === "named-gloss")) {
+          //         return anno.body.references.value[0]
+          //     }
+          //     // This will end up in the Set
+          //     return "!"
+          // })
+          // const glossesOnly = await Promise.all(glosses).catch(err => { throw err })
+          const glossesOnly = annos.map(anno => anno.target)
+          return new Set<string>(glossesOnly)
+      })
+      .catch(err => {
+          console.error(err)
+          throw err
+      })
+      glossUriSet.delete("!")
+      allGlosses = new Set<string>([...allGlosses, ...glossUriSet])
+    }
+    let glosses: string[] = Array.from(allGlosses.values())
+    return glosses
+  } 
+  catch (error) {
     console.error("Error fetching data:", error);
-    return null;
+    throw error
+  }
+}
+
+/**
+ * Determines which Witness Fragments are part of a particular Manuscript
+ * @param manuscriptId
+ */
+export async function grabWitnessFragmentsFromManuscript(manuscriptId: string){
+ try {
+    let fragmentUriSet = await makePagedQuery(`${TINY}/query`, {
+      "body.partOf.value": manuscriptId,
+      "__rerum.history.next": {
+        $exists: true,
+        $size: 0,
+      },
+      "__rerum.generatedBy": GENERATOR
+    })
+    .then(resp => resp.json())
+    .then(async (annos) => {
+        const fragments = annos.map(async (anno) => {
+            const entity = await axios.get(anno.target).then(resp => resp.data)
+            if (entity["@type"] && entity["@type"] === "WitnessFragment") {
+                return anno.target
+            }
+            // This will end up in the Set
+            return "!"
+        })
+        const fragmentsOnly = await Promise.all(fragments).catch(err => { throw err })
+        return new Set(fragmentsOnly)
+    })
+    .catch(err => {
+        console.error(err)
+        throw err
+    })
+    // Remove the undefined entry if present
+    fragmentUriSet.delete("!")
+    if (fragmentUriSet.size === 0) {
+        console.log(`There are no Manuscript Witnesses that reference the Gloss '${glossId}'`)
+        return new Array<string>()
+    }
+    let fragments: string[] = Array.from(fragmentUriSet.values())
+    return fragments
+  } 
+  catch (error) {
+    console.error("Error fetching data:", error);
+    throw error
   }
 }
 
