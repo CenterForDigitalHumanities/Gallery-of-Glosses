@@ -12,7 +12,9 @@ export async function generateStaticParams() {
   return ids
 }
 
-const GlossInstance = async ({ params }: { params: { slug: string }}) => {
+type Params = Promise<{ slug: string }>
+
+const GlossInstance = async ({ params }: { params: Params }) => {
   const { slug } = await params
   const promise = expand(slug)
 
