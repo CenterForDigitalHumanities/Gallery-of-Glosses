@@ -411,7 +411,7 @@ export async function grabWitnessFragmentsReferencingGloss(glossId: string) {
 export async function grabGlossesFromManuscript(manuscriptId: string){
   try {
     console.log("SPECIAL GLOSSES PIPE")
-    let resp = await axios.post(`${TINY}/glosses`,
+    let resp = await axios.post(`${TINY}/glossesInManuscript`,
         {"ManuscriptWitness": manuscriptId},
         {
           headers: {
@@ -437,7 +437,7 @@ export async function grabGlossesFromManuscript(manuscriptId: string){
 export async function grabWitnessFragmentsFromManuscript(manuscriptId: string){
   try {
     console.log("SPECIAL FRAGMENTS")
-    let resp = await axios.post(`${TINY}/fragments`,
+    let resp = await axios.post(`${TINY}/fragmentsInManuscript`,
         {"ManuscriptWitness": manuscriptId},
         {
           headers: {
