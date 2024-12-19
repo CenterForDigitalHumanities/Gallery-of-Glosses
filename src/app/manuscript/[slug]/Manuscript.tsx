@@ -9,7 +9,7 @@ import { use } from "react"
 import { useManuscriptContext } from "@/contexts/ManuscriptContext"
 
 //TODO
-import { useGlossesFromManuscript } from "@/hooks/useGlossesFromManuscript"
+//import { useGlossesFromManuscript } from "@/hooks/useGlossesFromManuscript"
 import { useWitnessFragmentsFromManuscript } from "@/hooks/useWitnessFragmentsFromManuscript"
 
 let filterColumn_glosses = {
@@ -51,14 +51,15 @@ const Manuscript = (props : {  slug: string } ) => {
   manuscript["@id"] = RERUM+props.slug
 
   // What Glosses can be found in this Manuscript
+
   // FIXME this is too expensive to do this way, but it works if you have 10 minutes to wait.
-  //let glossesResult = useGlossesFromManuscript(manuscript["@id"])
-  //let glosses = glossesResult.glosses
+  // let glossesResult = useGlossesFromManuscript(manuscript["@id"])
+  // let glosses = glossesResult.glosses
 
   // Which Witness Fragments belong to this Manuscript?
   // FIXME this is too expensive to do this way, but it works if you have 10 minutes to wait.
-  //const witnessFragmentsResult = useWitnessFragmentsFromManuscript(manuscript["@id"]);
-  //let fragments = witnessFragmentsResult.witnessFragments;
+  const witnessFragmentsResult = useWitnessFragmentsFromManuscript(manuscript["@id"]);
+  let fragments = witnessFragmentsResult.witnessFragments;
   
   return (
     <div>
@@ -110,7 +111,7 @@ const Manuscript = (props : {  slug: string } ) => {
             </span>
           </p>
         </div>
-        {/*<h2 className="text-xl font-bold mb-4">
+        <h2 className="text-xl font-bold mb-4">
           Witness Fragments Within this Manuscript
         </h2>
         {
@@ -122,8 +123,8 @@ const Manuscript = (props : {  slug: string } ) => {
           filterColumn={filterColumn_fragments}
         />
         : "No Fragments Found"
-        }*/}
-        {/*<h2 className="text-xl font-bold mb-4">
+        }
+{/*        <h2 className="text-xl font-bold mb-4">
           Glosses Within this Manuscript
         </h2>
         {

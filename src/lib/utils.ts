@@ -410,74 +410,18 @@ export async function grabWitnessFragmentsReferencingGloss(glossId: string) {
  */
 export async function grabGlossesFromManuscript(manuscriptId: string){
   try {
-    let fragmentUriSet = await makePagedQuery(`${TINY}/query`, {
-      "body.partOf.value": manuscriptId,
-      "__rerum.history.next": {
-        $exists: true,
-        $size: 0
-      },
-      "__rerum.generatedBy": GENERATOR
-    })
-    .then(resp => resp.json())
-    .then(annos => {
-        // const fragments = annos.map(async (anno) => {
-        //     const entity = await axios.get(anno.target).then(resp => resp.data)
-        //     if (entity["@type"] && entity["@type"] === "WitnessFragment") {
-        //         return anno.target
-        //     }
-        //     // This will end up in the Set
-        //     return "!"
-        // })
-        // const fragmentsOnly = await Promise.all(fragments).catch(err => { throw err })
-        const fragmentsOnly = annos.map( anno => anno.target)
-        return new Set(fragmentsOnly)
-    })
-    .catch(err => {
-        console.error(err)
-        throw err
-    })
-    // Remove the undefined entry if present
-    fragmentUriSet.delete("!")
-    if (fragmentUriSet.size === 0) {
-        console.log(`There are no Manuscript Witnesses that reference the Gloss '${glossId}'`)
-        return new Array<string>()
-    }
-
-    let allGlosses = new Set<string>()
-    for await (const fragmentURI of [...fragmentUriSet.values()]) {
-      const referencesAnnosAnnosQuery = {
-          "body.references.value": { "$exists": true },
-          "target": fragmentURI,
-          "__rerum.history.next": {
-            $exists: true,
-            $size: 0,
+    console.log("SPECIAL GLOSSES PIPE")
+    let resp = await axios.post(`${TINY}/glosses`,
+        {"ManuscriptWitness": manuscriptId},
+        {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
           },
-          "__rerum.generatedBy": GENERATOR
-      }
-
-      let glossUriSet = await makePagedQuery(`${TINY}/query`, referencesAnnosAnnosQuery)
-      .then(response => response.json())
-      .then(annos => {
-          // const glosses = annos.map(async (anno) => {
-          //     const entity = await fetch(anno.body.references.value[0]).then(resp => resp.json()).catch(err => { throw err })
-          //     if (entity["@type"] && (entity["@type"] === "Gloss" || entity["@type"] === "named-gloss")) {
-          //         return anno.body.references.value[0]
-          //     }
-          //     // This will end up in the Set
-          //     return "!"
-          // })
-          // const glossesOnly = await Promise.all(glosses).catch(err => { throw err })
-          const glossesOnly = annos.map(anno => anno.target)
-          return new Set<string>(glossesOnly)
-      })
-      .catch(err => {
-          console.error(err)
-          throw err
-      })
-      glossUriSet.delete("!")
-      allGlosses = new Set<string>([...allGlosses, ...glossUriSet])
-    }
+        },
+      )
+    let allGlosses = new Set(resp.data.map(f => f["@id"]))
     let glosses: string[] = Array.from(allGlosses.values())
+    console.log("SPECIAL GLOSSES LENGTH "+glosses.length)
     return glosses
   } 
   catch (error) {
@@ -487,43 +431,23 @@ export async function grabGlossesFromManuscript(manuscriptId: string){
 }
 
 /**
- * Determines which Witness Fragments are part of a particular Manuscript
+ * Determines which Glosses appear in a particular Manuscript
  * @param manuscriptId
  */
 export async function grabWitnessFragmentsFromManuscript(manuscriptId: string){
- try {
-    let fragmentUriSet = await makePagedQuery(`${TINY}/query`, {
-      "body.partOf.value": manuscriptId,
-      "__rerum.history.next": {
-        $exists: true,
-        $size: 0,
-      },
-      "__rerum.generatedBy": GENERATOR
-    })
-    .then(resp => resp.json())
-    .then(async (annos) => {
-        const fragments = annos.map(async (anno) => {
-            const entity = await axios.get(anno.target).then(resp => resp.data)
-            if (entity["@type"] && entity["@type"] === "WitnessFragment") {
-                return anno.target
-            }
-            // This will end up in the Set
-            return "!"
-        })
-        const fragmentsOnly = await Promise.all(fragments).catch(err => { throw err })
-        return new Set(fragmentsOnly)
-    })
-    .catch(err => {
-        console.error(err)
-        throw err
-    })
-    // Remove the undefined entry if present
-    fragmentUriSet.delete("!")
-    if (fragmentUriSet.size === 0) {
-        console.log(`There are no Manuscript Witnesses that reference the Gloss '${glossId}'`)
-        return new Array<string>()
-    }
-    let fragments: string[] = Array.from(fragmentUriSet.values())
+  try {
+    console.log("SPECIAL FRAGMENTS")
+    let resp = await axios.post(`${TINY}/fragments`,
+        {"ManuscriptWitness": manuscriptId},
+        {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+          },
+        },
+      )
+    let allFragments = new Set(resp.data.map(f => f["@id"]))
+    let fragments: string[] = Array.from(allFragments.values())
+    console.log("SPECIAL FRAGMENTS LENGTH "+fragments.length)
     return fragments
   } 
   catch (error) {
@@ -531,6 +455,7 @@ export async function grabWitnessFragmentsFromManuscript(manuscriptId: string){
     throw error
   }
 }
+
 
 /**
  * Filters an array of RERUM objects such that the data referenced at their targets is filtered by the passed function.

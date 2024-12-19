@@ -30,14 +30,18 @@ export const useWitnessFragmentsFromManuscript = (manuscriptId: string) => {
   }
 
   async function fetchWitnessFragmentsAndProcessProperties() {
+    console.log("GRAB FRAGMENTS WITH SPECIAL HOOK")
     const fragmentsList: string[] = await grabWitnessFragmentsFromManuscript(manuscriptId);
+    console.log("HAVE FRAGMENTS "+fragmentsList.length)
     if (fragmentsList && fragmentsList.length > 0) {
       for (let item of fragmentsList) {
+        // console.log("ITEM -- NOT EXPANDED")
+        // console.log(item)
         const fragmentId = item
         const fragmentProperties = await expand(fragmentId);
         const processedFragment = processWitnessFragment(
           fragmentProperties,
-          fragmnetId,
+          fragmentId,
         );
         setWitnessFragments((prevFragments) => [...prevFragments, processedFragment]);
       }
