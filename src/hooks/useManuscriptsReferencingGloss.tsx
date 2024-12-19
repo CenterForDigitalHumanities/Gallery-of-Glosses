@@ -10,8 +10,6 @@ export const useManuscriptsReferencingGloss = (glossId: string) => {
   const [manuscripts, setManuscripts] = useState<ProcessedManuscript[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // We want the Set of Manuscripts that say they contain this Gloss.
-  
   async function expand(targetId:string) {
     try{
       const res = await grabProperties(targetId)
@@ -29,23 +27,22 @@ export const useManuscriptsReferencingGloss = (glossId: string) => {
     }
   }
 
-  async function fetchGlossWitnessesAndProcessProperties() {
-    const manuscriptsList: string[] = await grabManuscriptsContainingGloss(glossId);
-    if (manuscriptsList && manuscriptsList.length > 0) {
-      for (let item of manuscriptsList) {
-        const manuscriptId = item["@id"];
-        const manuscriptProperties = await expand(manuscriptId);
-        const processedManuscript = processManuscript(
-          manuscriptProperties,
-          manuscriptId,
-        );
-        setManuscripts((prevManuscript) => [...prevManuscript, processedManuscript]);
-      }
-    }
-    setLoading(false);
-  }
-
   useEffect(() => {
+    async function fetchGlossWitnessesAndProcessProperties() {
+      const manuscriptsList: string[] = await grabManuscriptsContainingGloss(glossId);
+      if (manuscriptsList && manuscriptsList.length > 0) {
+        for (let item of manuscriptsList) {
+          const manuscriptId = item["@id"];
+          const manuscriptProperties = await expand(manuscriptId);
+          const processedManuscript = processManuscript(
+            manuscriptProperties,
+            manuscriptId,
+          );
+          setManuscripts((prevManuscript) => [...prevManuscript, processedManuscript]);
+        }
+      }
+      setLoading(false);
+    }
     fetchGlossWitnessesAndProcessProperties();
   }, [glossId]);
 

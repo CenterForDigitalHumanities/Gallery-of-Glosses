@@ -9,8 +9,6 @@ import { GENERATOR } from "@/configs/rerum-links";
 export const useWitnessFragmentsFromManuscript = (manuscriptId: string) => {
   const [witnessFragments, setWitnessFragments] = useState<ProcessedFragment[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
-  // We want the Set of Manuscripts that say they contain this Gloss.
   
   async function expand(targetId:string) {
     try{
@@ -29,27 +27,26 @@ export const useWitnessFragmentsFromManuscript = (manuscriptId: string) => {
     }
   }
 
-  async function fetchWitnessFragmentsAndProcessProperties() {
-    console.log("GRAB FRAGMENTS WITH SPECIAL HOOK")
-    const fragmentsList: string[] = await grabWitnessFragmentsFromManuscript(manuscriptId);
-    console.log("HAVE FRAGMENTS "+fragmentsList.length)
-    if (fragmentsList && fragmentsList.length > 0) {
-      for (let item of fragmentsList) {
-        // console.log("ITEM -- NOT EXPANDED")
-        // console.log(item)
-        const fragmentId = item
-        const fragmentProperties = await expand(fragmentId);
-        const processedFragment = processWitnessFragment(
-          fragmentProperties,
-          fragmentId,
-        );
-        setWitnessFragments((prevFragments) => [...prevFragments, processedFragment]);
-      }
-    }
-    setLoading(false);
-  }
-
   useEffect(() => {
+    async function fetchWitnessFragmentsAndProcessProperties() {
+      console.log("GRAB FRAGMENTS WITH SPECIAL HOOK")
+      const fragmentsList: string[] = await grabWitnessFragmentsFromManuscript(manuscriptId);
+      console.log("HAVE FRAGMENTS "+fragmentsList.length)
+      if (fragmentsList && fragmentsList.length > 0) {
+        for (let item of fragmentsList) {
+          // console.log("ITEM -- NOT EXPANDED")
+          // console.log(item)
+          const fragmentId = item
+          const fragmentProperties = await expand(fragmentId);
+          const processedFragment = processWitnessFragment(
+            fragmentProperties,
+            fragmentId,
+          );
+          setWitnessFragments((prevFragments) => [...prevFragments, processedFragment]);
+        }
+      }
+      setLoading(false);
+    }
     fetchWitnessFragmentsAndProcessProperties();
   }, [manuscriptId]);
 

@@ -419,8 +419,7 @@ export async function grabGlossesFromManuscript(manuscriptId: string){
           },
         },
       )
-    let allGlosses: Set<string> = new Set(resp.data.map(f => f["@id"]))
-    let glosses: string[] = Array.from(allGlosses.values())
+    let glosses: string[] = resp.data.map(f => f["@id"])
     console.log("SPECIAL GLOSSES LENGTH "+glosses.length)
     return glosses
   } 
@@ -436,7 +435,7 @@ export async function grabGlossesFromManuscript(manuscriptId: string){
  */
 export async function grabWitnessFragmentsFromManuscript(manuscriptId: string){
   try {
-    console.log("SPECIAL FRAGMENTS")
+    console.log("SPECIAL FRAGMENTS PIPE")
     let resp = await axios.post(`${TINY}/fragmentsInManuscript`,
         {"ManuscriptWitness": manuscriptId},
         {
@@ -445,8 +444,7 @@ export async function grabWitnessFragmentsFromManuscript(manuscriptId: string){
           },
         },
       )
-    let allFragments: Set<string> = new Set(resp.data.map(f => f["@id"]))
-    let fragments: string[] = Array.from(allFragments.values())
+    let fragments: string[] = resp.data.map(f => f["@id"])
     console.log("SPECIAL FRAGMENTS LENGTH "+fragments.length)
     return fragments
   } 

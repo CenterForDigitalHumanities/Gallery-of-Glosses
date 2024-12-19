@@ -10,8 +10,6 @@ export const useWitnessFragmentsReferencingGloss = (glossId: string) => {
   const [witnessFragments, setWitnessFragments] = useState<ProcessedFragment[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // We want the Set of Witness Fragments that say they reference this Gloss.
-
   async function expand(targetId:string) {
     try{
       const res = await grabProperties(targetId)
@@ -29,23 +27,22 @@ export const useWitnessFragmentsReferencingGloss = (glossId: string) => {
     }
   }
 
-  async function fetchGlossWitnessesAndProcessProperties() {
-    const witnessFragmentsList = await grabWitnessFragmentsReferencingGloss(glossId);
-    if (witnessFragmentsList && witnessFragmentsList.length > 0) {
-      for (let item of witnessFragmentsList) {
-        const witnessFragmentId = item;
-        const witnessFragmentProperties = await expand(witnessFragmentId);
-        const processedFragment = processWitnessFragment(
-          witnessFragmentProperties,
-          witnessFragmentId,
-        );
-        setWitnessFragments((prevFragment) => [...prevFragment, processedFragment]);
-      }
-    }
-    setLoading(false);
-  }
-
   useEffect(() => {
+    async function fetchGlossWitnessesAndProcessProperties() {
+      const witnessFragmentsList = await grabWitnessFragmentsReferencingGloss(glossId);
+      if (witnessFragmentsList && witnessFragmentsList.length > 0) {
+        for (let item of witnessFragmentsList) {
+          const witnessFragmentId = item;
+          const witnessFragmentProperties = await expand(witnessFragmentId);
+          const processedFragment = processWitnessFragment(
+            witnessFragmentProperties,
+            witnessFragmentId,
+          );
+          setWitnessFragments((prevFragment) => [...prevFragment, processedFragment]);
+        }
+      }
+      setLoading(false);
+    }
     fetchGlossWitnessesAndProcessProperties();
   }, [glossId]);
 
