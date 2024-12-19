@@ -160,7 +160,7 @@ export function processGloss(gloss: any, targetId: string): ProcessedGloss {
  */
 export function processManuscript(manuscript: any, targetId: string): ProcessedManuscript {
   let processedManuscript: ProcessedManuscript = {
-    targetId: undefined,
+    targetId: "",
     targetCollection: "GoG-Manuscripts",
     provenance: undefined,
     url: undefined,
@@ -419,7 +419,7 @@ export async function grabGlossesFromManuscript(manuscriptId: string){
           },
         },
       )
-    let allGlosses = new Set(resp.data.map(f => f["@id"]))
+    let allGlosses: Set<string> = new Set(resp.data.map(f => f["@id"]))
     let glosses: string[] = Array.from(allGlosses.values())
     console.log("SPECIAL GLOSSES LENGTH "+glosses.length)
     return glosses
@@ -445,7 +445,7 @@ export async function grabWitnessFragmentsFromManuscript(manuscriptId: string){
           },
         },
       )
-    let allFragments = new Set(resp.data.map(f => f["@id"]))
+    let allFragments: Set<string> = new Set(resp.data.map(f => f["@id"]))
     let fragments: string[] = Array.from(allFragments.values())
     console.log("SPECIAL FRAGMENTS LENGTH "+fragments.length)
     return fragments
@@ -454,20 +454,4 @@ export async function grabWitnessFragmentsFromManuscript(manuscriptId: string){
     console.error("Error fetching data:", error);
     throw error
   }
-}
-
-
-/**
- * Filters an array of RERUM objects such that the data referenced at their targets is filtered by the passed function.
- * @param data Data to be filtered
- * @param filterFunction Function to pass into filter method of the array of objects returned at the targets of the passed data
- */
-export async function filterDataAtTargets(data: any[], filterFunction: any) {
-  let targets = await Promise.all(
-    data.map(async (annotation: TranscriptionAnnotation) => {
-      const witnessFragmentResponse = await axios.get(annotation.target);
-      return witnessFragmentResponse.data;
-    }),
-  );
-  return targets.filter(filterFunction);
 }

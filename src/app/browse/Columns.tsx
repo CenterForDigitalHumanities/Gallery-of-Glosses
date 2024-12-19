@@ -5,8 +5,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import DataTableCell from "./DataTableCell";
 
-function handleOpenRecordInstance(row: { original: ProcessedGloss | ProcessedManuscript | ProcessedFrament}) {
-  const id = (row.original as ProcessedGloss | ProcessedManuscript | processedFragment)?.targetId?.split("/id/")?.[1];
+function handleOpenRecordInstance(row: { original: ProcessedGloss | ProcessedManuscript | ProcessedFragment}) {
+  const id = (row.original as ProcessedGloss | ProcessedManuscript | ProcessedFragment)?.targetId?.split("/id/")?.[1];
   const link = 
   (row.original.targetCollection?.includes("Gloss")) ? `${NAV.BASEPATH}/gloss/${id}` : 
   (row.original.targetCollection?.includes("Manuscript")) ? `${NAV.BASEPATH}/manuscript/${id}` :

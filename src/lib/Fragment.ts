@@ -1,5 +1,5 @@
 interface Fragment {
-  targetId?: string;
+  targetId: string;
   targetCollection?: string;
   identifier?: {
     value: string;
@@ -51,7 +51,7 @@ interface Fragment {
 
 interface ProcessedFragment {
   [key: string]: any;
-  targetId?: string;
+  targetId: string;
   identifier?: string;
   glossLocation?: string;
   glossFormat?: string;

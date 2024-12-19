@@ -1,5 +1,5 @@
 interface Manuscript {
-  targetId?: string;
+  targetId: string;
   targetCollection?: string;
   provenance?: { value: string };
   url?: { value: string };
@@ -15,8 +15,7 @@ interface Manuscript {
 
 interface ProcessedManuscript {
   [key: string]: any;
-
-  targetId?: string;
+  targetId: string;
   targetCollection?: string;
   provenance?: string;
   url?: string;

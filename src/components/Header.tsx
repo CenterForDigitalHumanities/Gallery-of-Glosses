@@ -12,6 +12,7 @@ import {
   GETTING_STARTED_LINKS,
   GLOSS_TOOLS_LINKS,
 } from "@/configs/navigation";
+import Link from 'next/link'
 
 interface HeaderProps {}
 
@@ -32,7 +33,7 @@ const Header: FC<HeaderProps> = ({}) => {
     <header className="supports-backdrop-blur:bg-background/60 sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
       <div className="container flex h-14 items-center">
         <div className="mr-4 hidden md:flex">
-          <a className="mr-6 flex items-center space-x-2" href="/">
+          <Link className="mr-6 flex items-center space-x-2" href="/">
             <Image
               src={`${NAV.BASEPATH}/assets/images/logo.png`}
               alt="icon"
@@ -42,7 +43,7 @@ const Header: FC<HeaderProps> = ({}) => {
             <span className="hidden font-bold sm:inline-block">
               Gallery of Glosses
             </span>
-          </a>
+          </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
             <a
               className="transition-colors hover:text-foreground/80 text-foreground/60"
@@ -116,18 +117,18 @@ const Header: FC<HeaderProps> = ({}) => {
             className="pointer-events-auto fixed h-screen gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 inset-y-0 left-0 w-4/5 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm pr-0"
           >
             <div className="flex items-center gap-4 ">
-              <a href="/">
+              <Link href="/">
                 <Image
                   src={`${NAV.BASEPATH}/assets/images/logo.png`}
                   alt="icon"
                   width="20"
                   height="20"
                 />
-              </a>
+              </Link>
 
-              <a href="/" className="font-bold right-4 top-6">
+              <Link href="/" className="font-bold right-4 top-6">
                 Gallery of Glosses
-              </a>
+              </Link>
               <button
                 onClick={() => setOpenMenu(false)}
                 className="ml-auto mr-4 rounded-sm opacity-70 transition-opacity"
