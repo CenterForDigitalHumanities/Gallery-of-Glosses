@@ -1,8 +1,9 @@
 interface Gloss {
+  targetId:string;
+  targetCollection?: string;
   title?: {
     value: string;
   };
-  targetCollection?: string;
   _section?: {
     value: string;
   };
@@ -40,7 +41,6 @@ interface Gloss {
 
 interface ProcessedGloss {
   [key: string]: any;
-
   targetId: string;
   title: string;
   targetCollection: string;
