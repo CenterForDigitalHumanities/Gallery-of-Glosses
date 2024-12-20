@@ -17,31 +17,42 @@ let filterColumn_glosses = {
   expandable: false,
 };
 let filterColumn_fragments = {
-  header: "Shelfmark",
-  accessorKey: "identifier",
+  header: "Witness Text",
+  accessorKey: "textValue",
   expandable: false,
 };
 let columns_glosses = make_columns([
   filterColumn_glosses,
+  { header: "Gloss Text", accessorKey: "textValue", expandable: true },
   {
     header: "Canonical Reference Locator",
     accessorKey: "canonicalReference",
     expandable: false,
   },
-  { header: "Gloss Text", accessorKey: "textValue", expandable: true },
+  
 ]);
 let columns_fragments = make_columns([
   filterColumn_fragments,
-  {
-    header: "Text",
-    accessorKey: "textValue",
-    expandable: true,
-  },
-  {
-    header: "Resource",
-    accessorKey: "source",
-    expandable: false,
-  }
+  // {
+  //   header: "Glossator",
+  //   accessorKey: "glossatorHand",
+  //   expandable: false,
+  // },
+  // {
+  //   header: "Location",
+  //   accessorKey: "glossLocation",
+  //   expandable: false,
+  // },
+  // {
+  //   header: "Format",
+  //   accessorKey: "glossFormat",
+  //   expandable: false,
+  // },
+  // {
+  //   header: "Tags",
+  //   accessorKey: "tags",
+  //   expandable: true,
+  // }
 ]);
 
 const Manuscript = (props : {  slug: string } ) => {
@@ -54,7 +65,7 @@ const Manuscript = (props : {  slug: string } ) => {
   let glosses = glossesResult.glosses
 
   // Which Witness Fragments belong to this Manuscript?
-  const witnessFragmentsResult = useWitnessFragmentsFromManuscript(manuscript["@id"]);
+  let witnessFragmentsResult = useWitnessFragmentsFromManuscript(manuscript["@id"]);
   let fragments = witnessFragmentsResult.witnessFragments;
   
   return (
@@ -63,8 +74,8 @@ const Manuscript = (props : {  slug: string } ) => {
         <h1 className="text-2xl font-bold mb-4">
           {manuscript?.identifier ?? "Not found"}
         </h1>
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
-          <p>
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-4">
+          {/*<p>
             <span className="font-semibold">Repository:</span>{" "}
             <span>
               {manuscript?.repository ?? "Not found"}
@@ -87,51 +98,81 @@ const Manuscript = (props : {  slug: string } ) => {
             <span>
               {manuscript?.provenance ?? "Not found"}
             </span>
-          </p>
+          </p>*/}
           <p>
             <span className="font-semibold">Region:</span>{" "}
             <span>
-              {manuscript?.region ?? "Not found"}
+              {manuscript?._originRegion ?? "Not found"}
             </span>
           </p>
           <p>
+            <span className="font-semibold">Locale:</span>{" "}
+            <span>
+              {manuscript?._originLocal ?? "Not found"}
+            </span>
+          </p>
+          <p>
+            <span className="font-semibold">Date:</span>{" "}
+            <span>
+              {manuscript?.date ?? "Not found"}
+            </span>
+          </p>
+          <p>
+            <span className="font-semibold">Bibliographic Citation:</span>{" "}
+            <span>
+              {manuscript?._citation ?? "Not found"}
+            </span>
+          </p>
+        </div>
+        <div className="mb-4">
+          <p className="linky">
             <span className="font-semibold">Data URL:</span>{" "}
             <span>
-              {manuscript?.url ?? "Not found"}
+              <a href={`manuscript?.url`}>{manuscript?.url ?? "Not found"}</a>
             </span>
           </p>
-          <p>
-            <span className="font-semibold">Base Project:</span>{" "}
+          <p className="linky">
+            <span className="font-semibold">IIIF Manifest:</span>{" "}
             <span>
-              {manuscript?.baseProject ?? "Not found"}
+              <a href={`manuscript?._iiifManifest`}>{manuscript?._iiifManifest ?? "Not found"}</a>
             </span>
           </p>
+          <p className="linky">
+            <span className="font-semibold">See Also:</span>{" "}
+            <span>
+              <a href={`manuscript?.seeAlso`}>{manuscript?.seeAlso ?? "Not found"}</a>
+            </span>
+          </p>
+        </div>
+        <div className="font-semibold">Notes</div>
+        <div className="mb-4">
+          {
+            manuscript?.notes ?? "Not Found"
+          }
         </div>
         <h2 className="text-xl font-bold mb-4">
           Witness Fragments Within this Manuscript
         </h2>
+        <small className="loadNote">Please allow a few minutes for this to load</small>
         {
-        fragments.length ?
         <DataTable
           columns={columns_fragments}
           data={fragments}
           loading={witnessFragmentsResult.loading}
           filterColumn={filterColumn_fragments}
         />
-        : "No Fragments Found"
         }
-        <h2 className="text-xl font-bold mb-4">
+        <h2 className="text-xl font-bold mb-4 mt-4">
           Glosses Within this Manuscript
         </h2>
+        <small className="loadNote">Please allow a few minutes for this to load</small>
         {
-        glosses.length ?
         <DataTable
           columns={columns_glosses}
           data={glosses}
           loading={glossesResult.loading}
           filterColumn={filterColumn_glosses}
         />
-        : "No Glosses Found"
         }
       </div>
     </div>

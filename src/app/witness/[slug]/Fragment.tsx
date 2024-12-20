@@ -13,7 +13,7 @@ import Image from "next/image";
 const ManuscriptFragment = (props : {  slug: string } ) => {
   let fragmentPromise = useFragmentContext()
   let fragment = use(fragmentPromise)
-  const glossId = fragment?.references[0]
+  const glossId = fragment?.references ? fragment.references[0] : undefined
   let gloss = useGlossInstance(glossId)
   const manuscriptId = fragment?.partOf
   let manuscript = useManuscriptInstance(manuscriptId)
@@ -21,6 +21,7 @@ const ManuscriptFragment = (props : {  slug: string } ) => {
 
   // Hack so something is in the Image area.
   if(!fragment.depiction) fragment.depiction = "https://image-api.iiif.io/api/image/3.0/example/reference/9ee11092dfd2782634f5e8e2c87c16d5-uclamss_1841_diary_07_02/90,100,1750,100/max/0/default.jpg"
+  
   return (
     <div>
       <div className="text-foreground p-4 md:p-8">
@@ -29,7 +30,7 @@ const ManuscriptFragment = (props : {  slug: string } ) => {
           {fragment?.text?.textValue ?? "ERROR - NO TEXT FOUND"}
           &nbsp; &rsquo;
         </h4>
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-4">
           <p>
             <span className="font-semibold">Folio or Page:</span>{" "}
             <span>
@@ -72,6 +73,12 @@ const ManuscriptFragment = (props : {  slug: string } ) => {
             </span>
           </p>
         </div>
+        <div className="font-semibold">Notes</div>
+        <div className="mb-4">
+          {
+            fragment?.notes ?? "Not Found"
+          }
+        </div>
         <div className="font-semibold">Parent Manuscript Link</div>
         <div className="mb-4">
           <a href=
@@ -79,7 +86,7 @@ const ManuscriptFragment = (props : {  slug: string } ) => {
               manuscript?.targetId.split("/").pop() ?? "error"
             }`}>
             {
-              manuscript?.identifier ?? "Unknown"
+              manuscript?.identifier ?? "Not Found"
             }
           </a>
         </div>
@@ -90,7 +97,7 @@ const ManuscriptFragment = (props : {  slug: string } ) => {
             gloss?.targetId.split("/").pop() ?? "error"
           }`}>
           {
-            gloss?.title ?? "Unknown"
+            gloss?.title ?? "Not Found"
           }
           </a>
         </div>

@@ -36,8 +36,6 @@ export const useGlossesFromManuscript = (manuscriptId: string) => {
       console.log("HAVE GLOSSES "+glossesList.length)
       if (glossesList && glossesList.length > 0) {
         for (let item of glossesList) {
-          console.log("ITEM")
-          console.log(item)
           const glossId = item
           const glossProperties = await expand(glossId);
           const processedGloss = processGloss(

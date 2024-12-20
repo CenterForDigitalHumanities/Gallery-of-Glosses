@@ -88,3 +88,17 @@
   background-color: rgb(245,245,245);
   font-style: oblique;
 }
+
+.loadNote {
+  top: -20px;
+  position: relative;
+}
+
+button.showmore{
+  margin-left:  8px;
+}
+
+p.linky{
+  line-break: anywhere;
+  margin-bottom:  5px;
+}

@@ -23,12 +23,31 @@ const columns = make_columns([
     accessorKey: "textValue",
     expandable: true,
   },
-  {
-    header: "Resource",
-    accessorKey: "source",
-    expandable: false,
-  }
-  
+  // {
+  //   header: "Glossator",
+  //   accessorKey: "glossatorHand",
+  //   expandable: false,
+  // },
+  // {
+  //   header: "Location",
+  //   accessorKey: "glossLocation",
+  //   expandable: false,
+  // },
+  // {
+  //   header: "Format",
+  //   accessorKey: "glossFormat",
+  //   expandable: false,
+  // },
+  // {
+  //   header: "Tags",
+  //   accessorKey: "tags",
+  //   expandable: true,
+  // },
+  // {
+  //   header: "Resource",
+  //   accessorKey: "source",
+  //   expandable: false,
+  // },
 ]);
 
 const Gloss = (props : {  slug: string } ) => {
@@ -51,7 +70,7 @@ const Gloss = (props : {  slug: string } ) => {
         <h1 className="text-2xl font-bold mb-4">
           {gloss?.title ?? "{ Unlabeled Gloss }"}
         </h1>
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-4">
           <p>
             <span className="font-semibold">Canonical Reference Locator:</span>{" "}
             <span>
@@ -102,8 +121,14 @@ const Gloss = (props : {  slug: string } ) => {
             &nbsp; &rsquo;
           </p>
         </div>
+        <div className="font-semibold">Notes</div>
+        <div className="mb-4">
+          {
+            gloss?.notes ?? "Not Found"
+          }
+        </div>
         <h2 className="text-xl font-bold mb-4">
-          Witness Fragments for this Gloss
+          Witnesses of this Gloss
         </h2>
         {
         fragments.length ?

@@ -165,13 +165,17 @@ export function processManuscript(manuscript: any, targetId: string): ProcessedM
     provenance: undefined,
     url: undefined,
     identifier: undefined,
-    city: undefined,
+    _originLocal: undefined,
+    _originRegion: undefined,
+    _originAuthority: undefined,
+    _iiifManifest: undefined,
+    date: undefined,
     alternative: undefined,
     repository: undefined,
     title: undefined,
     institution: undefined,
     baseProject: undefined,
-    region: undefined,
+    region: undefined
   };
   if(!manuscript || !targetId) return processedManuscript;
   processedManuscript.targetId = targetId;
@@ -231,11 +235,20 @@ export async function grabProductionManuscriptFragments() {
   try {
     let fragmentsQueryObj = 
     {
-      "@type": "WitnessFragment",
-      "__rerum.history.next": {$exists:true, $size: 0},
-      "__rerum.generatedBy": GENERATOR
+      "$and":[
+        {"$or": [
+          {"@type": "WitnessFragment"},
+          {"type": "WitnessFragment"}
+        ]},
+        {"$or": [
+          {"__rerum.generatedBy": GENERATOR.replace(/^https?/, "http")},
+          {"__rerum.generatedBy": GENERATOR.replace(/^https?/, "https")}
+        ]}
+      ],
+      "__rerum.history.next": {"$exists":true, "$size": 0}
     }
-    return await makePagedQuery(`${TINY}/query`, fragmentsQueryObj).then(resp => resp.json())
+    const fragments = await makePagedQuery(`${TINY}/query`, fragmentsQueryObj).then(resp => resp.json())
+    return fragments
   } catch (error) {
     console.error("Error fetching data:", error)
     return null

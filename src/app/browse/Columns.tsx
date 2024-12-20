@@ -30,7 +30,19 @@ export function make_columns(columnsList: { header: string, accessorKey: string,
           <DataTableColumnHeader column={column} title={columnObject.header} />
         ),
         cell: ({ row }) => {
-          const title = row.getValue(columnObject.accessorKey);
+          let textVal: string = row.getValue(columnObject.accessorKey) ? row.getValue(columnObject.accessorKey) : "Not Found"
+          if(textVal === "Not Found"){
+            return (
+              <div
+                className="truncate"
+                onClick={() => {
+                  handleOpenRecordInstance(row);
+                }}
+              >
+                <small>Not Found</small>
+              </div>
+            );
+          }
           return (
             <div
               className="truncate"
@@ -38,9 +50,9 @@ export function make_columns(columnsList: { header: string, accessorKey: string,
                 handleOpenRecordInstance(row);
               }}
             >
-              {title as React.ReactNode}
+              {textVal as React.ReactNode}
             </div>
-          );
+          );  
         },
       }
     else
@@ -50,8 +62,9 @@ export function make_columns(columnsList: { header: string, accessorKey: string,
           <DataTableColumnHeader column={column} title={columnObject.header} />
         ),
         cell: ({ row }) => {
+          let textVal: string = row.getValue(columnObject.accessorKey) ? row.getValue(columnObject.accessorKey) : "Not Found"
           return (
-            <DataTableCell textValue={row.getValue(columnObject.accessorKey)} rowId={row.id} />
+            <DataTableCell textValue={textVal} rowId={row.id} />
           );
         },
       }

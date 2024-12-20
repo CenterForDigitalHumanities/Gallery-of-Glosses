@@ -36,10 +36,6 @@ export const BROWSE_GLOSSES_LINKS = [
     href: BASEPATH + "/browse/glosses/document",
   },
   {
-    title: "Browse by Section",
-    href: BASEPATH + "/browse/glosses/section",
-  },
-  {
     title: "Browse by Tag",
     href: BASEPATH + "/browse/glosses/tag",
   },
