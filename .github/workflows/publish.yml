@@ -3,7 +3,7 @@ name: publish-to-github-pages
 on:
   push:
     branches:
-      - 81-relate-entities
+      - main
 
 permissions:
   contents: read
