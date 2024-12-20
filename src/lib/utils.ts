@@ -125,15 +125,15 @@ export function processGloss(gloss: any, targetId: string): ProcessedGloss {
     section: "",
     subsection: "",
     tags: [],
-    textFormat: undefined,
-    textLanguage: undefined,
-    textValue: undefined,
-    creator: undefined,
-    document: undefined,
-    themes: undefined,
-    canonicalReference: undefined,
-    description: undefined,
-    targetedText: undefined,
+    textFormat: "",
+    textLanguage: "",
+    textValue: "",
+    creator: "",
+    document: "",
+    canonicalReference: "",
+    description: "",
+    targetedText: "",
+    notes: ""
   };
   if(!gloss || !targetId) return processedGloss;
   processedGloss.targetId = targetId;
@@ -162,20 +162,18 @@ export function processManuscript(manuscript: any, targetId: string): ProcessedM
   let processedManuscript: ProcessedManuscript = {
     targetId: "",
     targetCollection: "GoG-Manuscripts",
-    provenance: undefined,
-    url: undefined,
-    identifier: undefined,
-    _originLocal: undefined,
-    _originRegion: undefined,
-    _originAuthority: undefined,
-    _iiifManifest: undefined,
-    date: undefined,
-    alternative: undefined,
-    repository: undefined,
-    title: undefined,
-    institution: undefined,
-    baseProject: undefined,
-    region: undefined
+    provenance: "",
+    url: "",
+    identifier: "",
+    _originLocal: "",
+    _originRegion: "",
+    _originAuthority: "",
+    _iiifManifest: "",
+    date: "",
+    title: "",
+    baseProject: "",
+    notes: "",
+    tags: []
   };
   if(!manuscript || !targetId) return processedManuscript;
   processedManuscript.targetId = targetId;

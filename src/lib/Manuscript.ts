@@ -10,6 +10,11 @@ interface Manuscript {
   _citation?: { value: string };
   date?: { value: string };
   title?: { value: string };
+  notes?: { value: string };
+  tags?: {
+    "@type": "Set";
+    items: string[];
+  };
 }
 
 interface ProcessedManuscript {
@@ -25,4 +30,6 @@ interface ProcessedManuscript {
   _citation?: string;
   date: string;
   title?: string;
+  notes?: string;
+  tags?: string[];
 }

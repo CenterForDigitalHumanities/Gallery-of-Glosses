@@ -25,9 +25,6 @@ interface Gloss {
   document?: {
     value: string;
   };
-  themes?: {
-    value: string[];
-  };
   canonicalReference?: {
     value: string;
   };
@@ -55,7 +52,6 @@ interface ProcessedGloss {
   textValue?: string;
   creator?: string;
   document?: string;
-  themes?: string[];
   canonicalReference?: string;
   description?: string;
   targetedText?: string;

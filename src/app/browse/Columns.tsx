@@ -21,7 +21,7 @@ function handleOpenRecordInstance(row: { original: ProcessedGloss | ProcessedMan
  * @param columnsList - An array of objects representing basic column information.
  * @returns An array of columns.
  */
-export function make_columns(columnsList: { header: string, accessorKey: string, expandable: boolean }[]): ColumnDef<ProcessedGloss | ProcessedManuscript>[] {
+export function make_columns(columnsList: { header: string, accessorKey: string, expandable: boolean }[]): ColumnDef<ProcessedGloss | ProcessedManuscript | ProcessedFragment>[] {
   return columnsList.map((columnObject) => {
     if (!columnObject.expandable)
       return {
