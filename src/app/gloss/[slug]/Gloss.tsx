@@ -7,36 +7,70 @@ import { make_columns } from "@/app/browse/Columns";
 import { DataTable } from "@/app/browse/DataTable";
 import { use } from "react"
 import { useGlossContext } from "@/contexts/GlossContext"
+import { useManuscriptsReferencingGloss } from "@/hooks/useManuscriptsReferencingGloss"
+import { useWitnessFragmentsReferencingGloss } from "@/hooks/useWitnessFragmentsReferencingGloss"
 
 const filterColumn = {
-  header: "Manuscript",
+  header: "Shelfmark",
   accessorKey: "identifier",
   expandable: false,
-};
+}
+
 const columns = make_columns([
   filterColumn,
   {
-    header: "Witness Details (under construction)",
-    accessorKey: "city",
-    expandable: false,
+    header: "Text",
+    accessorKey: "textValue",
+    expandable: true,
   },
+  // {
+  //   header: "Glossator",
+  //   accessorKey: "glossatorHand",
+  //   expandable: false,
+  // },
+  // {
+  //   header: "Location",
+  //   accessorKey: "glossLocation",
+  //   expandable: false,
+  // },
+  // {
+  //   header: "Format",
+  //   accessorKey: "glossFormat",
+  //   expandable: false,
+  // },
+  // {
+  //   header: "Tags",
+  //   accessorKey: "tags",
+  //   expandable: true,
+  // },
+  // {
+  //   header: "Resource",
+  //   accessorKey: "source",
+  //   expandable: false,
+  // },
 ]);
 
 const Gloss = (props : {  slug: string } ) => {
   const pathname = usePathname();
   let glossPromise = useGlossContext()
   let gloss = use(glossPromise)
+  gloss["@id"] = RERUM+props.slug
   
-  //const witnessesResult = useGlossWitnesses(targetId);
-  //let witnesses = witnessesResult.witnesses;
-  
+  // Which Manuscripts contain this Gloss?
+  //const manuscriptsResult = useManuscriptsReferencingGloss(gloss["@id"]);
+  //let manuscripts = manuscriptsResult.manuscripts;
+
+  // Which Witness Fragments reference this Gloss?
+  const witnessFragmentsResult = useWitnessFragmentsReferencingGloss(gloss["@id"]);
+  let fragments = witnessFragmentsResult.witnessFragments;
+
   return (
     <div>
       <div className="text-foreground p-4 md:p-8">
         <h1 className="text-2xl font-bold mb-4">
           {gloss?.title ?? "{ Unlabeled Gloss }"}
         </h1>
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-4">
           <p>
             <span className="font-semibold">Canonical Reference Locator:</span>{" "}
             <span>
@@ -62,7 +96,7 @@ const Gloss = (props : {  slug: string } ) => {
                 ? gloss.tags.items.map((tag, tagIndex, tagArray) => (
                     <a
                       key={tagIndex}
-                      href={`${NAV.BASEPATH}/browse/tag?q=${tag}`}
+                      href={`${NAV.BASEPATH}/browse/glosses/tag?q=${tag}`}
                       className="text-blue-500 hover:underline"
                     >
                       {tag}
@@ -79,20 +113,33 @@ const Gloss = (props : {  slug: string } ) => {
             </span>
           </p>
         </div>
-        <div className="rounded-xl shadow-inner">
-          <p className="text-justify">
+        <div className="mb-4">
+          <span className="font-semibold">Gloss Text:</span>
+          <p className="text-value-reference">
+            &lsquo; &nbsp;
             {gloss?.text?.textValue ?? "Not found"}
+            &nbsp; &rsquo;
           </p>
         </div>
-        {/*<h2 className="text-xl font-bold mb-4">
-          Witness References
+        <div className="font-semibold">Notes</div>
+        <div className="mb-4">
+          {
+            gloss?.notes ?? "Not Found"
+          }
+        </div>
+        <h2 className="text-xl font-bold mb-4">
+          Witnesses of this Gloss
         </h2>
-        {<DataTable
+        {
+        fragments.length ?
+        <DataTable
           columns={columns}
-          data={witnesses}
-          loading={witnessesResult.loading}
+          data={fragments}
+          loading={witnessFragmentsResult.loading}
           filterColumn={filterColumn}
-        />}*/}
+        />
+        : "No Fragments Found"
+        }
       </div>
     </div>
   );

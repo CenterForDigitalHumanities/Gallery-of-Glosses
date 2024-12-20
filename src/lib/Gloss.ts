@@ -1,8 +1,9 @@
 interface Gloss {
+  targetId:string;
+  targetCollection?: string;
   title?: {
     value: string;
   };
-  targetCollection?: string;
   _section?: {
     value: string;
   };
@@ -24,9 +25,6 @@ interface Gloss {
   document?: {
     value: string;
   };
-  themes?: {
-    value: string[];
-  };
   canonicalReference?: {
     value: string;
   };
@@ -36,11 +34,13 @@ interface Gloss {
   targetedText?: {
     value: string;
   };
+  notes?: {
+    value: string;
+  };
 }
 
 interface ProcessedGloss {
   [key: string]: any;
-
   targetId: string;
   title: string;
   targetCollection: string;
@@ -52,8 +52,8 @@ interface ProcessedGloss {
   textValue?: string;
   creator?: string;
   document?: string;
-  themes?: string[];
   canonicalReference?: string;
   description?: string;
   targetedText?: string;
+  notes?: string;
 }

@@ -74,3 +74,31 @@
     @apply bg-background text-foreground;
   }
 }
+
+.fragmentImage {
+  height:  200px;
+  width: auto;
+  max-width: 100%;
+  position:  relative;
+  display:  block;
+}
+
+.text-value-reference {
+  padding: 1em;
+  background-color: rgb(245,245,245);
+  font-style: oblique;
+}
+
+.loadNote {
+  top: -20px;
+  position: relative;
+}
+
+button.showmore{
+  margin-left:  8px;
+}
+
+p.linky{
+  line-break: anywhere;
+  margin-bottom:  5px;
+}

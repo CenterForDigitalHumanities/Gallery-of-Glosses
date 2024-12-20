@@ -5,10 +5,15 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import DataTableCell from "./DataTableCell";
 
-function handleOpenRecordInstance(row: { original: ProcessedGloss | ProcessedManuscript }) {
-  const id = (row.original as ProcessedGloss | ProcessedManuscript)?.targetId?.split("/id/")?.[1];
-  const link = (row.original.targetCollection.includes("Gloss")) ? `${NAV.BASEPATH}/gloss/${id}` : `${NAV.BASEPATH}/manuscript/${id}`;
-  window.open(link, "_blank");
+function handleOpenRecordInstance(row: { original: ProcessedGloss | ProcessedManuscript | ProcessedFragment}) {
+  const id = (row.original as ProcessedGloss | ProcessedManuscript | ProcessedFragment)?.targetId?.split("/id/")?.[1];
+  const link = 
+  (row.original.targetCollection?.includes("Gloss")) ? `${NAV.BASEPATH}/gloss/${id}` : 
+  (row.original.targetCollection?.includes("Manuscript")) ? `${NAV.BASEPATH}/manuscript/${id}` :
+  (row.original.targetCollection?.includes("Fragment")) ? `${NAV.BASEPATH}/witness/${id}` :
+  undefined
+  if(link) window.open(link, "_blank");
+  return
 }
 
 /**
@@ -16,7 +21,7 @@ function handleOpenRecordInstance(row: { original: ProcessedGloss | ProcessedMan
  * @param columnsList - An array of objects representing basic column information.
  * @returns An array of columns.
  */
-export function make_columns(columnsList: { header: string, accessorKey: string, expandable: boolean }[]): ColumnDef<ProcessedGloss | ProcessedManuscript>[] {
+export function make_columns(columnsList: { header: string, accessorKey: string, expandable: boolean }[]): ColumnDef<ProcessedGloss | ProcessedManuscript | ProcessedFragment>[] {
   return columnsList.map((columnObject) => {
     if (!columnObject.expandable)
       return {
@@ -25,7 +30,19 @@ export function make_columns(columnsList: { header: string, accessorKey: string,
           <DataTableColumnHeader column={column} title={columnObject.header} />
         ),
         cell: ({ row }) => {
-          const title = row.getValue(columnObject.accessorKey);
+          let textVal: string = row.getValue(columnObject.accessorKey) ? row.getValue(columnObject.accessorKey) : "Not Found"
+          if(textVal === "Not Found"){
+            return (
+              <div
+                className="truncate"
+                onClick={() => {
+                  handleOpenRecordInstance(row);
+                }}
+              >
+                <small>Not Found</small>
+              </div>
+            );
+          }
           return (
             <div
               className="truncate"
@@ -33,9 +50,9 @@ export function make_columns(columnsList: { header: string, accessorKey: string,
                 handleOpenRecordInstance(row);
               }}
             >
-              {title as React.ReactNode}
+              {textVal as React.ReactNode}
             </div>
-          );
+          );  
         },
       }
     else
@@ -45,8 +62,9 @@ export function make_columns(columnsList: { header: string, accessorKey: string,
           <DataTableColumnHeader column={column} title={columnObject.header} />
         ),
         cell: ({ row }) => {
+          let textVal: string = row.getValue(columnObject.accessorKey) ? row.getValue(columnObject.accessorKey) : "Not Found"
           return (
-            <DataTableCell textValue={row.getValue(columnObject.accessorKey)} rowId={row.id} />
+            <DataTableCell textValue={textVal} rowId={row.id} />
           );
         },
       }

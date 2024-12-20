@@ -1,29 +1,35 @@
 interface Manuscript {
-  target: string;
-  provenance?: { value: string };
+  targetId: string;
+  targetCollection?: string;
   url?: { value: string };
   identifier?: { value: string };
-  city?: { value: string };
-  alternative?: { value: string };
-  Repository?: { value: string };
+  _originLocal?: { value: string };
+  _originRegion?: { value: string };
+  _originAuthority?: { value: string };
+  _iiifManifest?: { value: string };
+  _citation?: { value: string };
+  date?: { value: string };
   title?: { value: string };
-  institution?: { value: string };
-  "tpen://base-project"?: { value: string };
-  region?: { value: string };
+  notes?: { value: string };
+  tags?: {
+    "@type": "Set";
+    items: string[];
+  };
 }
 
 interface ProcessedManuscript {
   [key: string]: any;
-
-  targetId?: string;
-  provenance?: string;
+  targetId: string;
+  targetCollection?: string;
   url?: string;
   identifier?: string;
-  city?: string;
-  alternative?: string;
-  repository?: string;
+  _originLocal?: string;
+  _originRegion?: string;
+  _originAuthority?: string;
+  _iiifManifest?: string;
+  _citation?: string;
+  date: string;
   title?: string;
-  institution?: string;
-  baseProject?: string;
-  region?: string;
+  notes?: string;
+  tags?: string[];
 }
