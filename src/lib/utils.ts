@@ -58,16 +58,14 @@ export async function makeAggregationQuery(
   url: string,
   data: Object,
   limit: number = 50,
-  //skip: number = 0,
-  pageToken: string,
+  skip: number = 0,
 ): Promise<Response> {
   try {
     let objects: ObjectData[] = [];
 
     while (true) {
-      //` ${url}?limit=${limit}&skip=${skip}`,
       const response = await axios.post(
-        `${url}?limit=${limit}&pageToken=${pageToken}`,
+        `${url}?limit=${limit}&skip=${skip}`,
         data,
         {
           headers: {
@@ -81,8 +79,7 @@ export async function makeAggregationQuery(
       if (!response.data.length || response.data.length < limit) {
         break;
       } else {
-        //skip += limit;
-        pageToken = response.data[limit-1].paginationToken
+        skip += limit;
       }
     }
 
