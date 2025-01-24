@@ -54,6 +54,58 @@ export function getQueryFromId(targetId: string) {
  * @param limit Number of objects to get out of query
  * @param skip Number of objects to skip in query
  */
+export async function makeAggregationQuery(
+  url: string,
+  data: Object,
+  limit: number = 50,
+  //skip: number = 0,
+  pageToken: string,
+): Promise<Response> {
+  try {
+    let objects: ObjectData[] = [];
+
+    while (true) {
+      //` ${url}?limit=${limit}&skip=${skip}`,
+      const response = await axios.post(
+        `${url}?limit=${limit}&pageToken=${pageToken}`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+          },
+        },
+      );
+
+      objects = [...objects, ...response.data];
+
+      if (!response.data.length || response.data.length < limit) {
+        break;
+      } else {
+        //skip += limit;
+        pageToken = response.data[limit-1].paginationToken
+      }
+    }
+
+    return new Response(JSON.stringify(objects), {
+      status: 200,
+    });
+  } catch (err) {
+    return new Response(
+      "Could not retrieve objects at this time. Please try later",
+      {
+        status: 500,
+      },
+    );
+  }
+}
+
+/**
+ * Makes a paged query and returns the response
+ * @param url Base URL to send request to
+ * @param data JSON object to send
+ * @param limit Number of objects to get out of query
+ * @param skip Number of objects to skip in query
+ */
 export async function makePagedQuery(
   url: string,
   data: Object,
@@ -422,16 +474,22 @@ export async function grabWitnessFragmentsReferencingGloss(glossId: string) {
 export async function grabGlossesFromManuscript(manuscriptId: string){
   try {
     console.log("SPECIAL GLOSSES PIPE")
-    let resp = await axios.post(`${TINY}/glossesInManuscript`,
-        {"ManuscriptWitness": manuscriptId},
-        {
-          headers: {
-            "Content-Type": "application/json; charset=utf-8",
-          },
-        },
-      )
-    let glosses: string[] = resp.data.map(f => f["@id"])
+    const start = Date.now();
+    let resp = await makeAggregationQuery(`${TINY}/glossesInManuscript`, {"ManuscriptWitness": manuscriptId})
+      .then(r => r.json())
+      .catch(err => { throw err })
+    // let resp = await axios.post(`${TINY}/glossesInManuscript`,
+    //     {"ManuscriptWitness": manuscriptId},
+    //     {
+    //       headers: {
+    //         "Content-Type": "application/json; charset=utf-8",
+    //       },
+    //     },
+    //   )
+    let glosses: string[] = resp.map(f => f["@id"])
     console.log("SPECIAL GLOSSES LENGTH "+glosses.length)
+    const end = Date.now()
+    console.log(`Total GOG Public Gloss Aggregator Runtime: ${end - start} ms`)
     return glosses
   } 
   catch (error) {
@@ -447,16 +505,22 @@ export async function grabGlossesFromManuscript(manuscriptId: string){
 export async function grabWitnessFragmentsFromManuscript(manuscriptId: string){
   try {
     console.log("SPECIAL FRAGMENTS PIPE")
-    let resp = await axios.post(`${TINY}/fragmentsInManuscript`,
-        {"ManuscriptWitness": manuscriptId},
-        {
-          headers: {
-            "Content-Type": "application/json; charset=utf-8",
-          },
-        },
-      )
-    let fragments: string[] = resp.data.map(f => f["@id"])
+    const start = Date.now()
+    let resp = await makeAggregationQuery(`${TINY}/fragmentsInManuscript`, {"ManuscriptWitness": manuscriptId})
+      .then(r => r.json())
+      .catch(err => { throw err })
+    // let resp = await axios.post(`${TINY}/fragmentsInManuscript`,
+    //     {"ManuscriptWitness": manuscriptId},
+    //     {
+    //       headers: {
+    //         "Content-Type": "application/json; charset=utf-8",
+    //       },
+    //     },
+    //   )
+    let fragments: string[] = resp.map(f => f["@id"])
     console.log("SPECIAL FRAGMENTS LENGTH "+fragments.length)
+    const end = Date.now()
+    console.log(`Total GOG Public Fragment Aggregator Runtime: ${end - start} ms`)
     return fragments
   } 
   catch (error) {
