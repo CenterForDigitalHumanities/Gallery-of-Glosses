@@ -1,7 +1,7 @@
 {
   "name": "gallery-of-glosses",
   "homepage": "https://galleryofglosses.org/",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -21,7 +21,7 @@
     "@types/react": "19.0.0",
     "@types/react-dom": "19.0.0",
     "autoprefixer": "^10.4.20",
-    "axios": "^1.7.9",
+    "axios": "^1.12.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "eslint": "^9.17.0",
