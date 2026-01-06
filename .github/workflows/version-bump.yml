@@ -8,7 +8,7 @@ on:
 
 permissions:
   contents: write
-  pull-requests: read
+  pull-requests: write
 
 jobs:
   bump-version:
@@ -67,9 +67,19 @@ jobs:
       - name: Commit and push version bump
         run: |
           NEW_VERSION="${{ steps.new-version.outputs.version }}"
+          BRANCH="version-bump-$NEW_VERSION"
+          git checkout -b $BRANCH
           git add package.json package-lock.json
           git commit -m "chore: bump version to $NEW_VERSION [skip ci]"
-          git push origin main
+          git push origin $BRANCH
+
+      - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          NEW_VERSION="${{ steps.new-version.outputs.version }}"
+          BRANCH="version-bump-$NEW_VERSION"
+          gh pr create --title "chore: bump version to $NEW_VERSION [skip ci]" --body "Automated version bump." --base main --head $BRANCH
 
       - name: Create Release
         uses: actions/create-release@v1
