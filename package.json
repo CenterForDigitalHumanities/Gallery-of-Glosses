@@ -1,7 +1,7 @@
 {
   "name": "gallery-of-glosses",
   "homepage": "https://galleryofglosses.org/",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -28,7 +28,7 @@
     "eslint-config-next": "^15.1.0",
     "gallery-of-glosses": "file:",
     "lucide-react": "^0.468.0",
-    "next": "^15.1.1",
+    "next": "^15.1.11",
     "next-themes": "^0.4.4",
     "postcss": "^8.4.49",
     "react": "19.0.0",
