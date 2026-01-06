@@ -1,0 +1,84 @@
+name: Version Bump on PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  bump-version:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js ⚙️
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Determine version bump type
+        id: version-type
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          # Check PR title for conventional commit keywords
+          if [[ "$PR_TITLE" =~ ^feat(\(.+\))?!: ]] || [[ "$PR_TITLE" =~ ^BREAKING\ CHANGE ]]; then
+            echo "bump=major" >> $GITHUB_OUTPUT
+          elif [[ "$PR_TITLE" =~ ^feat(\(.+\))?:? ]]; then
+            echo "bump=minor" >> $GITHUB_OUTPUT
+          else
+            echo "bump=patch" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Get current version
+        id: current-version
+        run: |
+          CURRENT_VERSION=$(node -e "console.log(require('./package.json').version)")
+          echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Calculate new version
+        id: new-version
+        run: |
+          npm install -g semver
+          CURRENT_VERSION="${{ steps.current-version.outputs.version }}"
+          BUMP_TYPE="${{ steps.version-type.outputs.bump }}"
+          NEW_VERSION=$(semver -i $BUMP_TYPE $CURRENT_VERSION)
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update package.json and package-lock.json
+        run: |
+          NEW_VERSION="${{ steps.new-version.outputs.version }}"
+          npm version $NEW_VERSION --no-git-tag-version
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Commit and push version bump
+        run: |
+          NEW_VERSION="${{ steps.new-version.outputs.version }}"
+          git add package.json package-lock.json
+          git commit -m "chore: bump version to $NEW_VERSION [skip ci]"
+          git push origin main
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.new-version.outputs.version }}
+          release_name: Release v${{ steps.new-version.outputs.version }}
+          body: |
+            Version ${{ steps.new-version.outputs.version }} - Merged from PR #${{ github.event.pull_request.number }}
+          draft: false
+          prerelease: false
