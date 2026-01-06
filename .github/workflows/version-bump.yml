@@ -27,10 +27,10 @@ jobs:
 
       - name: Determine version bump type
         id: version-type
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
           # Check PR title for conventional commit keywords
-          PR_TITLE="${{ github.event.pull_request.title }}"
-          
           if [[ "$PR_TITLE" =~ ^feat(\(.+\))?!: ]] || [[ "$PR_TITLE" =~ ^BREAKING\ CHANGE ]]; then
             echo "bump=major" >> $GITHUB_OUTPUT
           elif [[ "$PR_TITLE" =~ ^feat(\(.+\))?:? ]]; then
