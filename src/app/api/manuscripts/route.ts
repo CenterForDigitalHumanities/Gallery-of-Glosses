@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { grabProductionManuscripts, grabProperties, processManuscript } from '@/lib/utils';
 import { manuscriptToJsonLD, createJsonLDCollection } from '@/lib/jsonld';
 
+// Mark this route as dynamic since it fetches external data
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/manuscripts
  * Returns all manuscripts in JSON-LD format

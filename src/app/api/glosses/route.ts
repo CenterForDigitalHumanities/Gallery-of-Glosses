@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { grabProductionGlosses, grabProperties, processGloss } from '@/lib/utils';
 import { glossToJsonLD, createJsonLDCollection } from '@/lib/jsonld';
 
+// Mark this route as dynamic since it fetches external data
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/glosses
  * Returns all glosses in JSON-LD format

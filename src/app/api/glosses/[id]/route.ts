@@ -3,6 +3,9 @@ import { grabProperties, processGloss } from '@/lib/utils';
 import { glossToJsonLD } from '@/lib/jsonld';
 import { RERUM } from '@/configs/rerum-links';
 
+// Mark this route as dynamic since it fetches external data
+export const dynamic = 'force-dynamic';
+
 type Params = Promise<{ id: string }>
 
 /**
