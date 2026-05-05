@@ -128,19 +128,19 @@ const Manuscript = (props : {  slug: string } ) => {
           <p className="linky">
             <span className="font-semibold">Data URL:</span>{" "}
             <span>
-              <a href={`manuscript?.url`}>{manuscript?.url ?? "Not found"}</a>
+              <a href={manuscript?.url ?? "#"}>{manuscript?.url ?? "Not found"}</a>
             </span>
           </p>
           <p className="linky">
             <span className="font-semibold">IIIF Manifest:</span>{" "}
             <span>
-              <a href={`manuscript?._iiifManifest`}>{manuscript?._iiifManifest ?? "Not found"}</a>
+              <a href={manuscript?._iiifManifest ?? "#"}>{manuscript?._iiifManifest ?? "Not found"}</a>
             </span>
           </p>
           <p className="linky">
             <span className="font-semibold">See Also:</span>{" "}
             <span>
-              <a href={`manuscript?.seeAlso`}>{manuscript?.seeAlso ?? "Not found"}</a>
+              <a href={manuscript?.seeAlso ?? "#"}>{manuscript?.seeAlso ?? "Not found"}</a>
             </span>
           </p>
         </div>

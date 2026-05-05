@@ -278,6 +278,22 @@ export function processWitnessFragment(fragment: any, targetId: string): Process
   return processedFragment;
 }
 
+/**
+ * Fetches each target URL from an array of annotation-like objects and returns
+ * the resolved entities that satisfy the given filter predicate.
+ * @param data Array of objects containing a `target` URL property
+ * @param filterFn Predicate to determine which fetched entities to include
+ */
+export async function filterDataAtTargets(
+  data: { target: string }[],
+  filterFn: (item: any) => boolean,
+): Promise<any[]> {
+  const entities = await Promise.all(
+    data.map((item) => axios.get(item.target).then((resp) => resp.data)),
+  );
+  return entities.filter(filterFn);
+}
+
 export async function grabProductionManuscriptFragments() {
   try {
     let fragmentsQueryObj = 
@@ -470,15 +486,10 @@ export async function grabWitnessFragmentsReferencingGloss(glossId: string) {
  */
 export async function grabGlossesFromManuscript(manuscriptId: string){
   try {
-    console.log("SPECIAL GLOSSES PIPE")
-    // const start = Date.now();
     let resp = await makeAggregationQuery(`${TINY}/glossesInManuscript`, {"ManuscriptWitness": manuscriptId})
       .then(r => r.json())
       .catch(err => { throw err })
     let glosses: string[] = resp.map(f => f["@id"])
-    // console.log("SPECIAL GLOSSES LENGTH "+glosses.length)
-    // const end = Date.now()
-    // console.log(`Total GOG Public Gloss Aggregator Runtime: ${end - start} ms`)
     return glosses
   } 
   catch (error) {
@@ -493,15 +504,10 @@ export async function grabGlossesFromManuscript(manuscriptId: string){
  */
 export async function grabWitnessFragmentsFromManuscript(manuscriptId: string){
   try {
-    console.log("SPECIAL FRAGMENTS PIPE")
-    // const start = Date.now()
     let resp = await makeAggregationQuery(`${TINY}/fragmentsInManuscript`, {"ManuscriptWitness": manuscriptId})
       .then(r => r.json())
       .catch(err => { throw err })
     let fragments: string[] = resp.map(f => f["@id"])
-    // console.log("SPECIAL FRAGMENTS LENGTH "+fragments.length)
-    // const end = Date.now()
-    // console.log(`Total GOG Public Fragment Aggregator Runtime: ${end - start} ms`)
     return fragments
   } 
   catch (error) {

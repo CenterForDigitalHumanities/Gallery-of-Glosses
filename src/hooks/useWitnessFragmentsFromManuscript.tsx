@@ -29,9 +29,7 @@ export const useWitnessFragmentsFromManuscript = (manuscriptId: string) => {
 
   useEffect(() => {
     async function fetchWitnessFragmentsAndProcessProperties() {
-      console.log("GRAB FRAGMENTS WITH SPECIAL HOOK")
       const fragmentsList: string[] = await grabWitnessFragmentsFromManuscript(manuscriptId);
-      console.log("HAVE FRAGMENTS "+fragmentsList.length)
       if (fragmentsList && fragmentsList.length > 0) {
         for (let item of fragmentsList) {
           // console.log("ITEM -- NOT EXPANDED")

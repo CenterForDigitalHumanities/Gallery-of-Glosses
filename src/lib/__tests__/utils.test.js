@@ -5,7 +5,7 @@ import {
   filterDataAtTargets,
 } from "../utils";
 import axios from "axios";
-import { TINY } from "@/configs/rerum-links";
+import { TINY, GENERATOR } from "@/configs/rerum-links";
 
 jest.mock("axios");
 describe("grabProperties", () => {
@@ -15,9 +15,9 @@ describe("grabProperties", () => {
 
   it("should send an appropriate RERUM query", async () => {
     axios.post.mockResolvedValue({
-      data: { status: 200, someProperty: "someValue" },
+      data: [],
     });
-    const response = await grabProperties(
+    await grabProperties(
       "https://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
     );
 
@@ -44,6 +44,7 @@ describe("grabProperties", () => {
           },
         ],
         "__rerum.history.next": { $exists: true, $size: 0 },
+        "__rerum.generatedBy": GENERATOR,
       },
       { headers: { "Content-Type": "application/json; charset=utf-8" } },
     );
@@ -51,7 +52,7 @@ describe("grabProperties", () => {
 
   it("should return a response with a status of 200 for a valid query", async () => {
     axios.post.mockResolvedValue({
-      data: { status: 200, someProperty: "someValue" },
+      data: [],
     });
     const response = await grabProperties(
       "https://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
@@ -83,7 +84,13 @@ describe("getQueryFromId", () => {
         },
       ],
       "__rerum.history.next": { $exists: true, $size: 0 },
+      "__rerum.generatedBy": GENERATOR,
     });
+  });
+
+  it("should return a simple target query for non-URL ids", () => {
+    const query = getQueryFromId("some-local-id");
+    expect(query).toEqual({ target: "some-local-id" });
   });
 });
 

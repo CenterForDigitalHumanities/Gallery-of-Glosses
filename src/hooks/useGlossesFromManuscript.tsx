@@ -31,9 +31,7 @@ export const useGlossesFromManuscript = (manuscriptId: string) => {
 
   useEffect(() => {
     async function fetchGlossesAndProcessProperties() {
-      console.log("GRAB GLOSSES WITH SPECIAL HOOK")
       const glossesList: string[] = await grabGlossesFromManuscript(manuscriptId);
-      console.log("HAVE GLOSSES "+glossesList.length)
       if (glossesList && glossesList.length > 0) {
         for (let item of glossesList) {
           const glossId = item

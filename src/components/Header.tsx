@@ -109,9 +109,8 @@ const Header: FC<HeaderProps> = ({}) => {
           <div
             data-state="open"
             className="pointer-events-auto fixed h-screen w-screen gap-4 bg-black opacity-40 p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 inset-y-0 left-0 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm pr-0"
-          >
-            test
-          </div>
+            onClick={() => setOpenMenu(false)}
+          />
           <div
             data-state="open"
             className="pointer-events-auto fixed h-screen gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 inset-y-0 left-0 w-4/5 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm pr-0"
