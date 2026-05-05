@@ -284,13 +284,25 @@ export function processWitnessFragment(fragment: any, targetId: string): Process
  * @param data Array of objects containing a `target` URL property
  * @param filterFn Predicate to determine which fetched entities to include
  */
-export async function filterDataAtTargets(
+export async function filterDataAtTargets<T = Record<string, unknown>>(
   data: { target: string }[],
-  filterFn: (item: any) => boolean,
-): Promise<any[]> {
-  const entities = await Promise.all(
-    data.map((item) => axios.get(item.target).then((resp) => resp.data)),
+  filterFn: (item: T) => boolean,
+): Promise<T[]> {
+  const results = await Promise.allSettled(
+    data.map((item) =>
+      axios.get<T>(item.target).then((resp) => resp.data),
+    ),
   );
+
+  const entities: T[] = [];
+  for (const result of results) {
+    if (result.status === "fulfilled") {
+      entities.push(result.value);
+    } else {
+      console.error("filterDataAtTargets: failed to fetch target", result.reason);
+    }
+  }
+
   return entities.filter(filterFn);
 }
 
