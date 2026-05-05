@@ -281,6 +281,11 @@ export function processWitnessFragment(fragment: any, targetId: string): Process
 /**
  * Fetches each target URL from an array of annotation-like objects and returns
  * the resolved entities that satisfy the given filter predicate.
+ *
+ * Note: individual target fetches that fail are logged to `console.error` and
+ * excluded from the returned array, so the result may be shorter than the
+ * input array.
+ *
  * @param data Array of objects containing a `target` URL property
  * @param filterFn Predicate to determine which fetched entities to include
  */
@@ -295,11 +300,16 @@ export async function filterDataAtTargets<T = Record<string, unknown>>(
   );
 
   const entities: T[] = [];
-  for (const result of results) {
+  for (let i = 0; i < results.length; i++) {
+    const result = results[i];
     if (result.status === "fulfilled") {
       entities.push(result.value);
     } else {
-      console.error("filterDataAtTargets: failed to fetch target", result.reason);
+      console.error(
+        "filterDataAtTargets: failed to fetch target",
+        data[i].target,
+        result.reason,
+      );
     }
   }
 
