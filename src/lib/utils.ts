@@ -1,6 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import axios from "axios";
 import {
   PRODUCTION_GLOSS_COLLECTION,
   TINY,
@@ -8,6 +7,8 @@ import {
   PRODUCTION_MANUSCRIPT_COLLECTION,
   GENERATOR
 } from "@/configs/rerum-links";
+
+const REQUEST_TIMEOUT = 10_000;
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -64,19 +65,23 @@ export async function makeAggregationQuery(
     let objects: ObjectData[] = [];
 
     while (true) {
-      const response = await axios.post(
-        `${url}?limit=${limit}&skip=${skip}`,
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json; charset=utf-8",
-          },
+      const response = await fetch(`${url}?limit=${limit}&skip=${skip}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
         },
-      );
+        body: JSON.stringify(data),
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT),
+      });
 
-      objects = [...objects, ...response.data];
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status} from ${url}`);
+      }
 
-      if (!response.data.length || response.data.length < limit) {
+      const pageData: ObjectData[] = await response.json();
+      objects = [...objects, ...pageData];
+
+      if (!pageData.length || pageData.length < limit) {
         break;
       } else {
         skip += limit;
@@ -113,19 +118,23 @@ export async function makePagedQuery(
     let objects: ObjectData[] = [];
 
     while (true) {
-      const response = await axios.post(
-        `${url}?limit=${limit}&skip=${skip}`,
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json; charset=utf-8",
-          },
+      const response = await fetch(`${url}?limit=${limit}&skip=${skip}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
         },
-      );
+        body: JSON.stringify(data),
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT),
+      });
 
-      objects = [...objects, ...response.data];
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status} from ${url}`);
+      }
 
-      if (!response.data.length || response.data.length < limit) {
+      const pageData: ObjectData[] = await response.json();
+      objects = [...objects, ...pageData];
+
+      if (!pageData.length || pageData.length < limit) {
         break;
       } else {
         skip += limit;
@@ -304,8 +313,13 @@ export async function grabProductionManuscriptFragments() {
 
 export async function grabProductionGlosses() {
   try {
-    const response = await axios.get(PRODUCTION_GLOSS_COLLECTION);
-    return response.data;
+    const response = await fetch(PRODUCTION_GLOSS_COLLECTION, {
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status} from ${PRODUCTION_GLOSS_COLLECTION}`);
+    }
+    return response.json();
   } catch (error) {
     console.error("Error fetching data:", error);
     return null;
@@ -314,8 +328,13 @@ export async function grabProductionGlosses() {
 
 export async function grabProductionManuscripts() {
   try {
-    const response = await axios.get(PRODUCTION_MANUSCRIPT_COLLECTION);
-    return response.data;
+    const response = await fetch(PRODUCTION_MANUSCRIPT_COLLECTION, {
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status} from ${PRODUCTION_MANUSCRIPT_COLLECTION}`);
+    }
+    return response.json();
   } catch (error) {
     console.error("Error fetching data:", error);
     return null;
@@ -341,7 +360,9 @@ export async function grabManuscriptsContainingGloss(glossId: string) {
     .then(resp => resp.json())
     .then(async (annos) => {
         const fragments = annos.map(async (anno) => {
-            const entity = await axios.get(anno.target).then(resp => resp.data)
+            const entity = await fetch(anno.target, {
+              signal: AbortSignal.timeout(REQUEST_TIMEOUT),
+            }).then((resp) => resp.json());
             if (entity["@type"] && entity["@type"] === "WitnessFragment") {
                 return anno.target
             }
@@ -435,7 +456,9 @@ export async function grabWitnessFragmentsReferencingGloss(glossId: string) {
     .then(resp => resp.json())
     .then(async (annos) => {
         const fragments = annos.map(async (anno) => {
-            const entity = await axios.get(anno.target).then(resp => resp.data)
+            const entity = await fetch(anno.target, {
+              signal: AbortSignal.timeout(REQUEST_TIMEOUT),
+            }).then((resp) => resp.json());
             if (entity["@type"] && entity["@type"] === "WitnessFragment") {
                 return anno.target
             }

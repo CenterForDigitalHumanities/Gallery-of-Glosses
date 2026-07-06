@@ -7,8 +7,8 @@
  * @param gloss The processed gloss data
  * @returns JSON-LD representation of the gloss
  */
-export function glossToJsonLD(gloss: any) {
-  const jsonLD: any = {
+export function glossToJsonLD(gloss: ProcessedGloss) {
+  const jsonLD: Record<string, any> = {
     "@context": {
       "@vocab": "http://schema.org/",
       "gog": "https://galleryofglosses.org/terms/",
@@ -81,8 +81,8 @@ export function glossToJsonLD(gloss: any) {
  * @param manuscript The processed manuscript data
  * @returns JSON-LD representation of the manuscript
  */
-export function manuscriptToJsonLD(manuscript: any) {
-  const jsonLD: any = {
+export function manuscriptToJsonLD(manuscript: ProcessedManuscript) {
+  const jsonLD: Record<string, any> = {
     "@context": {
       "@vocab": "http://schema.org/",
       "gog": "https://galleryofglosses.org/terms/",
