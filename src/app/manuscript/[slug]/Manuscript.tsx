@@ -1,15 +1,16 @@
 "use client";
 
-import { RERUM } from "@/configs/rerum-links"
-import * as NAV from "@/configs/navigation"
-import { usePathname } from "next/navigation"
-import { make_columns } from "@/app/browse/Columns"
-import { DataTable } from "@/app/browse/DataTable"
-import { use } from "react"
-import { useManuscriptContext } from "@/contexts/ManuscriptContext"
-
-import { useGlossesFromManuscript } from "@/hooks/useGlossesFromManuscript"
-import { useWitnessFragmentsFromManuscript } from "@/hooks/useWitnessFragmentsFromManuscript"
+import { RERUM } from "@/configs/rerum-links";
+import * as NAV from "@/configs/navigation";
+import { usePathname } from "next/navigation";
+import { make_columns } from "@/app/browse/Columns";
+import { DataTable } from "@/app/browse/DataTable";
+import { use } from "react";
+import { useManuscriptContext } from "@/contexts/ManuscriptContext";
+import { useGlossesFromManuscript } from "@/hooks/useGlossesFromManuscript";
+import { useWitnessFragmentsFromManuscript } from "@/hooks/useWitnessFragmentsFromManuscript";
+import { ManuscriptMap } from "@/components/ManuscriptMap";
+import { manuscriptLocations } from "@/data/manuscript-locations";
 
 let filterColumn_glosses = {
   header: "Incipit",
@@ -67,7 +68,15 @@ const Manuscript = (props : {  slug: string } ) => {
   // Which Witness Fragments belong to this Manuscript?
   let witnessFragmentsResult = useWitnessFragmentsFromManuscript(manuscript["@id"]);
   let fragments = witnessFragmentsResult.witnessFragments;
-  
+
+  // Find the location for this manuscript
+  const location = manuscriptLocations.find(
+    (loc) =>
+      loc.identifier === manuscript?.identifier ||
+      loc.identifier.includes(manuscript?.identifier ?? "") ||
+      (manuscript?.identifier ?? "").includes(loc.identifier)
+  );
+
   return (
     <div>
       <div className="text-foreground p-4 md:p-8">
@@ -75,30 +84,22 @@ const Manuscript = (props : {  slug: string } ) => {
           {manuscript?.identifier ?? "Not found"}
         </h1>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-4">
-          {/*<p>
-            <span className="font-semibold">Repository:</span>{" "}
-            <span>
-              {manuscript?.repository ?? "Not found"}
-            </span>
-          </p>
-          <p>
-            <span className="font-semibold">City:</span>{" "}
-            <span>
-              {manuscript?.city ?? "Not found"}
-            </span>
-          </p>
-          <p>
-            <span className="font-semibold">Institution:</span>{" "}
-            <span>
-              {manuscript?.institution ?? "Not found"}
-            </span>
-          </p>
-          <p>
-            <span className="font-semibold">Provenance:</span>{" "}
-            <span>
-              {manuscript?.provenance ?? "Not found"}
-            </span>
-          </p>*/}
+          {location && (
+            <>
+              <p>
+                <span className="font-semibold">City:</span>{" "}
+                <span>{location.city}</span>
+              </p>
+              <p>
+                <span className="font-semibold">Institution:</span>{" "}
+                <span>{location.institution}</span>
+              </p>
+              <p>
+                <span className="font-semibold">Country:</span>{" "}
+                <span>{location.country}</span>
+              </p>
+            </>
+          )}
           <p>
             <span className="font-semibold">Region:</span>{" "}
             <span>
@@ -124,6 +125,12 @@ const Manuscript = (props : {  slug: string } ) => {
             </span>
           </p>
         </div>
+        {location && (
+          <div className="mb-4">
+            <h2 className="text-xl font-bold mb-2">Holding Location</h2>
+            <ManuscriptMap location={location} />
+          </div>
+        )}
         <div className="mb-4">
           <p className="linky">
             <span className="font-semibold">Data URL:</span>{" "}

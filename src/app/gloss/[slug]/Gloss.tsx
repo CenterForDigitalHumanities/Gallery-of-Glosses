@@ -10,6 +10,9 @@ import { useGlossContext } from "@/contexts/GlossContext";
 import { useManuscriptsReferencingGloss } from "@/hooks/useManuscriptsReferencingGloss";
 import { useWitnessFragmentsReferencingGloss } from "@/hooks/useWitnessFragmentsReferencingGloss";
 import { GlossAnalysis } from "./GlossAnalysis";
+import { WitnessMap } from "@/components/WitnessMap";
+import { manuscriptLocations, type ManuscriptLocation } from "@/data/manuscript-locations";
+import { type ProcessedFragment } from "@/lib/Fragment";
 
 const filterColumn = {
   header: "Shelfmark",
@@ -50,6 +53,33 @@ const columns = make_columns([
   //   expandable: false,
   // },
 ]);
+
+/**
+ * Maps witness fragments to their holding locations based on manuscript identifier.
+ */
+function getWitnessLocations(fragments: ProcessedFragment[]): ManuscriptLocation[] {
+  const seen = new Set<string>();
+  return fragments
+    .map((frag) => {
+      const partOf = frag.partOf ?? "";
+      const targetId = frag.targetId ?? "";
+      const identifier = frag.identifier ?? "";
+      const match = manuscriptLocations.find((loc) =>
+        partOf.includes(loc.identifier) ||
+        targetId.includes(loc.identifier) ||
+        identifier.includes(loc.identifier) ||
+        loc.identifier.toLowerCase().includes(partOf.toLowerCase()) ||
+        loc.identifier.toLowerCase().includes(identifier.toLowerCase())
+      );
+      return match ?? null;
+    })
+    .filter((loc): loc is ManuscriptLocation => {
+      if (!loc) return false;
+      if (seen.has(loc.identifier)) return false;
+      seen.add(loc.identifier);
+      return true;
+    });
+}
 
 const Gloss = (props : {  slug: string } ) => {
   const pathname = usePathname();
@@ -131,6 +161,11 @@ const Gloss = (props : {  slug: string } ) => {
         <h2 className="text-xl font-bold mb-4">
           Witnesses of this Gloss
         </h2>
+        <div className="mb-4">
+          <WitnessMap
+            locations={getWitnessLocations(fragments)}
+          />
+        </div>
         <GlossAnalysis
           fragments={fragments}
           loading={witnessFragmentsResult.loading}

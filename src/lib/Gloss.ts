@@ -1,4 +1,4 @@
-interface Gloss {
+export interface Gloss {
   targetId:string;
   targetCollection?: string;
   title?: {
@@ -39,7 +39,7 @@ interface Gloss {
   };
 }
 
-interface ProcessedGloss {
+export interface ProcessedGloss {
   [key: string]: any;
   targetId: string;
   title: string;

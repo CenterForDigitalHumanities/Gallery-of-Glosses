@@ -1,4 +1,4 @@
-interface Manuscript {
+export interface Manuscript {
   targetId: string;
   targetCollection?: string;
   url?: { value: string };
@@ -17,7 +17,7 @@ interface Manuscript {
   };
 }
 
-interface ProcessedManuscript {
+export interface ProcessedManuscript {
   [key: string]: any;
   targetId: string;
   targetCollection?: string;

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { grabProperties, processManuscript } from "@/lib/utils";
+import { type ProcessedManuscript } from "@/lib/Manuscript";
 
 export const useManuscriptInstance = (targetId: string) => {
   const [manuscript, setManuscript] = useState<ProcessedManuscript>();

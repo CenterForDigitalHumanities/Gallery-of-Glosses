@@ -4,6 +4,7 @@ import {
   grabProductionManuscripts,
   processManuscript,
 } from "@/lib/utils";
+import { type ProcessedManuscript } from "@/lib/Manuscript";
 
 export const useManuscriptList = () => {
   const [manuscripts, setManuscripts] = useState<ProcessedManuscript[]>([]);

@@ -4,6 +4,9 @@ import * as NAV from "@/configs/navigation";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import DataTableCell from "./DataTableCell";
+import { type ProcessedGloss } from "@/lib/Gloss";
+import { type ProcessedManuscript } from "@/lib/Manuscript";
+import { type ProcessedFragment } from "@/lib/Fragment";
 
 function handleOpenRecordInstance(row: { original: ProcessedGloss | ProcessedManuscript | ProcessedFragment}) {
   const id = (row.original as ProcessedGloss | ProcessedManuscript | ProcessedFragment)?.targetId?.split("/id/")?.[1];
