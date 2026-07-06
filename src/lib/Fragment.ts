@@ -49,7 +49,7 @@ interface Fragment {
   
 }
 
-interface ProcessedFragment {
+export interface ProcessedFragment {
   [key: string]: any;
   targetId: string;
   identifier?: string;

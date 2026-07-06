@@ -5,10 +5,11 @@ import * as NAV from "@/configs/navigation";
 import { usePathname } from "next/navigation";
 import { make_columns } from "@/app/browse/Columns";
 import { DataTable } from "@/app/browse/DataTable";
-import { use } from "react"
-import { useGlossContext } from "@/contexts/GlossContext"
-import { useManuscriptsReferencingGloss } from "@/hooks/useManuscriptsReferencingGloss"
-import { useWitnessFragmentsReferencingGloss } from "@/hooks/useWitnessFragmentsReferencingGloss"
+import { use } from "react";
+import { useGlossContext } from "@/contexts/GlossContext";
+import { useManuscriptsReferencingGloss } from "@/hooks/useManuscriptsReferencingGloss";
+import { useWitnessFragmentsReferencingGloss } from "@/hooks/useWitnessFragmentsReferencingGloss";
+import { GlossAnalysis } from "./GlossAnalysis";
 
 const filterColumn = {
   header: "Shelfmark",
@@ -130,16 +131,23 @@ const Gloss = (props : {  slug: string } ) => {
         <h2 className="text-xl font-bold mb-4">
           Witnesses of this Gloss
         </h2>
-        {
-        fragments.length ?
-        <DataTable
-          columns={columns}
-          data={fragments}
+        <GlossAnalysis
+          fragments={fragments}
           loading={witnessFragmentsResult.loading}
-          filterColumn={filterColumn}
         />
-        : "No Fragments Found"
-        }
+        {fragments.length && !witnessFragmentsResult.loading ? (
+          <div className="mt-8">
+            <h3 className="text-lg font-semibold mb-2">All Witnesses</h3>
+            <DataTable
+              columns={columns}
+              data={fragments}
+              loading={false}
+              filterColumn={filterColumn}
+            />
+          </div>
+        ) : !fragments.length && !witnessFragmentsResult.loading ? (
+          "No Fragments Found"
+        ) : null}
       </div>
     </div>
   );
