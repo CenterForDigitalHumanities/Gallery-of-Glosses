@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-      - copilot/serve-linked-data-endpoint # temporary: test build on this branch
-  workflow_dispatch: # allow manual trigger
 
 permissions:
   contents: read
