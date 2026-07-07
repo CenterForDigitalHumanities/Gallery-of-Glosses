@@ -4,6 +4,7 @@ import {
   grabProperties,
   processWitnessFragment,
 } from "@/lib/utils";
+import { type ProcessedFragment } from "@/lib/Fragment";
 import { GENERATOR } from "@/configs/rerum-links";
 
 export const useWitnessFragmentsReferencingGloss = (glossId: string) => {

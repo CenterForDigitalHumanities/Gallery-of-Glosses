@@ -39,7 +39,7 @@ interface Gloss {
   };
 }
 
-interface ProcessedGloss {
+export interface ProcessedGloss {
   [key: string]: any;
   targetId: string;
   title: string;
