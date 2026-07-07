@@ -208,6 +208,10 @@ export function processGloss(gloss: any, targetId: string): ProcessedGloss {
     else if (prop === "tags"){
       processedGloss.tags = gloss.tags.items ?? []
     }
+    else if (gloss[prop]?.value !== undefined) {
+      // Extract .value from RERUM property objects like { value: "..." }
+      processedGloss[prop] = gloss[prop].value;
+    }
     else{
       processedGloss[prop] = gloss[prop]
     }
