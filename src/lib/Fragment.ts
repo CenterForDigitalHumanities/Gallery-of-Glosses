@@ -1,4 +1,4 @@
-interface Fragment {
+export interface Fragment {
   targetId: string;
   targetCollection?: string;
   identifier?: {

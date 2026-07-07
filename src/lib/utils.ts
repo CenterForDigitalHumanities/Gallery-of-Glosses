@@ -11,7 +11,8 @@ import { type ProcessedGloss } from "./Gloss";
 import { type ProcessedManuscript } from "./Manuscript";
 import { type ProcessedFragment } from "./Fragment";
 
-const REQUEST_TIMEOUT = 10_000;
+// Increased timeout for build-heavy concurrent scenarios (prerendering all pages)
+const REQUEST_TIMEOUT = 60_000;
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -68,21 +69,23 @@ export async function makeAggregationQuery(
     let objects: ObjectData[] = [];
 
     while (true) {
-      const response = await fetch(
-        `${url}?limit=${limit}&skip=${skip}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json; charset=utf-8",
-          },
-          body: JSON.stringify(data),
-          signal: AbortSignal.timeout(REQUEST_TIMEOUT),
+      const response = await fetch(`${url}?limit=${limit}&skip=${skip}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
         },
-      ).then((r) => r.json());
+        body: JSON.stringify(data),
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT),
+      });
 
-      objects = [...objects, ...response];
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status} from ${url}`);
+      }
 
-      if (!response.length || response.length < limit) {
+      const pageData: ObjectData[] = await response.json();
+      objects = [...objects, ...pageData];
+
+      if (!pageData.length || pageData.length < limit) {
         break;
       } else {
         skip += limit;
@@ -119,21 +122,23 @@ export async function makePagedQuery(
     let objects: ObjectData[] = [];
 
     while (true) {
-      const response = await fetch(
-        `${url}?limit=${limit}&skip=${skip}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json; charset=utf-8",
-          },
-          body: JSON.stringify(data),
-          signal: AbortSignal.timeout(REQUEST_TIMEOUT),
+      const response = await fetch(`${url}?limit=${limit}&skip=${skip}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
         },
-      ).then((r) => r.json());
+        body: JSON.stringify(data),
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT),
+      });
 
-      objects = [...objects, ...response];
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status} from ${url}`);
+      }
 
-      if (!response.length || response.length < limit) {
+      const pageData: ObjectData[] = await response.json();
+      objects = [...objects, ...pageData];
+
+      if (!pageData.length || pageData.length < limit) {
         break;
       } else {
         skip += limit;
@@ -199,12 +204,19 @@ export function processGloss(gloss: any, targetId: string): ProcessedGloss {
       processedGloss.textValue = gloss.text?.textValue;
       processedGloss.textLanguage = gloss.text?.language;
       processedGloss.textFormat = gloss.text?.format;
-    } 
+    }
     else if (prop === "tags"){
       processedGloss.tags = gloss.tags.items ?? []
     }
-    else{
-      processedGloss[prop] = gloss[prop]
+    else {
+      // Strip leading underscore from RERUM property names (e.g., "_document" → "document")
+      const targetProp = prop.startsWith("_") ? prop.slice(1) : prop;
+      const rawValue = gloss[prop];
+      // Extract .value from RERUM property objects like { value: "..." }
+      const value = rawValue?.value ?? rawValue;
+      if (targetProp in processedGloss) {
+        processedGloss[targetProp] = value;
+      }
     }
   }
   return processedGloss;
@@ -235,8 +247,19 @@ export function processManuscript(manuscript: any, targetId: string): ProcessedM
   if(!manuscript || !targetId) return processedManuscript;
   processedManuscript.targetId = targetId;
   for (const prop in manuscript){
-    // May have to account for values that are not flat strings.  I think all the ones above are flat strings.
-    processedManuscript[prop] = manuscript[prop]
+    if (prop === "tags" && manuscript[prop]?.items) {
+      processedManuscript.tags = manuscript[prop].items;
+    }
+    else {
+      // Strip leading underscore from RERUM property names (e.g., "_originLocal" → "originLocal")
+      const targetProp = prop.startsWith("_") ? prop.slice(1) : prop;
+      const rawValue = manuscript[prop];
+      // Extract .value from RERUM property objects like { value: "..." }
+      const value = rawValue?.value ?? rawValue;
+      if (targetProp in processedManuscript) {
+        processedManuscript[targetProp] = value;
+      }
+    }
   }
   return processedManuscript;
 }
@@ -270,17 +293,23 @@ export function processWitnessFragment(fragment: any, targetId: string): Process
   processedFragment.targetId = targetId;
 
   for (const prop in fragment){
-
     if(prop === "text") {
       processedFragment.textValue = fragment.text?.textValue;
       processedFragment.textLanguage = fragment.text?.language;
       processedFragment.textFormat = fragment.text?.format;
-    } 
+    }
     else if (prop === "tags"){
       processedFragment.tags = fragment.tags.items ?? []
     }
-    else{
-      processedFragment[prop] = fragment[prop]
+    else {
+      // Strip leading underscore from RERUM property names
+      const targetProp = prop.startsWith("_") ? prop.slice(1) : prop;
+      const rawValue = fragment[prop];
+      // Extract .value from RERUM property objects like { value: "..." }
+      const value = rawValue?.value ?? rawValue;
+      if (targetProp in processedFragment) {
+        processedFragment[targetProp] = value;
+      }
     }
   }
   return processedFragment;
@@ -314,8 +343,11 @@ export async function grabProductionGlosses() {
   try {
     const response = await fetch(PRODUCTION_GLOSS_COLLECTION, {
       signal: AbortSignal.timeout(REQUEST_TIMEOUT),
-    }).then((r) => r.json());
-    return response;
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status} from ${PRODUCTION_GLOSS_COLLECTION}`);
+    }
+    return response.json();
   } catch (error) {
     console.error("Error fetching data:", error);
     return null;
@@ -326,8 +358,11 @@ export async function grabProductionManuscripts() {
   try {
     const response = await fetch(PRODUCTION_MANUSCRIPT_COLLECTION, {
       signal: AbortSignal.timeout(REQUEST_TIMEOUT),
-    }).then((r) => r.json());
-    return response;
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status} from ${PRODUCTION_MANUSCRIPT_COLLECTION}`);
+    }
+    return response.json();
   } catch (error) {
     console.error("Error fetching data:", error);
     return null;
@@ -355,7 +390,7 @@ export async function grabManuscriptsContainingGloss(glossId: string) {
         const fragments = annos.map(async (anno) => {
             const entity = await fetch(anno.target, {
               signal: AbortSignal.timeout(REQUEST_TIMEOUT),
-            }).then(resp => resp.json())
+            }).then((resp) => resp.json());
             if (entity["@type"] && entity["@type"] === "WitnessFragment") {
                 return anno.target
             }
@@ -451,7 +486,7 @@ export async function grabWitnessFragmentsReferencingGloss(glossId: string) {
         const fragments = annos.map(async (anno) => {
             const entity = await fetch(anno.target, {
               signal: AbortSignal.timeout(REQUEST_TIMEOUT),
-            }).then(resp => resp.json())
+            }).then((resp) => resp.json());
             if (entity["@type"] && entity["@type"] === "WitnessFragment") {
                 return anno.target
             }

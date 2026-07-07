@@ -4,6 +4,7 @@ import {
   grabProperties,
   processManuscript,
 } from "@/lib/utils";
+import { type ProcessedManuscript } from "@/lib/Manuscript";
 import { GENERATOR } from "@/configs/rerum-links";
 import { type ProcessedManuscript } from "@/lib/Manuscript";
 

@@ -66,15 +66,27 @@ function DiffView({ variants }: { variants: VariantGroup[] }) {
         const diffParts = renderDiffLine(variant.text, reference);
 
         return (
-          <div key={idx} className="rounded-lg border p-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-muted-foreground">
-                Variant {idx + 1} ({variant.count} witness
-                {variant.count > 1 ? "es" : ""})
-                {isReference && " (most common)"}
+          <div key={idx} className="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden">
+            <div className="bg-muted/50 px-4 py-2 border-b flex flex-wrap items-center gap-2">
+              <span className="text-sm font-medium shrink-0">
+                Variant {idx + 1} ({variant.count} witness{variant.count > 1 ? "es" : ""}){isReference && " (most common)"} —
               </span>
+              {variant.fragments.map((frag) => (
+                <a
+                  key={frag.targetId}
+                  href={`${NAV.BASEPATH}/witness/${frag.targetId.split("/").pop()}`}
+                  className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium text-blue-500 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-blue-950 transition-colors"
+                >
+                  {frag.identifier ?? frag.targetId.split("/").pop()}
+                  {frag.folio && (
+                    <span className="ml-1 text-muted-foreground">
+                      f. {frag.folio}
+                    </span>
+                  )}
+                </a>
+              ))}
             </div>
-            <div className="leading-relaxed">
+            <div className="p-4 leading-relaxed">
               {diffParts.map((part, i) => (
                 <span
                   key={i}
@@ -87,18 +99,6 @@ function DiffView({ variants }: { variants: VariantGroup[] }) {
                   {part.word}
                   {i < diffParts.length - 1 ? " " : ""}
                 </span>
-              ))}
-            </div>
-            <div className="mt-2 flex flex-wrap gap-1">
-              {variant.fragments.map((frag) => (
-                <a
-                  key={frag.targetId}
-                  href={`${NAV.BASEPATH}/witness/${frag.targetId.split("/").pop()}`}
-                  className="text-xs text-blue-500 hover:underline"
-                  title={frag.identifier ?? frag.targetId}
-                >
-                  {frag.identifier ?? frag.targetId.split("/").pop()}
-                </a>
               ))}
             </div>
           </div>
@@ -121,37 +121,29 @@ function CurationView({ variants }: { variants: VariantGroup[] }) {
           key={idx}
           className="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden"
         >
-          <div className="bg-muted/50 px-4 py-2 border-b">
-            <span className="text-sm font-medium">
-              Variant {idx + 1} — {variant.count} witness
-              {variant.count > 1 ? "es" : ""}
+          <div className="bg-muted/50 px-4 py-2 border-b flex flex-wrap items-center gap-2">
+            <span className="text-sm font-medium shrink-0">
+              Variant {idx + 1} — {variant.count} witness{variant.count > 1 ? "es" : ""}
             </span>
+            {variant.fragments.map((frag) => (
+              <a
+                key={frag.targetId}
+                href={`${NAV.BASEPATH}/witness/${frag.targetId.split("/").pop()}`}
+                className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium text-blue-500 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-blue-950 transition-colors"
+              >
+                {frag.identifier ?? frag.targetId.split("/").pop()}
+                {frag.folio && (
+                  <span className="ml-1 text-muted-foreground">
+                    f. {frag.folio}
+                  </span>
+                )}
+              </a>
+            ))}
           </div>
           <div className="p-4">
             <p className="text-lg italic leading-relaxed">
               &lsquo; {variant.text} &rsquo;
             </p>
-          </div>
-          <div className="border-t bg-muted/30 px-4 py-3">
-            <p className="text-xs font-semibold text-muted-foreground mb-2">
-              Found in:
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {variant.fragments.map((frag) => (
-                <a
-                  key={frag.targetId}
-                  href={`${NAV.BASEPATH}/witness/${frag.targetId.split("/").pop()}`}
-                  className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium text-blue-500 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-blue-950 transition-colors"
-                >
-                  {frag.identifier ?? frag.targetId.split("/").pop()}
-                  {frag.folio && (
-                    <span className="ml-1 text-muted-foreground">
-                      f. {frag.folio}
-                    </span>
-                  )}
-                </a>
-              ))}
-            </div>
           </div>
         </div>
       ))}
@@ -195,18 +187,20 @@ export function GlossAnalysis({
     <div>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold">Gloss Analysis</h2>
-        <div className="flex gap-2">
+        <div className="inline-flex rounded-lg border border-input bg-background shadow-sm">
           <Button
-            variant={viewMode === "diff" ? "default" : "outline"}
+            variant={viewMode === "diff" ? "default" : "ghost"}
             size="sm"
             onClick={() => setViewMode("diff")}
+            className="rounded-none border-r border-input"
           >
             Diff
           </Button>
           <Button
-            variant={viewMode === "curation" ? "default" : "outline"}
+            variant={viewMode === "curation" ? "default" : "ghost"}
             size="sm"
             onClick={() => setViewMode("curation")}
+            className="rounded-none"
           >
             Curation
           </Button>

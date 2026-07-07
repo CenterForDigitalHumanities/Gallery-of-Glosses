@@ -26,8 +26,10 @@ export const useGlossList = () => {
           let gloss: Record<string, any> = {};
           for (const d of data) {
             if (!d?.body) continue;
-            const key = Object.keys(d.body)[0];
-            gloss[key] = d.body[key].value ?? d.body[key];
+            const rawKey = Object.keys(d.body)[0];
+            // Extract short property name from RERUM URL (e.g., "document" from "...#document")
+            const key = rawKey.includes("#") ? rawKey.split("#").pop() : rawKey;
+            gloss[key] = d.body[rawKey].value ?? d.body[rawKey];
           }
           return processGloss(gloss, targetId);
         } catch (err) {

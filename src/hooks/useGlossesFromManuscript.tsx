@@ -4,6 +4,7 @@ import {
   grabProperties,
   processGloss,
 } from "@/lib/utils";
+import { type ProcessedGloss } from "@/lib/Gloss";
 import { GENERATOR } from "@/configs/rerum-links";
 import { type ProcessedGloss } from "@/lib/Gloss";
 
