@@ -204,16 +204,19 @@ export function processGloss(gloss: any, targetId: string): ProcessedGloss {
       processedGloss.textValue = gloss.text?.textValue;
       processedGloss.textLanguage = gloss.text?.language;
       processedGloss.textFormat = gloss.text?.format;
-    } 
+    }
     else if (prop === "tags"){
       processedGloss.tags = gloss.tags.items ?? []
     }
-    else if (gloss[prop]?.value !== undefined) {
+    else {
+      // Strip leading underscore from RERUM property names (e.g., "_document" → "document")
+      const targetProp = prop.startsWith("_") ? prop.slice(1) : prop;
+      const rawValue = gloss[prop];
       // Extract .value from RERUM property objects like { value: "..." }
-      processedGloss[prop] = gloss[prop].value;
-    }
-    else{
-      processedGloss[prop] = gloss[prop]
+      const value = rawValue?.value ?? rawValue;
+      if (targetProp in processedGloss) {
+        processedGloss[targetProp] = value;
+      }
     }
   }
   return processedGloss;
@@ -245,14 +248,17 @@ export function processManuscript(manuscript: any, targetId: string): ProcessedM
   processedManuscript.targetId = targetId;
   for (const prop in manuscript){
     if (prop === "tags" && manuscript[prop]?.items) {
-      processedManuscript[prop] = manuscript[prop].items;
-    }
-    else if (manuscript[prop]?.value !== undefined) {
-      // Extract .value from RERUM property objects like { value: "..." }
-      processedManuscript[prop] = manuscript[prop].value;
+      processedManuscript.tags = manuscript[prop].items;
     }
     else {
-      processedManuscript[prop] = manuscript[prop];
+      // Strip leading underscore from RERUM property names (e.g., "_originLocal" → "originLocal")
+      const targetProp = prop.startsWith("_") ? prop.slice(1) : prop;
+      const rawValue = manuscript[prop];
+      // Extract .value from RERUM property objects like { value: "..." }
+      const value = rawValue?.value ?? rawValue;
+      if (targetProp in processedManuscript) {
+        processedManuscript[targetProp] = value;
+      }
     }
   }
   return processedManuscript;
@@ -287,21 +293,23 @@ export function processWitnessFragment(fragment: any, targetId: string): Process
   processedFragment.targetId = targetId;
 
   for (const prop in fragment){
-
     if(prop === "text") {
       processedFragment.textValue = fragment.text?.textValue;
       processedFragment.textLanguage = fragment.text?.language;
       processedFragment.textFormat = fragment.text?.format;
-    } 
+    }
     else if (prop === "tags"){
       processedFragment.tags = fragment.tags.items ?? []
     }
-    else if (fragment[prop]?.value !== undefined) {
+    else {
+      // Strip leading underscore from RERUM property names
+      const targetProp = prop.startsWith("_") ? prop.slice(1) : prop;
+      const rawValue = fragment[prop];
       // Extract .value from RERUM property objects like { value: "..." }
-      processedFragment[prop] = fragment[prop].value;
-    }
-    else{
-      processedFragment[prop] = fragment[prop]
+      const value = rawValue?.value ?? rawValue;
+      if (targetProp in processedFragment) {
+        processedFragment[targetProp] = value;
+      }
     }
   }
   return processedFragment;
