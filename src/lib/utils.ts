@@ -244,8 +244,16 @@ export function processManuscript(manuscript: any, targetId: string): ProcessedM
   if(!manuscript || !targetId) return processedManuscript;
   processedManuscript.targetId = targetId;
   for (const prop in manuscript){
-    // May have to account for values that are not flat strings.  I think all the ones above are flat strings.
-    processedManuscript[prop] = manuscript[prop]
+    if (prop === "tags" && manuscript[prop]?.items) {
+      processedManuscript[prop] = manuscript[prop].items;
+    }
+    else if (manuscript[prop]?.value !== undefined) {
+      // Extract .value from RERUM property objects like { value: "..." }
+      processedManuscript[prop] = manuscript[prop].value;
+    }
+    else {
+      processedManuscript[prop] = manuscript[prop];
+    }
   }
   return processedManuscript;
 }
@@ -287,6 +295,10 @@ export function processWitnessFragment(fragment: any, targetId: string): Process
     } 
     else if (prop === "tags"){
       processedFragment.tags = fragment.tags.items ?? []
+    }
+    else if (fragment[prop]?.value !== undefined) {
+      // Extract .value from RERUM property objects like { value: "..." }
+      processedFragment[prop] = fragment[prop].value;
     }
     else{
       processedFragment[prop] = fragment[prop]
