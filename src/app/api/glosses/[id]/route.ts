@@ -1,16 +1,35 @@
 import { NextResponse } from 'next/server';
-import { grabProperties, processGloss } from '@/lib/utils';
+import { grabProperties, processGloss, grabProductionGlosses } from '@/lib/utils';
 import { glossToJsonLD } from '@/lib/jsonld';
-import { RERUM } from '@/configs/rerum-links';
 
-// Mark this route as dynamic since it fetches external data
-export const dynamic = 'force-dynamic';
+// Static generation for GitHub Pages compatibility
+export const dynamic = 'error';
 
 type Params = Promise<{ id: string }>
 
 /**
+ * Generate static params for all glosses at build time
+ */
+export async function generateStaticParams(): Promise<Array<{ id: string }>> {
+  try {
+    const collectionList = await grabProductionGlosses();
+    if (!collectionList?.itemListElement) {
+      console.warn('No glosses found for static generation');
+      return [];
+    }
+
+    return collectionList.itemListElement.map((item: any) => ({
+      id: item['@id'].split('/').pop() || item['@id'],
+    }));
+  } catch (error) {
+    console.error('Error generating gloss static params:', error);
+    return [];
+  }
+}
+
+/**
  * GET /api/glosses/[id]
- * Returns a single gloss in JSON-LD format
+ * Returns a single gloss in JSON-LD format (prerendered as static .json)
  */
 export async function GET(
   request: Request,
@@ -19,8 +38,8 @@ export async function GET(
   try {
     const { id } = await params;
     
-    // Construct the full ID if needed
-    const targetId = id.includes("store.rerum.io") ? id : RERUM + id;
+    // grabProperties handles ID normalization internally
+    const targetId = id;
 
     const res = await grabProperties(targetId);
     const data = await res.json();

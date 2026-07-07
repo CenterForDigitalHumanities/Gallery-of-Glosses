@@ -2,6 +2,9 @@
  * Utilities for converting Gallery of Glosses data to JSON-LD format
  */
 
+import { type ProcessedGloss } from "./Gloss";
+import { type ProcessedManuscript } from "./Manuscript";
+
 /**
  * Converts a processed Gloss to JSON-LD format
  * @param gloss The processed gloss data
@@ -11,8 +14,7 @@ export function glossToJsonLD(gloss: ProcessedGloss) {
   const jsonLD: Record<string, any> = {
     "@context": {
       "@vocab": "http://schema.org/",
-      "gog": "https://galleryofglosses.org/terms/",
-      "rerum": "http://store.rerum.io/v1/id/"
+      "gog": "https://galleryofglosses.org/terms/"
     },
     "@type": "Comment",
     "@id": gloss.targetId,
@@ -45,16 +47,20 @@ export function glossToJsonLD(gloss: ProcessedGloss) {
     jsonLD["gog:canonicalReference"] = gloss.canonicalReference;
   }
 
-  if (gloss.section) {
-    jsonLD["gog:section"] = gloss.section;
+  // Handle section/subsection/document with underscore fallback (RERUM stores these with _prefix)
+  const section = gloss.section || gloss._section;
+  if (section) {
+    jsonLD["gog:section"] = section;
   }
 
-  if (gloss.subsection) {
-    jsonLD["gog:subsection"] = gloss.subsection;
+  const subsection = gloss.subsection || gloss._subsection;
+  if (subsection) {
+    jsonLD["gog:subsection"] = subsection;
   }
 
-  if (gloss.document) {
-    jsonLD["gog:document"] = gloss.document;
+  const document = gloss.document || gloss._document;
+  if (document) {
+    jsonLD["gog:document"] = document;
   }
 
   if (gloss.targetedText) {
@@ -85,8 +91,7 @@ export function manuscriptToJsonLD(manuscript: ProcessedManuscript) {
   const jsonLD: Record<string, any> = {
     "@context": {
       "@vocab": "http://schema.org/",
-      "gog": "https://galleryofglosses.org/terms/",
-      "rerum": "http://store.rerum.io/v1/id/"
+      "gog": "https://galleryofglosses.org/terms/"
     },
     "@type": "Manuscript",
     "@id": manuscript.targetId,

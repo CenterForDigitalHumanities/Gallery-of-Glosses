@@ -7,8 +7,12 @@ import {
   PRODUCTION_MANUSCRIPT_COLLECTION,
   GENERATOR
 } from "@/configs/rerum-links";
+import { type ProcessedGloss } from "./Gloss";
+import { type ProcessedManuscript } from "./Manuscript";
+import { type ProcessedFragment } from "./Fragment";
 
-const REQUEST_TIMEOUT = 10_000;
+// Increased timeout for build-heavy concurrent scenarios (prerendering all pages)
+const REQUEST_TIMEOUT = 60_000;
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

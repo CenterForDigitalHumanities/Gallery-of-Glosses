@@ -4,6 +4,7 @@ import {
   grabProductionGlosses,
   processGloss,
 } from "@/lib/utils";
+import { type ProcessedGloss } from "@/lib/Gloss";
 
 export const useGlossList = () => {
   const [glosses, setGlosses] = useState<ProcessedGloss[]>([]);
