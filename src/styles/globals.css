@@ -87,7 +87,8 @@
 
 .text-value-reference {
   padding: 1em;
-  background-color: rgb(245,245,245);
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
   font-style: oblique;
 }
 

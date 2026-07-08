@@ -168,6 +168,7 @@ const Gloss = (props : {  slug: string } ) => {
         </div>
         <GlossAnalysis
           fragments={fragments}
+          glossText={gloss?.text?.textValue}
           loading={witnessFragmentsResult.loading}
         />
         {fragments.length && !witnessFragmentsResult.loading ? (
