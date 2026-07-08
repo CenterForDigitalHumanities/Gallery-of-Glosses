@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { grabProperties, processGloss } from "@/lib/utils";
+import { type ProcessedGloss } from "@/lib/Gloss";
 
 export const useGlossInstance = (targetId: string) => {
   const [gloss, setGloss] = useState<ProcessedGloss>();

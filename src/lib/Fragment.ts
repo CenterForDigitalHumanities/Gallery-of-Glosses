@@ -1,4 +1,4 @@
-interface Fragment {
+export interface Fragment {
   targetId: string;
   targetCollection?: string;
   identifier?: {
@@ -49,7 +49,7 @@ interface Fragment {
   
 }
 
-interface ProcessedFragment {
+export interface ProcessedFragment {
   [key: string]: any;
   targetId: string;
   identifier?: string;

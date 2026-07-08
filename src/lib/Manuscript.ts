@@ -17,7 +17,7 @@ interface Manuscript {
   };
 }
 
-interface ProcessedManuscript {
+export interface ProcessedManuscript {
   [key: string]: any;
   targetId: string;
   targetCollection?: string;

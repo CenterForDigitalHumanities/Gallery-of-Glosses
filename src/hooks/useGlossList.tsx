@@ -4,6 +4,7 @@ import {
   grabProductionGlosses,
   processGloss,
 } from "@/lib/utils";
+import { type ProcessedGloss } from "@/lib/Gloss";
 
 export const useGlossList = () => {
   const [glosses, setGlosses] = useState<ProcessedGloss[]>([]);
@@ -20,8 +21,10 @@ export const useGlossList = () => {
           let gloss = {}
           for(const item of data){
             if(!item?.body) continue
-            const key = Object.keys(item.body)[0]
-            gloss[key] = item.body[key].value ?? item.body[key]
+            const rawKey = Object.keys(item.body)[0];
+            // Extract short property name from RERUM URL (e.g., "document" from "...#document")
+            const key = rawKey.includes("#") ? rawKey.split("#").pop() : rawKey;
+            gloss[key] = item.body[rawKey].value ?? item.body[rawKey];
           }
           //const gloss = data.map((item: { body: any }) => item.body);
           const processedGloss = processGloss(gloss, targetId);
