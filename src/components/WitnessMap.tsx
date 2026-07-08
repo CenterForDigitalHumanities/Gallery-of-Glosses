@@ -1,7 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
+import type { Icon } from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { type ManuscriptLocation } from "@/data/manuscript-locations";
 
 const MapContainer = dynamic(
@@ -34,6 +36,27 @@ export function WitnessMap({
   locations,
   height = "240px",
 }: WitnessMapProps) {
+  const [markerIcon, setMarkerIcon] = useState<Icon | null>(null);
+
+  /* Create a Leaflet Icon with CDN image URLs — must run client-side only */
+  useEffect(() => {
+    import("leaflet").then((L) => {
+      const leaflet = L.default as typeof import("leaflet");
+      const icon = leaflet.icon({
+        iconRetinaUrl:
+          "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+        iconUrl:
+          "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+        shadowUrl:
+          "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41],
+      });
+      setMarkerIcon(icon);
+    });
+  }, []);
   const bounds = useMemo(() => {
     if (locations.length === 0) return undefined;
     const lats = locations.map((l) => l.lat);
@@ -80,17 +103,18 @@ export function WitnessMap({
           attribution=""
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
-        {locations.map((loc, idx) => (
-          <Marker key={`${loc.identifier}-${idx}`} position={[loc.lat, loc.lon]}>
-            <Tooltip direction="top" offset={[0, -10]}>
-              <div className="text-xs">
-                <strong>{loc.city}</strong>
-                <br />
-                {loc.identifier}
-              </div>
-            </Tooltip>
-          </Marker>
-        ))}
+        {markerIcon &&
+          locations.map((loc, idx) => (
+            <Marker key={`${loc.identifier}-${idx}`} position={[loc.lat, loc.lon]} icon={markerIcon}>
+              <Tooltip direction="top" offset={[0, -10]}>
+                <div className="text-xs">
+                  <strong>{loc.city}</strong>
+                  <br />
+                  {loc.identifier}
+                </div>
+              </Tooltip>
+            </Marker>
+          ))}
       </MapContainer>
     </div>
   );
