@@ -204,13 +204,9 @@ function DiffView({
           <div key={idx} className="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden">
             <div className="bg-muted/50 px-4 py-2 border-b flex flex-wrap items-center gap-2">
               <span className="text-sm font-medium shrink-0">
-<<<<<<< HEAD
-                Variant {idx + 1} ({variant.count} witness{variant.count > 1 ? "es" : ""}){isReference && " (most common)"} —
-=======
                 Variant {idx + 1} ({variant.count} witness{variant.count > 1 ? "es" : ""})
                 {isReference && " (most common)"}
                 {isDivergent && idx > 0 && ` (diff vs variant ${idx})`} —
->>>>>>> phase-2
               </span>
               {variant.fragments.map((frag) => (
                 <a
