@@ -45,17 +45,54 @@ function normalizeForComparison(text: string): string {
 }
 
 /**
- * Count word-level differences between two normalized comparison keys.
+ * Compute the Longest Common Subsequence (LCS) of two word arrays.
+ * Returns a boolean array for each input indicating which words are in the LCS.
+ */
+function lcsMask<T>(a: T[], b: T[]): { aMask: boolean[]; bMask: boolean[] } {
+  const m = a.length;
+  const n = b.length;
+
+  const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (a[i - 1] === b[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1] + 1;
+      } else {
+        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+      }
+    }
+  }
+
+  const aMask = new Array(m).fill(false);
+  const bMask = new Array(n).fill(false);
+  let i = m;
+  let j = n;
+  while (i > 0 && j > 0) {
+    if (a[i - 1] === b[j - 1]) {
+      aMask[i - 1] = true;
+      bMask[j - 1] = true;
+      i--;
+      j--;
+    } else if (dp[i - 1][j] >= dp[i][j - 1]) {
+      i--;
+    } else {
+      j--;
+    }
+  }
+
+  return { aMask, bMask };
+}
+
+/**
+ * Count word-level edit distance using LCS.
+ * edit_distance = len(a) + len(b) - 2 * len(lcs)
  */
 function wordDiffDistance(keyA: string, keyB: string): number {
   const wordsA = keyA.split(/\s+/).filter(Boolean);
   const wordsB = keyB.split(/\s+/).filter(Boolean);
-  const maxLen = Math.max(wordsA.length, wordsB.length);
-  let distance = 0;
-  for (let i = 0; i < maxLen; i++) {
-    if (wordsA[i] !== wordsB[i]) distance++;
-  }
-  return distance;
+  const { aMask } = lcsMask(wordsA, wordsB);
+  const lcsLen = aMask.filter(Boolean).length;
+  return wordsA.length + wordsB.length - 2 * lcsLen;
 }
 
 /**
@@ -109,8 +146,9 @@ function sortVariants(
 }
 
 /**
- * Simple diff: highlights words that differ from the reference,
- * comparing normalized forms but displaying original words.
+ * LCS-based diff: highlights words in `text` that are not part of the
+ * longest common subsequence with `reference`.
+ * When normalize is enabled, compares normalized forms but displays original words.
  */
 function renderDiffLine(
   text: string,
@@ -119,18 +157,17 @@ function renderDiffLine(
 ): { word: string; different: boolean }[] {
   const textWords = text.split(/\s+/).filter(Boolean);
   const refWords = reference.split(/\s+/).filter(Boolean);
-  const maxLen = Math.max(textWords.length, refWords.length);
 
-  const parts: { word: string; different: boolean }[] = [];
-  for (let i = 0; i < maxLen; i++) {
-    const w = textWords[i] ?? "";
-    const r = refWords[i] ?? "";
-    const diff = normalize
-      ? normalizeForComparison(w) !== normalizeForComparison(r)
-      : w !== r;
-    parts.push({ word: w, different: diff });
-  }
-  return parts;
+  const compareWords = (w: string) => normalize ? normalizeForComparison(w) : w;
+  const textCompare = textWords.map(compareWords);
+  const refCompare = refWords.map(compareWords);
+
+  const { aMask } = lcsMask(textCompare, refCompare);
+
+  return textWords.map((word, i) => ({
+    word,
+    different: !aMask[i],
+  }));
 }
 
 /**
