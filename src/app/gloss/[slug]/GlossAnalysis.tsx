@@ -360,7 +360,6 @@ export function GlossAnalysis({
           sortMode={sortMode}
           normalize={normalizeOrthography}
         />
-        />
       ) : (
         <CurationView variants={variants} />
       )}
