@@ -9,14 +9,18 @@ type ViewMode = "diff" | "curation";
 type SortMode = "frequency" | "divergent";
 
 interface VariantGroup {
+  /** Original text as it appears in the first witness (for display). */
   text: string;
+  /** Normalized comparison key (tags stripped, punctuation removed, orthography canonicalized). */
+  _key: string;
   count: number;
   fragments: ProcessedFragment[];
 }
 
 /**
- * Normalize common medieval orthographic variants to a canonical form.
- * Applied in word order so longer replacements take precedence.
+ * Normalize text for comparison: strip XML-like tags, remove punctuation,
+ * and canonicalize common medieval orthographic variants.
+ * Applied in order so longer replacements take precedence.
  */
 const ORTHOGRAPHIC_RULES: [RegExp, string][] = [
   [/exsp\b/gi, "exp"],
@@ -28,20 +32,24 @@ const ORTHOGRAPHIC_RULES: [RegExp, string][] = [
   [/c/gi, "t"],
 ];
 
-function normalizeOrthography(text: string): string {
-  let result = text;
+function normalizeForComparison(text: string): string {
+  // Strip XML-like tags (e.g. <seg ref="Lt 6:13">...</seg>) but keep inner content
+  let result = text.replace(/<[^>]+>/g, "");
+  // Remove punctuation
+  result = result.replace(/[\u2000-\u206F\u2E00-\u2E7F\.,;:!?'"\-\—\–\(\)\[\]{}]/g, "");
+  // Apply orthographic rules
   for (const [pattern, replacement] of ORTHOGRAPHIC_RULES) {
     result = result.replace(pattern, replacement);
   }
-  return result;
+  return result.toLowerCase().trim();
 }
 
 /**
- * Count word-level differences between two texts.
+ * Count word-level differences between two normalized comparison keys.
  */
-function wordDiffDistance(textA: string, textB: string): number {
-  const wordsA = textA.split(/\s+/).filter(Boolean);
-  const wordsB = textB.split(/\s+/).filter(Boolean);
+function wordDiffDistance(keyA: string, keyB: string): number {
+  const wordsA = keyA.split(/\s+/).filter(Boolean);
+  const wordsB = keyB.split(/\s+/).filter(Boolean);
   const maxLen = Math.max(wordsA.length, wordsB.length);
   let distance = 0;
   for (let i = 0; i < maxLen; i++) {
@@ -52,7 +60,9 @@ function wordDiffDistance(textA: string, textB: string): number {
 
 /**
  * Groups witness fragments by their text value.
- * When normalizeOrthography is enabled, groups by normalized text.
+ * When normalize is enabled, groups by a normalized comparison key
+ * (tags stripped, punctuation removed, orthography canonicalized)
+ * but preserves the original text for display.
  */
 function groupByVariant(
   fragments: ProcessedFragment[],
@@ -62,14 +72,19 @@ function groupByVariant(
 
   for (const fragment of fragments) {
     const text = fragment.textValue ?? "";
-    const key = normalize ? normalizeOrthography(text) : text;
+    const key = normalize ? normalizeForComparison(text) : text;
     const existing = map.get(key) ?? [];
     existing.push(fragment);
     map.set(key, existing);
   }
 
   return Array.from(map.entries())
-    .map(([text, frags]) => ({ text, count: frags.length, fragments: frags }));
+    .map(([key, frags]) => ({
+      text: frags[0].textValue ?? "",
+      _key: key,
+      count: frags.length,
+      fragments: frags,
+    }));
 }
 
 /**
@@ -84,20 +99,23 @@ function sortVariants(
     return [...variants].sort((a, b) => b.count - a.count);
   }
 
-  // Most divergent: sort by word diff distance from gloss text (ascending)
+  // Most divergent: sort by word diff distance from normalized gloss text (ascending)
+  const glossKey = normalizeForComparison(glossText);
   return [...variants].sort(
     (a, b) =>
-      wordDiffDistance(a.text, glossText) -
-      wordDiffDistance(b.text, glossText)
+      wordDiffDistance(a._key, glossKey) -
+      wordDiffDistance(b._key, glossKey)
   );
 }
 
 /**
- * Simple diff: highlights words that differ from the reference.
+ * Simple diff: highlights words that differ from the reference,
+ * comparing normalized forms but displaying original words.
  */
 function renderDiffLine(
   text: string,
-  reference: string
+  reference: string,
+  normalize: boolean
 ): { word: string; different: boolean }[] {
   const textWords = text.split(/\s+/).filter(Boolean);
   const refWords = reference.split(/\s+/).filter(Boolean);
@@ -107,7 +125,10 @@ function renderDiffLine(
   for (let i = 0; i < maxLen; i++) {
     const w = textWords[i] ?? "";
     const r = refWords[i] ?? "";
-    parts.push({ word: w, different: w !== r });
+    const diff = normalize
+      ? normalizeForComparison(w) !== normalizeForComparison(r)
+      : w !== r;
+    parts.push({ word: w, different: diff });
   }
   return parts;
 }
@@ -119,10 +140,12 @@ function DiffView({
   variants,
   referenceText,
   sortMode,
+  normalize,
 }: {
   variants: VariantGroup[];
   referenceText: string;
   sortMode: SortMode;
+  normalize: boolean;
 }) {
   if (variants.length === 0) return null;
 
@@ -138,7 +161,7 @@ function DiffView({
             : variants[idx - 1].text
           : variants[0].text;
         const isReference = !isDivergent && idx === 0;
-        const diffParts = renderDiffLine(variant.text, ref);
+        const diffParts = renderDiffLine(variant.text, ref, normalize);
 
         return (
           <div key={idx} className="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden">
@@ -335,6 +358,8 @@ export function GlossAnalysis({
           variants={variants}
           referenceText={glossText ?? ""}
           sortMode={sortMode}
+          normalize={normalizeOrthography}
+        />
         />
       ) : (
         <CurationView variants={variants} />
