@@ -28,7 +28,7 @@ export const useGlossList = () => {
             if (!d?.body) continue;
             const rawKey = Object.keys(d.body)[0];
             // Extract short property name from RERUM URL (e.g., "document" from "...#document")
-            const key = rawKey.includes("#") ? rawKey.split("#").pop() : rawKey;
+            const key = rawKey.includes("#") ? rawKey.split("#").pop() ?? rawKey : rawKey;
             gloss[key] = d.body[rawKey].value ?? d.body[rawKey];
           }
           return processGloss(gloss, targetId);
