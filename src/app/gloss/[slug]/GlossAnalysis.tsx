@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import * as NAV from "@/configs/navigation";
 
 type ViewMode = "diff" | "curation";
+type SortMode = "frequency" | "divergent";
 
 interface VariantGroup {
   text: string;
@@ -14,25 +15,85 @@ interface VariantGroup {
 }
 
 /**
- * Groups witness fragments by their text value, sorted by frequency (most common first).
+ * Normalize common medieval orthographic variants to a canonical form.
+ * Applied in word order so longer replacements take precedence.
  */
-function groupByVariant(fragments: ProcessedFragment[]): VariantGroup[] {
+const ORTHOGRAPHIC_RULES: [RegExp, string][] = [
+  [/exsp\b/gi, "exp"],
+  [/ae/gi, "e"],
+  [/oe/gi, "e"],
+  [/v/gi, "u"],
+  [/j/gi, "i"],
+  [/y/gi, "i"],
+  [/c/gi, "t"],
+];
+
+function normalizeOrthography(text: string): string {
+  let result = text;
+  for (const [pattern, replacement] of ORTHOGRAPHIC_RULES) {
+    result = result.replace(pattern, replacement);
+  }
+  return result;
+}
+
+/**
+ * Count word-level differences between two texts.
+ */
+function wordDiffDistance(textA: string, textB: string): number {
+  const wordsA = textA.split(/\s+/).filter(Boolean);
+  const wordsB = textB.split(/\s+/).filter(Boolean);
+  const maxLen = Math.max(wordsA.length, wordsB.length);
+  let distance = 0;
+  for (let i = 0; i < maxLen; i++) {
+    if (wordsA[i] !== wordsB[i]) distance++;
+  }
+  return distance;
+}
+
+/**
+ * Groups witness fragments by their text value.
+ * When normalizeOrthography is enabled, groups by normalized text.
+ */
+function groupByVariant(
+  fragments: ProcessedFragment[],
+  normalize: boolean
+): VariantGroup[] {
   const map = new Map<string, ProcessedFragment[]>();
 
   for (const fragment of fragments) {
     const text = fragment.textValue ?? "";
-    const existing = map.get(text) ?? [];
+    const key = normalize ? normalizeOrthography(text) : text;
+    const existing = map.get(key) ?? [];
     existing.push(fragment);
-    map.set(text, existing);
+    map.set(key, existing);
   }
 
   return Array.from(map.entries())
-    .map(([text, fragments]) => ({ text, count: fragments.length, fragments }))
-    .sort((a, b) => b.count - a.count);
+    .map(([text, frags]) => ({ text, count: frags.length, fragments: frags }));
 }
 
 /**
- * Simple diff: highlights words that differ from the reference (most common variant).
+ * Sort variants by the selected sort mode.
+ */
+function sortVariants(
+  variants: VariantGroup[],
+  sortMode: SortMode,
+  glossText: string
+): VariantGroup[] {
+  if (sortMode === "frequency") {
+    return [...variants].sort((a, b) => b.count - a.count);
+  }
+
+  // Most divergent: sort by word diff distance from gloss text (ascending)
+  return [...variants].sort(
+    (a, b) =>
+      wordDiffDistance(a.text, glossText) -
+      wordDiffDistance(b.text, glossText)
+  );
+}
+
+/**
+ * Simple diff: highlights words that differ from the reference.
  */
 function renderDiffLine(
   text: string,
@@ -52,24 +113,40 @@ function renderDiffLine(
 }
 
 /**
- * Diff view: shows each variant inline with differences highlighted against the most common variant.
+ * Diff view: shows each variant inline with differences highlighted.
  */
-function DiffView({ variants }: { variants: VariantGroup[] }) {
+function DiffView({
+  variants,
+  referenceText,
+  sortMode,
+}: {
+  variants: VariantGroup[];
+  referenceText: string;
+  sortMode: SortMode;
+}) {
   if (variants.length === 0) return null;
 
-  const reference = variants[0].text;
+  // In divergent mode, diff each variant against the previous one (or gloss text for first)
+  const isDivergent = sortMode === "divergent";
 
   return (
     <div className="space-y-4">
       {variants.map((variant, idx) => {
-        const isReference = idx === 0;
-        const diffParts = renderDiffLine(variant.text, reference);
+        const ref = isDivergent
+          ? idx === 0
+            ? referenceText
+            : variants[idx - 1].text
+          : variants[0].text;
+        const isReference = !isDivergent && idx === 0;
+        const diffParts = renderDiffLine(variant.text, ref);
 
         return (
           <div key={idx} className="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden">
             <div className="bg-muted/50 px-4 py-2 border-b flex flex-wrap items-center gap-2">
               <span className="text-sm font-medium shrink-0">
-                Variant {idx + 1}{isReference && " (most common)"} —
+                Variant {idx + 1} ({variant.count} witness{variant.count > 1 ? "es" : ""})
+                {isReference && " (most common)"}
+                {isDivergent && idx > 0 && ` (diff vs variant ${idx})`} —
               </span>
               {variant.fragments.map((frag) => (
                 <a
@@ -155,16 +232,28 @@ function CurationView({ variants }: { variants: VariantGroup[] }) {
  */
 export function GlossAnalysis({
   fragments,
+  glossText,
   loading,
 }: {
   fragments: ProcessedFragment[];
+  glossText?: string;
   loading: boolean;
 }) {
   const [viewMode, setViewMode] = useState<ViewMode>("diff");
+  const [sortMode, setSortMode] = useState<SortMode>("frequency");
+  const [normalizeOrthography, setNormalizeOrthography] = useState(false);
 
   const variants = useMemo(
-    () => groupByVariant(fragments.filter((f) => f.textValue)),
-    [fragments]
+    () =>
+      sortVariants(
+        groupByVariant(
+          fragments.filter((f) => f.textValue),
+          normalizeOrthography
+        ),
+        sortMode,
+        glossText ?? ""
+      ),
+    [fragments, sortMode, normalizeOrthography, glossText]
   );
 
   if (loading) {
@@ -210,8 +299,43 @@ export function GlossAnalysis({
         {fragments.length} witness{fragments.length > 1 ? "es" : ""}
       </p>
 
+      <div className="flex flex-wrap items-center gap-4 mb-4">
+        <label className="flex items-center gap-2 text-sm cursor-pointer">
+          <input
+            type="checkbox"
+            checked={normalizeOrthography}
+            onChange={(e) => setNormalizeOrthography(e.target.checked)}
+            className="rounded border-input"
+          />
+          Normalize orthography
+        </label>
+
+        <div className="inline-flex rounded-lg border border-input bg-background shadow-sm">
+          <Button
+            variant={sortMode === "frequency" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setSortMode("frequency")}
+            className="rounded-none border-r border-input"
+          >
+            Most frequent
+          </Button>
+          <Button
+            variant={sortMode === "divergent" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setSortMode("divergent")}
+            className="rounded-none"
+          >
+            Most divergent
+          </Button>
+        </div>
+      </div>
+
       {viewMode === "diff" ? (
-        <DiffView variants={variants} />
+        <DiffView
+          variants={variants}
+          referenceText={glossText ?? ""}
+          sortMode={sortMode}
+        />
       ) : (
         <CurationView variants={variants} />
       )}
