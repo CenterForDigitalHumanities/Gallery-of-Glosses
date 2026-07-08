@@ -6,45 +6,11 @@ This document describes the JSON-LD API endpoints available for accessing Glosse
 
 The Gallery of Glosses provides RESTful API endpoints that return data in JSON-LD format, following Linked Data principles. All endpoints return data with proper `@context`, `@type`, and `@id` annotations using schema.org vocabulary and custom Gallery of Glosses terms.
 
+Each endpoint accepts a resource ID and returns the corresponding gloss or manuscript as a static, prerendered JSON file for GitHub Pages compatibility.
+
 ## Endpoints
 
 ### Glosses
-
-#### Get All Glosses
-```
-GET /api/glosses
-```
-
-Returns a JSON-LD collection of all published glosses.
-
-**Response Format:**
-```json
-{
-  "@context": {
-    "@vocab": "http://schema.org/",
-    "gog": "https://galleryofglosses.org/terms/"
-  },
-  "@type": "ItemList",
-  "name": "Gallery of Glosses Gloss Collection",
-  "numberOfItems": 123,
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "item": {
-        "@context": {...},
-        "@type": "Comment",
-        "@id": "https://store.rerum.io/v1/id/...",
-        "name": "Gloss title",
-        "text": "Gloss text content",
-        ...
-      }
-    }
-  ]
-}
-```
-
-**Content-Type:** `application/ld+json`
 
 #### Get Individual Gloss
 ```
@@ -89,41 +55,6 @@ Returns a single gloss in JSON-LD format.
 **Content-Type:** `application/ld+json`
 
 ### Manuscripts
-
-#### Get All Manuscripts
-```
-GET /api/manuscripts
-```
-
-Returns a JSON-LD collection of all published manuscripts.
-
-**Response Format:**
-```json
-{
-  "@context": {
-    "@vocab": "http://schema.org/",
-    "gog": "https://galleryofglosses.org/terms/"
-  },
-  "@type": "ItemList",
-  "name": "Gallery of Glosses Manuscript Collection",
-  "numberOfItems": 45,
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "item": {
-        "@context": {...},
-        "@type": "Manuscript",
-        "@id": "https://store.rerum.io/v1/id/...",
-        "name": "Manuscript title",
-        ...
-      }
-    }
-  ]
-}
-```
-
-**Content-Type:** `application/ld+json`
 
 #### Get Individual Manuscript
 ```
@@ -201,19 +132,9 @@ Common status codes:
 
 ## Usage Examples
 
-### Fetch all glosses
-```bash
-curl -H "Accept: application/ld+json" https://galleryofglosses.org/api/glosses
-```
-
 ### Fetch a specific gloss
 ```bash
 curl -H "Accept: application/ld+json" https://galleryofglosses.org/api/glosses/610c54deffce846a83e70625
-```
-
-### Fetch all manuscripts
-```bash
-curl -H "Accept: application/ld+json" https://galleryofglosses.org/api/manuscripts
 ```
 
 ### Fetch a specific manuscript
@@ -223,7 +144,8 @@ curl -H "Accept: application/ld+json" https://galleryofglosses.org/api/manuscrip
 
 ## Implementation Notes
 
-1. All API routes are marked as `dynamic` to ensure they fetch fresh data on each request.
-2. The endpoints fetch data from the RERUM store and transform it into JSON-LD format.
-3. Each resource has both a URI (`@id`) that can be dereferenced and an `identifier` property.
-4. The endpoints support both full RERUM URIs and short ID formats as parameters.
+1. All API routes are marked as `dynamic: 'error'` to ensure static prerendering for GitHub Pages compatibility.
+2. Each endpoint uses `generateStaticParams` to produce all valid routes at build time.
+3. The endpoints fetch data from the RERUM store and transform it into JSON-LD format.
+4. Each resource has both a URI (`@id`) that can be dereferenced and an `identifier` property.
+5. The endpoints support both full RERUM URIs and short ID formats as parameters.
