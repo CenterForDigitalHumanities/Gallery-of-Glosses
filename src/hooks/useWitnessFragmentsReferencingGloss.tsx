@@ -6,7 +6,6 @@ import {
 } from "@/lib/utils";
 import { type ProcessedFragment } from "@/lib/Fragment";
 import { GENERATOR } from "@/configs/rerum-links";
-import { type ProcessedFragment } from "@/lib/Fragment";
 
 export const useWitnessFragmentsReferencingGloss = (glossId: string) => {
   const [witnessFragments, setWitnessFragments] = useState<ProcessedFragment[]>([]);

@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import type { Icon } from "leaflet";
-import "leaflet/dist/leaflet.css";
 import { type ManuscriptLocation } from "@/data/manuscript-locations";
 
 const MapContainer = dynamic(
@@ -37,25 +36,28 @@ export function WitnessMap({
   height = "240px",
 }: WitnessMapProps) {
   const [markerIcon, setMarkerIcon] = useState<Icon | null>(null);
+  const [hasError, setHasError] = useState(false);
 
   /* Create a Leaflet Icon with CDN image URLs — must run client-side only */
   useEffect(() => {
-    import("leaflet").then((L) => {
-      const leaflet = L.default as typeof import("leaflet");
-      const icon = leaflet.icon({
-        iconRetinaUrl:
-          "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-        iconUrl:
-          "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-        shadowUrl:
-          "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41],
-      });
-      setMarkerIcon(icon);
-    });
+    import("leaflet")
+      .then((L) => {
+        const leaflet = L.default as typeof import("leaflet");
+        const icon = leaflet.icon({
+          iconRetinaUrl:
+            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+          iconUrl:
+            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+          shadowUrl:
+            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          shadowSize: [41, 41],
+        });
+        setMarkerIcon(icon);
+      })
+      .catch(() => setHasError(true));
   }, []);
   const bounds = useMemo(() => {
     if (locations.length === 0) return undefined;
@@ -75,17 +77,8 @@ export function WitnessMap({
     return [avgLat, avgLon] as [number, number];
   }, [locations]);
 
-  if (locations.length === 0) {
-    return (
-      <div
-        className="rounded-lg border bg-muted/30 flex items-center justify-center"
-        style={{ height }}
-      >
-        <span className="text-sm text-muted-foreground">
-          No location data available
-        </span>
-      </div>
-    );
+  if (locations.length === 0 || hasError) {
+    return null;
   }
 
   return (
@@ -96,11 +89,10 @@ export function WitnessMap({
         bounds={bounds}
         style={{ height: "100%", width: "100%" }}
         zoomControl={false}
-        attributionControl={false}
         scrollWheelZoom={false}
       >
         <TileLayer
-          attribution=""
+          attribution='&copy; <a href="https://carto.com/">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
         {markerIcon &&

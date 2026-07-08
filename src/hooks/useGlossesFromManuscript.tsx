@@ -6,7 +6,6 @@ import {
 } from "@/lib/utils";
 import { type ProcessedGloss } from "@/lib/Gloss";
 import { GENERATOR } from "@/configs/rerum-links";
-import { type ProcessedGloss } from "@/lib/Gloss";
 
 export const useGlossesFromManuscript = (manuscriptId: string) => {
   const [glosses, setGlosses] = useState<ProcessedGloss[]>([]);

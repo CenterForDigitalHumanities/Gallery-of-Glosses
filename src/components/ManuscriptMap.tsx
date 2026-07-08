@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import type { Icon } from "leaflet";
-import "leaflet/dist/leaflet.css";
 import { type ManuscriptLocation } from "@/data/manuscript-locations";
 
 const MapContainer = dynamic(
@@ -36,25 +35,32 @@ export function ManuscriptMap({
   height = "200px",
 }: ManuscriptMapProps) {
   const [markerIcon, setMarkerIcon] = useState<Icon | null>(null);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    import("leaflet").then((L) => {
-      const leaflet = L.default as typeof import("leaflet");
-      const icon = leaflet.icon({
-        iconRetinaUrl:
-          "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-        iconUrl:
-          "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-        shadowUrl:
-          "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41],
-      });
-      setMarkerIcon(icon);
-    });
+    import("leaflet")
+      .then((L) => {
+        const leaflet = L.default as typeof import("leaflet");
+        const icon = leaflet.icon({
+          iconRetinaUrl:
+            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+          iconUrl:
+            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+          shadowUrl:
+            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          shadowSize: [41, 41],
+        });
+        setMarkerIcon(icon);
+      })
+      .catch(() => setHasError(true));
   }, []);
+
+  if (hasError) {
+    return null;
+  }
 
   return (
     <div className="rounded-lg border overflow-hidden" style={{ height }}>
@@ -63,10 +69,9 @@ export function ManuscriptMap({
         zoom={13}
         style={{ height: "100%", width: "100%" }}
         zoomControl={false}
-        attributionControl={false}
       >
         <TileLayer
-          attribution=""
+          attribution='&copy; <a href="https://carto.com/">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
         {markerIcon && (
