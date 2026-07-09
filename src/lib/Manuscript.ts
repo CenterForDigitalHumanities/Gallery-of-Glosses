@@ -1,4 +1,4 @@
-interface Manuscript {
+export interface Manuscript {
   targetId: string;
   targetCollection?: string;
   url?: { value: string };

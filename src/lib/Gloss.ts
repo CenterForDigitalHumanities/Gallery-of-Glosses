@@ -1,4 +1,4 @@
-interface Gloss {
+export interface Gloss {
   targetId:string;
   targetCollection?: string;
   title?: {

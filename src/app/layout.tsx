@@ -9,8 +9,15 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://galleryofglosses.org"),
   title: "Gallery of Glosses",
   description: "Learn About Glosses",
+  icons: {
+    apple: "/assets/images/logo_128x128.png",
+  },
+  openGraph: {
+    images: ["/assets/images/logo_256x256.png"],
+  },
 };
 
 export default function RootLayout({

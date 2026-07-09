@@ -5,10 +5,14 @@ import * as NAV from "@/configs/navigation";
 import { usePathname } from "next/navigation";
 import { make_columns } from "@/app/browse/Columns";
 import { DataTable } from "@/app/browse/DataTable";
-import { use } from "react"
-import { useGlossContext } from "@/contexts/GlossContext"
-import { useManuscriptsReferencingGloss } from "@/hooks/useManuscriptsReferencingGloss"
-import { useWitnessFragmentsReferencingGloss } from "@/hooks/useWitnessFragmentsReferencingGloss"
+import { use } from "react";
+import { useGlossContext } from "@/contexts/GlossContext";
+import { useManuscriptsReferencingGloss } from "@/hooks/useManuscriptsReferencingGloss";
+import { useWitnessFragmentsReferencingGloss } from "@/hooks/useWitnessFragmentsReferencingGloss";
+import { GlossAnalysis } from "./GlossAnalysis";
+import { WitnessMap } from "@/components/WitnessMap";
+import { manuscriptLocations, type ManuscriptLocation } from "@/data/manuscript-locations";
+import { type ProcessedFragment } from "@/lib/Fragment";
 
 const filterColumn = {
   header: "Shelfmark",
@@ -49,6 +53,43 @@ const columns = make_columns([
   //   expandable: false,
   // },
 ]);
+
+/**
+ * Maps witness fragments to their holding locations based on manuscript identifier.
+ */
+function getWitnessLocations(fragments: ProcessedFragment[]): ManuscriptLocation[] {
+  const seen = new Set<string>();
+  return fragments
+    .map((frag) => {
+      const candidates = [frag.partOf, frag.targetId, frag.identifier]
+        .map((value) => (value ?? "").trim())
+        .filter(Boolean);
+
+      if (candidates.length === 0) {
+        return null;
+      }
+
+      const match = manuscriptLocations.find((loc) => {
+        const locationIdentifier = loc.identifier.toLowerCase();
+        return candidates.some((candidate) => {
+          const normalizedCandidate = candidate.toLowerCase();
+          return (
+            normalizedCandidate === locationIdentifier ||
+            normalizedCandidate.includes(locationIdentifier) ||
+            locationIdentifier.includes(normalizedCandidate)
+          );
+        });
+      });
+
+      return match ?? null;
+    })
+    .filter((loc): loc is ManuscriptLocation => {
+      if (!loc) return false;
+      if (seen.has(loc.identifier)) return false;
+      seen.add(loc.identifier);
+      return true;
+    });
+}
 
 const Gloss = (props : {  slug: string } ) => {
   const pathname = usePathname();
@@ -130,16 +171,29 @@ const Gloss = (props : {  slug: string } ) => {
         <h2 className="text-xl font-bold mb-4">
           Witnesses of this Gloss
         </h2>
-        {
-        fragments.length ?
-        <DataTable
-          columns={columns}
-          data={fragments}
+        <div className="mb-4">
+          <WitnessMap
+            locations={getWitnessLocations(fragments)}
+          />
+        </div>
+        <GlossAnalysis
+          fragments={fragments}
+          glossText={gloss?.text?.textValue}
           loading={witnessFragmentsResult.loading}
-          filterColumn={filterColumn}
         />
-        : "No Fragments Found"
-        }
+        {fragments.length && !witnessFragmentsResult.loading ? (
+          <div className="mt-8">
+            <h3 className="text-lg font-semibold mb-2">All Witnesses</h3>
+            <DataTable
+              columns={columns}
+              data={fragments}
+              loading={false}
+              filterColumn={filterColumn}
+            />
+          </div>
+        ) : !fragments.length && !witnessFragmentsResult.loading ? (
+          "No Fragments Found"
+        ) : null}
       </div>
     </div>
   );
