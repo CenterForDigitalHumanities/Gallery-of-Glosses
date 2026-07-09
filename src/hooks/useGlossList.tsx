@@ -18,6 +18,8 @@ export const useGlossList = () => {
         return;
       }
 
+      setGlosses([]);
+
       const fetchGloss = async (item: { "@id": string }) => {
         try {
           const targetId = item["@id"];
@@ -38,19 +40,14 @@ export const useGlossList = () => {
         }
       };
 
-      const results = await Promise.allSettled(
-        collectionList.itemListElement.map(fetchGloss)
-      );
+      const tasks = collectionList.itemListElement.map(async (item) => {
+        const gloss = await fetchGloss(item);
+        if (gloss) {
+          setGlosses((prevGlosses) => [...prevGlosses, gloss]);
+        }
+      });
 
-      const successfulGlosses = results
-        .filter(
-          (r): r is PromiseFulfilledResult<ProcessedGloss> =>
-            r.status === "fulfilled"
-        )
-        .map((r) => r.value)
-        .filter((gloss): gloss is ProcessedGloss => gloss !== null);
-
-      setGlosses(successfulGlosses);
+      await Promise.allSettled(tasks);
       setLoading(false);
     }
     fetchGlossAndProcessProperties();

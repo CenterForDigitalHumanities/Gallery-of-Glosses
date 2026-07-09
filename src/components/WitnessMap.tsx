@@ -82,13 +82,18 @@ export function WitnessMap({
   }
 
   return (
-    <div className="rounded-lg border overflow-hidden" style={{ height }}>
+    <div
+      className="rounded-lg border overflow-hidden"
+      style={{ height }}
+      role="img"
+      aria-label="Map of witness holding locations"
+    >
       <MapContainer
         center={center}
         zoom={4}
         bounds={bounds}
+        boundsOptions={{ padding: [24, 24], maxZoom: 8 }}
         style={{ height: "100%", width: "100%" }}
-        zoomControl={false}
         scrollWheelZoom={false}
       >
         <TileLayer

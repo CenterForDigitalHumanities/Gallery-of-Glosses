@@ -23,13 +23,13 @@ interface VariantGroup {
  * Applied in order so longer replacements take precedence.
  */
 const ORTHOGRAPHIC_RULES: [RegExp, string][] = [
-  [/exsp\b/gi, "exp"],
+  [/exsp/gi, "exp"],
   [/ae/gi, "e"],
   [/oe/gi, "e"],
   [/v/gi, "u"],
   [/j/gi, "i"],
   [/y/gi, "i"],
-  [/c/gi, "t"],
+  [/c(?=[ie])/gi, "t"],
 ];
 
 function normalizeForComparison(text: string): string {

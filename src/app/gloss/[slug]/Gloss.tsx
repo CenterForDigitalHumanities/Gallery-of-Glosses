@@ -61,16 +61,26 @@ function getWitnessLocations(fragments: ProcessedFragment[]): ManuscriptLocation
   const seen = new Set<string>();
   return fragments
     .map((frag) => {
-      const partOf = frag.partOf ?? "";
-      const targetId = frag.targetId ?? "";
-      const identifier = frag.identifier ?? "";
-      const match = manuscriptLocations.find((loc) =>
-        partOf.includes(loc.identifier) ||
-        targetId.includes(loc.identifier) ||
-        identifier.includes(loc.identifier) ||
-        loc.identifier.toLowerCase().includes(partOf.toLowerCase()) ||
-        loc.identifier.toLowerCase().includes(identifier.toLowerCase())
-      );
+      const candidates = [frag.partOf, frag.targetId, frag.identifier]
+        .map((value) => (value ?? "").trim())
+        .filter(Boolean);
+
+      if (candidates.length === 0) {
+        return null;
+      }
+
+      const match = manuscriptLocations.find((loc) => {
+        const locationIdentifier = loc.identifier.toLowerCase();
+        return candidates.some((candidate) => {
+          const normalizedCandidate = candidate.toLowerCase();
+          return (
+            normalizedCandidate === locationIdentifier ||
+            normalizedCandidate.includes(locationIdentifier) ||
+            locationIdentifier.includes(normalizedCandidate)
+          );
+        });
+      });
+
       return match ?? null;
     })
     .filter((loc): loc is ManuscriptLocation => {

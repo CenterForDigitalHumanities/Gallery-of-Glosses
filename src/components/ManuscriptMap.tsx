@@ -63,12 +63,16 @@ export function ManuscriptMap({
   }
 
   return (
-    <div className="rounded-lg border overflow-hidden" style={{ height }}>
+    <div
+      className="rounded-lg border overflow-hidden"
+      style={{ height }}
+      role="img"
+      aria-label="Map of manuscript holding location"
+    >
       <MapContainer
         center={[location.lat, location.lon]}
         zoom={13}
         style={{ height: "100%", width: "100%" }}
-        zoomControl={false}
       >
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'

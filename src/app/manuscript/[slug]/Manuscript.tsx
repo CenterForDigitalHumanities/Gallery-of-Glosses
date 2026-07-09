@@ -69,13 +69,21 @@ const Manuscript = (props : {  slug: string } ) => {
   let witnessFragmentsResult = useWitnessFragmentsFromManuscript(manuscript["@id"]);
   let fragments = witnessFragmentsResult.witnessFragments;
 
-  // Find the location for this manuscript
-  const location = manuscriptLocations.find(
-    (loc) =>
-      loc.identifier === manuscript?.identifier ||
-      loc.identifier.includes(manuscript?.identifier ?? "") ||
-      (manuscript?.identifier ?? "").includes(loc.identifier)
-  );
+  // Find the location for this manuscript while guarding against empty identifiers.
+  const manuscriptIdentifier = (manuscript?.identifier ?? "").trim().toLowerCase();
+  const location = manuscriptIdentifier
+    ? manuscriptLocations.find(
+        (loc) => loc.identifier.toLowerCase() === manuscriptIdentifier
+      ) ??
+      manuscriptLocations.find((loc) => {
+        const locationIdentifier = loc.identifier.toLowerCase();
+        return (
+          manuscriptIdentifier.length >= 8 &&
+          (locationIdentifier.includes(manuscriptIdentifier) ||
+            manuscriptIdentifier.includes(locationIdentifier))
+        );
+      })
+    : undefined;
 
   return (
     <div>

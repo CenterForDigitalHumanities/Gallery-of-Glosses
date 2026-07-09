@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import type { Icon } from "leaflet";
-import { manuscriptLocations } from "@/data/manuscript-locations";
+import { manuscriptLocations, uniqueCities } from "@/data/manuscript-locations";
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -47,14 +47,19 @@ const Map = () => {
       .catch(() => setHasError(true));
   }, []);
 
-  const uniqueLocations = manuscriptLocations.filter(
-    (loc, idx, self) => idx === self.findIndex((l) => l.geonameId === loc.geonameId)
-  );
+  const uniqueLocationCount = Object.keys(uniqueCities).length;
 
   const center: [number, number] = [50, 2]; // Europe
 
   if (hasError) {
-    return null;
+    return (
+      <div className="text-foreground p-4 md:p-8">
+        <h1 className="text-2xl font-bold mb-4">Geolocated Witnesses</h1>
+        <p className="text-muted-foreground">
+          The map could not be loaded. Please refresh the page or try again later.
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -62,9 +67,14 @@ const Map = () => {
       <h1 className="text-2xl font-bold mb-4">Geolocated Witnesses</h1>
       <p className="text-muted-foreground mb-4">
         Physical holding locations for {manuscriptLocations.length} manuscripts across{" "}
-        {uniqueLocations.length} cities.
+        {uniqueLocationCount} cities.
       </p>
-      <div className="rounded-lg border overflow-hidden" style={{ height: "600px" }}>
+      <div
+        className="rounded-lg border overflow-hidden"
+        style={{ height: "600px" }}
+        role="img"
+        aria-label="Map of all manuscript holding locations"
+      >
         <MapContainer center={center} zoom={4} style={{ height: "100%", width: "100%" }}>
           <TileLayer
             attribution='&copy; <a href="https://carto.com/">CARTO</a>'
