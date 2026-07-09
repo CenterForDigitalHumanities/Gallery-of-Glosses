@@ -2,57 +2,70 @@ import {
   grabProperties,
   getQueryFromId,
   makePagedQuery,
-  filterDataAtTargets,
 } from "../utils";
-import axios from "axios";
-import { TINY } from "@/configs/rerum-links";
+import { TINY, GENERATOR } from "@/configs/rerum-links";
 
-jest.mock("axios");
+// Mock global fetch for Node.js test environment
+const mockFetch = jest.fn();
+global.fetch = mockFetch;
+
 describe("grabProperties", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it("should send an appropriate RERUM query", async () => {
-    axios.post.mockResolvedValue({
-      data: { status: 200, someProperty: "someValue" },
-    });
+    const mockResponse = {
+      ok: true,
+      json: async () => [{ status: 200, someProperty: "someValue" }],
+    };
+    mockFetch.mockResolvedValue(mockResponse);
+
     const response = await grabProperties(
       "https://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
     );
 
-    expect(axios.post).toHaveBeenCalledWith(
+    expect(mockFetch).toHaveBeenCalledWith(
       `${TINY}/query?limit=100&skip=0`,
-      {
-        $or: [
-          { target: "http://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1" },
-          { target: "https://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1" },
-          {
-            "target.@id":
-              "http://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
-          },
-          {
-            "target.@id":
-              "https://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
-          },
-          {
-            "target.id": "http://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
-          },
-          {
-            "target.id":
-              "https://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
-          },
-        ],
-        "__rerum.history.next": { $exists: true, $size: 0 },
-      },
-      { headers: { "Content-Type": "application/json; charset=utf-8" } },
+      expect.objectContaining({
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        body: JSON.stringify({
+          $or: [
+            { target: "http://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1" },
+            { target: "https://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1" },
+            {
+              "target.@id":
+                "http://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
+            },
+            {
+              "target.@id":
+                "https://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
+            },
+            {
+              "target.id": "http://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
+            },
+            {
+              "target.id":
+                "https://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
+            },
+          ],
+          "__rerum.history.next": { $exists: true, $size: 0 },
+          "__rerum.generatedBy": GENERATOR,
+        }),
+      }),
     );
   });
 
   it("should return a response with a status of 200 for a valid query", async () => {
-    axios.post.mockResolvedValue({
-      data: { status: 200, someProperty: "someValue" },
-    });
+    const mockResponse = {
+      ok: true,
+      json: async () => [{ status: 200, someProperty: "someValue" }],
+    };
+    mockFetch.mockResolvedValue(mockResponse);
+
     const response = await grabProperties(
       "https://store.rerum.io/v1/id/65837315d08cc4cd9d2aaeb1",
     );
@@ -83,6 +96,7 @@ describe("getQueryFromId", () => {
         },
       ],
       "__rerum.history.next": { $exists: true, $size: 0 },
+      "__rerum.generatedBy": GENERATOR,
     });
   });
 });
@@ -93,56 +107,25 @@ describe("makePagedQuery", () => {
   });
 
   it("should send an appropriate RERUM query with default limit and skip values", async () => {
-    axios.post.mockResolvedValue({
-      data: [{ status: 200, someProperty: "someValue" }],
-    });
+    const mockResponse = {
+      ok: true,
+      json: async () => [{ status: 200, someProperty: "someValue" }],
+    };
+    mockFetch.mockResolvedValue(mockResponse);
 
     const mockData = { example: "data" };
 
     const response = await makePagedQuery("https://example.com", mockData);
 
-    expect(axios.post).toHaveBeenCalledWith(
+    expect(mockFetch).toHaveBeenCalledWith(
       "https://example.com?limit=100&skip=0",
-      mockData,
-      { headers: { "Content-Type": "application/json; charset=utf-8" } },
+      expect.objectContaining({
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        body: JSON.stringify(mockData),
+      }),
     );
-  });
-});
-
-describe("filterDataAtTargets", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it("should filter through all data that matches the filter function", async () => {
-    const mockData = [
-      { target: "https://example.com" },
-      { target: "https://example.com" },
-      { target: "https://example.com" },
-    ];
-    axios.get.mockResolvedValue({ data: { "@type": "Text" } });
-    const filteredData = await filterDataAtTargets(
-      mockData,
-      (item) => item["@type"] === "Text",
-    );
-    expect(filteredData).toEqual([
-      { "@type": "Text" },
-      { "@type": "Text" },
-      { "@type": "Text" },
-    ]);
-  });
-
-  it("should filter out all data that doesn't match the filter function", async () => {
-    const mockData = [
-      { target: "https://example.com" },
-      { target: "https://example.com" },
-      { target: "https://example.com" },
-    ];
-    axios.get.mockResolvedValue({ data: { "@type": "Text" } });
-    const filteredData = await filterDataAtTargets(
-      mockData,
-      (item) => item["@type"] !== "Text",
-    );
-    expect(filteredData).toEqual([]);
   });
 });
